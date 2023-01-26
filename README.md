@@ -4,7 +4,7 @@
 :----------|:----------|:----------|:----------|
 | Biologists | Intermediate | None | Introduction to R |
 
-> NOTE: ** This workshop is currently under development.**
+> NOTE: **This workshop is currently under development.**
 > Materials in thsi repo are not currently maintained
 
 
