@@ -4,6 +4,9 @@
 :----------|:----------|:----------|:----------|
 | Biologists | Intermediate | None | Introduction to R |
 
+> NOTE: ** This workshop is currently under development.**
+> Materials in thsi repo are not currently maintained
+
 
 This workshop will focus on using the R statistical programming environment to evaluate files generated from peak calling of ChIP-seq (and related approaches i.e. CUT&RUN and ATAC-seq) data. We describe the different file formats encountered when working with peaks and use various Bioconductor packages to look at concordance between replicates, peak quality and annotate regions using nearest gene approaches. We demonstrate the use of DiffBind to evaluate changes in binding patterns between groups of samples, and how to explore genomic regions of interest as tracks in the Integrated Genome Viewer (IGV). We also briefly touch on various tools for motif-based sequence analyses.
 
