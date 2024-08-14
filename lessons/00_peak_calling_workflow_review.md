@@ -1,5 +1,5 @@
 ---
-title: "From raw reads to peak calls"
+title: "From sequence reads to peak calls"
 author: "Meeta Mistry, Upendra Bhattarai, Heather Wick"
 date: "Aug 13th, 2024"
 ---
@@ -17,7 +17,7 @@ Approximate time:
 
 ## From sequence reads to peak calls
 
-
+**TAKE CONTENT FROM HERE: https://hbctraining.github.io/Intro-to-ChIPseq-flipped/schedule/**
 
 ***
 
