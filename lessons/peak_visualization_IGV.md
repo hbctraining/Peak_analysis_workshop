@@ -1,5 +1,5 @@
 ---
-title: "Visualization of peaks"
+title: "Visualization of peaks using a genome browser"
 author: "Meeta Mistry"
 date: "Thursday July 29th, 2017"
 ---
@@ -7,9 +7,11 @@ date: "Thursday July 29th, 2017"
 Approximate time: 80 minutes
 
 ## Learning Objectives
-* Generate bigWig files
+* Describe different file types used for peak visualization
+* 
 * Visualizing enrichment patterns at particular locations in the genome
 
+**LINK OUT TO LESSONS IN CHROMATIN BIOLOGY WORKSHOP WHERE WE SHOW HOWTO CREATE BIGIWGS
 ## Visualization of ChIP-seq data
 
 The first part of ChIP-sequencing analysis uses common processing pipelines, which involves the alignment of raw reads to the genome, data filtering, and identification of enriched signal regions (peak calling). In the second stage, individual software programs allow detailed analysis of those peaks, biological interpretation, and visualization of ChIP-seq results.
