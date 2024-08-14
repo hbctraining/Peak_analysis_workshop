@@ -6,6 +6,7 @@ date: "October 2, 2018"
 
 ## Quality Metrics Based on Cross-Correlation
 
+**NOT SURE IF WE WILL USE THIS - BUT COULD BEHELPFUL IF WE INCLUDE ENCODE QUALITY METRICS.**
 
 ### Cross-correlation plot
 
