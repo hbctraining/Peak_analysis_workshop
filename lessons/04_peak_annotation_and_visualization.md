@@ -21,11 +21,13 @@ Approximate time:
 In this tutorial we use ChIPseeker, a Bioconductor package in R to annotate peaks with genomic feaures, explore various ways to visualize them and compare the peak profile and coverage between the experimental groups. We will also perform functional annotation and analysis to explore the biology in our dataset.
 
 
-Notes:
+
 
 - Annotation for individual samples and for consensus peaks for each sample group.
 - Peak annotation of genomic features (not on target genes) [see](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/12_functional_analysis.html)
     - Peak distance from TSS and other genomic feaures.
+    - Include genometricCorr or other statistical evaluation of proximity of peaks to genomic regions of interest.
+          Alternatively:use bedr to implement Jaccard statistics (for overlaps not proximity). [link](https://cran.r-project.org/web/packages/bedr/vignettes/Using-bedr.html#jaccard-and-reldist) [bedtools](https://bedtools.readthedocs.io/en/latest/content/tools/jaccard.html)
     - ChiPSeeker plots [see](https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/OLD_ChipSeeker_analysis.md#visualization-with-chipseeker)
     - Talk about Deeptools as an alternative using bam files. point to [chromatin biology workshop material](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/09_data_visualization.md)
 ***
