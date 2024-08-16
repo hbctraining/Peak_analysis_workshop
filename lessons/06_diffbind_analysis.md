@@ -1,5 +1,5 @@
 ---
-title: "Differential binding analysis pipeline"
+title: "Differential binding analysis"
 author: "Heather Wick, Upendra Bhattarai, Meeta Mistry"
 date: "Aug 16th, 2024"
 ---
@@ -11,15 +11,15 @@ Approximate time:
 ## Learning Objectives
 
 * Carryout data exploratory analysis and visualization for sample concordance.
-* Learn to use DiffBind for differential binding analysis and evaluate the results.
-* Annotate and visualize the differentially bound sites
-* Explore the biological content using functional enrichment analysis.
+* Learn to use DiffBind for differential binding analysis
+* Evaluate the results and export the output.
+
 
 
 
 ## Overview
 
-In this tutorial we will perform PCA and correlational heatmaps to study the sample relation. We will learn how to use DiffBind package to carryout differential binding analysis. Use Chipseeker to annotate the differentially bound sites. We will employ various ploting methods to evaluate the results. We will also carryout functional enrichment analysis to understand the biological meaning of the result.
+In this tutorial we will perform PCA and correlational heatmaps to study the sample relation. We will learn how to use DiffBind pipeline to carryout differential binding analysis, evaluate the results and output the results to file.
 
 
 
