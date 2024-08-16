@@ -19,7 +19,7 @@ Approximate time:
 
 Integrate Genomics Viewer (IGV) is an open-source desktop genome visualization tool. Below we will learn about the file formats used to visualize peaks in IGV and use it to explore peaks in our experiment samples. We will also use graphViz/rtracklayer to plot the peak signals in R. 
 
-Use material from variant calling workshop (setting up IGV)[https://hbctraining.github.io/variant_analysis/lessons/12_IGV.html]
+Use material from variant calling workshop [setting up IGV](https://hbctraining.github.io/variant_analysis/lessons/12_IGV.html)
 
 ***
 
