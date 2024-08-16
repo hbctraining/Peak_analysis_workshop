@@ -22,7 +22,7 @@ Approximate time:
 In this tutorial we will perform PCA and correlational heatmaps to study the sample relation. We will learn how to use DiffBind pipeline to carryout differential binding analysis, evaluate the results and output the results to file.
 
 
-(old material)[https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/OLD_diffbind_differential_peaks.md]
+[old material](https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/OLD_diffbind_differential_peaks.md)
 - Needs significant updating due to updates to diffbind
 - Go through entire workflow; share dbObj with them because we will compute the affinity binding matrix on cluster (provide code and script)
 - Some Viz such as MA plots, volcano and heatmaps
