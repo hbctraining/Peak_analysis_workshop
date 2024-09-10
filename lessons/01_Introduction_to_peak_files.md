@@ -64,7 +64,7 @@ BED files **require at least 3 fields** indicating the **genomic location of the
 
 ### narrowPeak
 
-A narrowPeak (.narrowPeak) file is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. The narrowPeak file is a BED 6+4 format, which means the first 6 columns of a standard BED file  with **4 additional fields**:
+A narrowPeak (.narrowPeak) file is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. The narrowPeak file is a BED6+4 format, which means the first 6 columns of a standard BED file  with **4 additional fields**:
 
 <p align="center">
 <img src="../img/narrowPeak.png"  width="800">
@@ -78,11 +78,17 @@ Each row in the narrowPeak file represents a called peak. Below is an the exampl
 
 ### broadPeak
 
-A broadPeak file is very similar to a narrowPeak file, but it is BED 6+3 because it is missing one element that the narrowPeak format has: the final column, which is the point-source, or summit coordinate, for each peak. This is because broad peaks are large regions rather than sharp peaks; they are called in MACS2 by combining adjacent narrow peaks.
+A broadPeak (.broadPeak) file is very similar to a narrowPeak file, but it is BED6+3 because it is missing one element that the narrowPeak format has: the final column, which is the point-source, or summit coordinate, for each peak. This is because broad peaks are large regions rather than sharp peaks; they are called in MACS2 by combining adjacent narrow peaks.
 
-## Handling peak files
+### gappedPeak
 
-Once we have our peak files, we can do some downstream processing, such as peak filtering, and perform QC. The type of processing you might do, such as removing peaks from black-listed regions, depends on the specific pipeline you are following (some pipelines, like the one we used to generate the data used in this course, filter reads in those regions before calling peaks, rather than peaks in those regions afterwards, but either method is acceptable). For more information on this type of filtering and the tools you might use to perform them, see the **bedtools** and **Filtering peaks overlapping with blacklist regions** sections from this similar lesson from our [Chromatin Biology workshop](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md).
+A gappedPeak (.gappedPeak) file is a BED12+3 file which contains broad peaks as well as narrow peaks within the broad peaks. You can learn more about this format (and the format of the other files) on the [Encode website](https://genome.ucsc.edu/FAQ/FAQformat.html#format14)
+
+## Handling peak files and peak data
+
+Once we have our peak files, we can do some downstream processing, such as peak filtering, perform QC, and performing downstream analyses and visualization. The type of peak processing and filtering you might do, such as removing peaks from black-listed regions, depends on the specific pipeline you are following. Some pipelines, like the one we used to generate the data used in this course, filter reads in those regions before calling peaks, rather than peaks in those regions afterwards, but either method is acceptable. For more information on this type of filtering and the tools you might use to perform them, see the **bedtools** and **Filtering peaks overlapping with blacklist regions** sections from this similar lesson from our [Chromatin Biology workshop](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md).
+
+Because we have already done a lot of this pre-processing we can jump straight into some basic quality control. Some of this will use the peak files, but to start we will actually be using 
 
 ***
 
