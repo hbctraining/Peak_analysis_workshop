@@ -28,16 +28,7 @@ _Image source: ["From DNA to a human: What the ENCODE and Roadmap Epigenome Proj
 <img src="../img/chipseq_bedtoolsworkflow_sept2021.png" width="600">
 </p>
 
-## Handling peak calls 
-
-Once completed peak calling, we are ready to perform QC on our called peaks.
-
-In this lesson, we will introduce you to an important file format that you will encounter when working with peak calls called the **BED format** (**B**rowser **E**xtensible **D**ata). We will also describe the contents of the **narrowPeak** files (output from MACS2) and how it relates to BED. 
-
-We will use **`bedtools`, a suite of tools that is very helpful when working with BED files and other related file formats**, to complete the following tasks for the WT and KO peak calls from this PRDM16 dataset:
-
-1. Filter out peaks that overlap with the blacklisted regions
-2. Assess the replicate concordance within sample groups, to see how many peaks are reproducible. 
+In this lesson, we will introduce you to several important file format that you will encounter when working with peak calls called the **BED format** (**B**rowser **E**xtensible **D**ata). We will also describe the contents of the **narrowPeak** files (output from MACS2) and how it relates to BED. 
 
 ## BED file formats
 
@@ -71,7 +62,6 @@ BED files **require at least 3 fields** indicating the **genomic location of the
 <img src="../img/bed_file.png" width="800">
 </p>
 
-
 ### narrowPeak
 
 A narrowPeak (.narrowPeak) file is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. The narrowPeak file is a BED 6+4 format, which means the first 6 columns of a standard BED file  with **4 additional fields**:
@@ -86,9 +76,13 @@ Each row in the narrowPeak file represents a called peak. Below is an the exampl
 <img src="../img/narrow_peak_example.png">
 </p>
 
-## What is a peak?
+### broadPeak
 
-* File formats are described in detail in the [Chromatin Biology workshop](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md)
+A broadPeak file is very similar to a narrowPeak file, but it is BED 6+3 because it is missing one element that the narrowPeak format has: the final column, which is the point-source, or summit coordinate, for each peak. This is because broad peaks are large regions rather than sharp peaks; they are called in MACS2 by combining adjacent narrow peaks.
+
+## Handling peak files
+
+Once we have our peak files, we can do some downstream processing, such as peak filtering, and perform QC. The type of processing you might do, such as removing peaks from black-listed regions, depends on the specific pipeline you are following (some pipelines, like the one we used to generate the data used in this course, filter reads in those regions before calling peaks, rather than peaks in those regions afterwards, but either method is acceptable). For more information on this type of filtering and the tools you might use to perform them, see the **bedtools** and **Filtering peaks overlapping with blacklist regions** sections from this similar lesson from our [Chromatin Biology workshop](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md).
 
 ***
 
