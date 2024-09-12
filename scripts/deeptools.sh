@@ -32,3 +32,8 @@
 ## Step-3
 
 #plotPCA -in multiBamsummary.npz -o H3K27Ac_deeptools_PCA.png
+
+
+#####
+## Outputs are in: /n/data1/cores/bcbio/upen/chipseq_peakanalysis_h3k27ac/upen/deeptools/
+####
