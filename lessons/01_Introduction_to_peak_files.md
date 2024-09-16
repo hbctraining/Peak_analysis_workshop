@@ -88,7 +88,7 @@ A gappedPeak (.gappedPeak) file is a BED12+3 file which contains broad peaks as 
 
 Once we have our peak files, we can do some downstream processing, such as peak filtering, find consensus peaks between samples, perform QC, and carry out other downstream analyses and visualization. The type of peak processing and filtering you might do, such as removing peaks from black-listed regions, depends on the specific pipeline you are following. Another useful step is to create **consensus peaks**. Some pipelines, like the one we used to generate the data used in this course, filter reads in black-listed regions before calling peaks, rather than peaks in those regions afterwards, but either method is acceptable. Our pipeline also conveniently has automatically provided consensus peaks for us, but this can also be calculated independently. For more information on this type of filtering and processing and the tools you might use to perform them, see the **bedtools** and **Filtering peaks overlapping with blacklist regions** sections from this similar lesson from our [Chromatin Biology workshop](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md).
 
-#### HAVE CODE SNIPPET HERE ABOUT FINDING CONSENSUS PEAKS ON THEIR OWN
+####HAVE CODE SNIPPET HERE ABOUT FINDING CONSENSUS PEAKS ON THEIR OWN
 
 ## Quality Control
 
@@ -110,11 +110,11 @@ Some peak quality control can be done directly on peak files, but there are many
 >```
 ***
 
-#### HAVE INSTRUCTIONS FOR MAKING METRICS.CSV???
+####HAVE INSTRUCTIONS FOR MAKING METRICS.CSV???
 
 You can download the pre-generated multiqc report HERE, and the consensus peak file HERE.
 
-#### DO WE NEED AN EXPLANATION OF THE DATA SET OR IS THAT PART OF THE PREREADING?
+####DO WE NEED AN EXPLANATION OF THE DATA SET OR IS THAT PART OF THE PREREADING?
 
 The data set we are going to look at consists of 3 wild type (WT) and 3 c knockout (cKO -- WHAT IS CKO) samples. The original authors were looking at H3K27ac in mice (WHY) with and without WHATEVER CKO GENE IS. Each replicate has its own input sample
 
