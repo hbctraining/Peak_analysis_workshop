@@ -303,7 +303,7 @@ metrics %>%
 ```
 
 <p align="center">
-<img src="../img/nrf.png"  width="800">
+<img src="../img/nrf.png"  width="400">
 </p>
 
 All of our samples are at least acceptable, and hover around or surpass the compliant or ideal thresholds.
