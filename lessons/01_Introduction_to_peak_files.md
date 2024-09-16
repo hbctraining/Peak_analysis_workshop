@@ -283,7 +283,7 @@ metrics %>% filter(!is.na(peak_count)) %>%
 The non-redundant fraction of reads is the number of distinct uniquely mapping reads (i.e. after removing duplicates) divided by the total number of reads. It is a measure of library complexity. This value is 0-1, and ideally, we would want to see values close to 1. Generally, an NRF of 0.8 and higher indicates acceptable data. The ENCODE website also sets out standardized thresholds for this as well and those are summarized in the table below. In our plot, we use a green, orange, and red dashed line to represent Ideal, Compliant, and Acceptable NRF cutoffs, respectively.
 
 <p align="center">
-<img src="../img/nrf_table.png"  width="800">
+<img src="../img/nrf_table.png"  width="400">
 </p>
 
 ```
@@ -303,7 +303,7 @@ metrics %>%
 ```
 
 <p align="center">
-<img src="../img/nrf.png"  width="400">
+<img src="../img/nrf.png"  width="800">
 </p>
 
 All of our samples are at least acceptable, and hover around or surpass the compliant or ideal thresholds.
