@@ -261,22 +261,7 @@ Our samples have FRiPs in line with what we might expect for broad histone marks
 <img src="../img/frips.png"  width="800">
 </p>
 
-### Number of peaks
 
-We want to see a consistent number of peaks between our samples (we only have this metric for our antibody samples
-
-```
-metrics %>% filter(!is.na(peak_count)) %>%
-    ggplot(aes(x = sample,
-               y = peak_count, 
-               fill = antibody)) +
-    geom_bar(stat = "identity") +
-    coord_flip() +
-    scale_y_continuous(name = "Number of Peaks") +
-    scale_x_discrete(limits = rev) +
-    xlab("") +
-    ggtitle("Number of Peaks")
-```
 
 ### Non-redundant fraction (NRF)
 
@@ -307,6 +292,27 @@ metrics %>%
 </p>
 
 All of our samples are at least acceptable, and hover around or surpass the compliant or ideal thresholds.
+
+### Number of peaks
+
+Finally, we want to see a consistent number of peaks between our samples (we only have this metric for our antibody samples
+
+```
+metrics %>% filter(!is.na(peak_count)) %>%
+    ggplot(aes(x = sample,
+               y = peak_count, 
+               fill = antibody)) +
+    geom_bar(stat = "identity") +
+    coord_flip() +
+    scale_y_continuous(name = "Number of Peaks") +
+    scale_x_discrete(limits = rev) +
+    xlab("") +
+    ggtitle("Number of Peaks")
+```
+
+<p align="center">
+<img src="../img/num_peaks.png" width="800">
+</p>
 
 ### Summary
 
