@@ -120,12 +120,12 @@ The data set we are going to look at consists of 3 wild type (WT) and 3 c knocko
 
 ### loading in data and setting up environment
 
-First, we need to set up our environment by loading some useful packages to help us process our data. We also need to load our multiqc output file
+First, we need to set up our environment by loading some useful packages to help us process our data. We also need to load our `metrics.csv` file, which contains output from multiqc, some additional metrics we've calculated for you in advance, as well as basic metadata ####MAYBE JUST LOAD LIBRARIES AS NEEDED?
 
 ```
 library(tidyverse)
 
-metrics <- read.csv("./metrics.csv")
+metrics <- read.csv("data/metrics.csv")
 ```
 
 ### Total reads
@@ -188,6 +188,8 @@ The normalized strand cross-correlation coefficient is a representation of the q
 
 You can read detail more about how this coefficient is calculated [here](https://hbctraining.github.io/In-depth-NGS-Data-Analysis-Course/sessionV/lessons/CC_metrics_extra.html).
 
+Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating NSC [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
+
 ```
 metrics %>%
     ggplot(aes(x = sample,
@@ -219,6 +221,8 @@ This is the ratio of the fragment-length correlation value minus the background 
 
 You can read detail more about how this coefficient is calculated [here](https://hbctraining.github.io/In-depth-NGS-Data-Analysis-Course/sessionV/lessons/CC_metrics_extra.html).
 
+Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating RSC [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
+
 ```
 metrics %>%
     ggplot(aes(x = sample,
@@ -241,6 +245,8 @@ metrics %>%
 ### Fraction of reads in peaks (FRiP)
 
 This represents the fraction of mapped reads which are mapped to peaks (as opposed to elsewhere in the genome). This is only calculated for antibody samples in our data set. The expected fraction of reads in peaks will vary by protein. Histone marks, which usually have broader peaks, often have higher FRiPs than transcription factors, which usually have much narrower peaks.
+
+Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating FRiP [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
 
 ```
 metrics %>% filter(!is.na(frip)) %>%
@@ -266,6 +272,8 @@ Our samples have FRiPs in line with what we might expect for broad histone marks
 ### Non-redundant fraction (NRF)
 
 The non-redundant fraction of reads is the number of distinct uniquely mapping reads (i.e. after removing duplicates) divided by the total number of reads. It is a measure of library complexity. This value is 0-1, and ideally, we would want to see values close to 1. Generally, an NRF of 0.8 and higher indicates acceptable data. The ENCODE website also sets out standardized thresholds for this as well and those are summarized in the table below. In our plot, we use a green, orange, and red dashed line to represent Ideal, Compliant, and Acceptable NRF cutoffs, respectively.
+
+Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating NRF [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
 
 <p align="center">
 <img src="../img/nrf_table.png"  width="400">
@@ -295,7 +303,9 @@ All of our samples are at least acceptable, and hover around or surpass the comp
 
 ### Number of peaks
 
-Finally, we want to see a consistent number of peaks between our samples (we only have this metric for our antibody samples
+Finally, we want to see a consistent number of peaks between our samples (we only have this metric for our antibody samples.
+
+Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating number of peaks [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
 
 ```
 metrics %>% filter(!is.na(peak_count)) %>%
