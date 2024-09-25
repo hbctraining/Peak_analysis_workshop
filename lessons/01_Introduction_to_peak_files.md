@@ -84,11 +84,6 @@ A broadPeak (.broadPeak) file is very similar to a narrowPeak file, but it is BE
 
 A gappedPeak (.gappedPeak) file is a BED12+3 file which contains broad peaks as well as narrow peaks within the broad peaks. You can learn more about this format (and the format of the other files) on the [Encode website](https://genome.ucsc.edu/FAQ/FAQformat.html#format14)
 
-## Handling peak files and peak data
-
-Once we have our peak files, we can do some downstream processing, such as peak filtering, find consensus peaks between samples, perform QC, and carry out other downstream analyses and visualization. The type of peak processing and filtering you might do, such as removing peaks from black-listed regions, depends on the specific pipeline you are following. Another useful step is to create **consensus peaks**. Some pipelines, like the one we used to generate the data used in this course, filter reads in black-listed regions before calling peaks, rather than peaks in those regions afterwards, but either method is acceptable. Our pipeline also conveniently has automatically provided consensus peaks for us, but this can also be calculated independently. For more information on this type of filtering and processing and the tools you might use to perform them, see the **bedtools** and **Filtering peaks overlapping with blacklist regions** sections from this similar lesson from our [Chromatin Biology workshop](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md).
-
-####HAVE CODE SNIPPET HERE ABOUT FINDING CONSENSUS PEAKS ON THEIR OWN
 
 ## Quality Control
 
@@ -110,15 +105,8 @@ Some peak quality control can be done directly on peak files, but there are many
 >```
 ***
 
-####HAVE INSTRUCTIONS FOR MAKING METRICS.CSV???
 
-You can download the pre-generated multiqc report HERE, and the consensus peak file HERE.
-
-####DO WE NEED AN EXPLANATION OF THE DATA SET OR IS THAT PART OF THE PREREADING?
-
-The data set we are going to look at consists of 3 wild type (WT) and 3 c knockout (cKO -- WHAT IS CKO) samples. The original authors were looking at H3K27ac in mice (WHY) with and without WHATEVER CKO GENE IS. Each replicate has its own input sample
-
-### loading in data and setting up environment
+### Loading in data and setting up environment
 
 First, we need to set up our environment by loading some useful packages to help us process our data. We also need to load our `metrics.csv` file, which contains output from multiqc, some additional metrics we've calculated for you in advance, as well as basic metadata ####MAYBE JUST LOAD LIBRARIES AS NEEDED?
 
@@ -127,6 +115,8 @@ library(tidyverse)
 
 metrics <- read.csv("data/metrics.csv")
 ```
+
+Talk about the fact that this file was generated as aouput from nf-core +bcbioR (link to lesson which talks about this in more detail). As we work through this lesson, we will prpvide core or instruction on how you could compute the metrics outside of using these (or something comparable to it).
 
 ### Total reads
 
@@ -188,7 +178,12 @@ The normalized strand cross-correlation coefficient is a representation of the q
 
 You can read detail more about how this coefficient is calculated [here](https://hbctraining.github.io/In-depth-NGS-Data-Analysis-Course/sessionV/lessons/CC_metrics_extra.html).
 
-Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating NSC [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
+Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you 
+are running a different pipeline, you may need to calculate this statistic yourself.
+
+This is computed using phantompeakqualtools R package (its old and difficult to install). Give code to run it 
+
+You can find code for calculating NSC [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
 
 ```
 metrics %>%
@@ -248,6 +243,8 @@ This represents the fraction of mapped reads which are mapped to peaks (as oppos
 
 Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating FRiP [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
 
+This code exists: https://github.com/hbctraining/Peak_analysis_workshop/blob/main/scripts/calculate_frip.sh
+
 ```
 metrics %>% filter(!is.na(frip)) %>%
     ggplot(aes(x = sample,
@@ -261,7 +258,7 @@ metrics %>% filter(!is.na(frip)) %>%
     ggtitle("Fraction of reads in peaks")
 ```
 
-Our samples have FRiPs in line with what we might expect for broad histone marks, and they are fairly consistent.
+Our samples have FRiPs in line with what we might expect for narrow histone marks, and they are fairly consistent.
 
 <p align="center">
 <img src="../img/frips.png"  width="800">
@@ -274,6 +271,8 @@ Our samples have FRiPs in line with what we might expect for broad histone marks
 The non-redundant fraction of reads is the number of distinct uniquely mapping reads (i.e. after removing duplicates) divided by the total number of reads. It is a measure of library complexity. This value is 0-1, and ideally, we would want to see values close to 1. Generally, an NRF of 0.8 and higher indicates acceptable data. The ENCODE website also sets out standardized thresholds for this as well and those are summarized in the table below. In our plot, we use a green, orange, and red dashed line to represent Ideal, Compliant, and Acceptable NRF cutoffs, respectively.
 
 Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating NRF [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
+
+This might be using samtools/Picard on bam  (shell script) - WJG
 
 <p align="center">
 <img src="../img/nrf_table.png"  width="400">
@@ -306,6 +305,8 @@ All of our samples are at least acceptable, and hover around or surpass the comp
 Finally, we want to see a consistent number of peaks between our samples (we only have this metric for our antibody samples.
 
 Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating number of peaks [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
+
+Code snippet wc-l of narrowPeak files (might have header)
 
 ```
 metrics %>% filter(!is.na(peak_count)) %>%
