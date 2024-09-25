@@ -75,6 +75,21 @@ ggplot(peaks, aes(x = peak_rank, y = peak_enrichment, color = sample)) +
 
 Our data looks pretty consistent between samples until enrichment is low ####COMMENT ON MEANING BHIND THIS
 
+## Histogram of quality scores
+
+Here, we plot a histogram of peak signal values for each sample. This plot can be used to help determine a minimum value for peak enrichment that can be used for filtering. 
+
+```
+ggplot(peaks, aes(x = peak_enrichment, fill = .data[[params$factor_of_interest]])) + 
+  geom_histogram(aes(peak_enrichment)) +
+  scale_fill_cb_friendly() +
+  xlab("Peak enrichment")
+```
+
+####INSERT IMAGE HERE
+
+####WRITE NOTE ABOUT HOW OUR DATA LOOKS AND WHETHER WE SHOULD DO ANY FILTERING
+
 ## Principal Component Analysis (PCA)
 
 Principal Component Analysis (PCA) is a technique used to emphasize variation and bring out strong patterns in a dataset (dimensionality reduction). This is a very important technique used in the QC and analysis of ChIPseq.
@@ -139,9 +154,9 @@ p
 
 As expected given what we saw in the PCA plots, our samples cluster nicely by genotype. If we had more samples and plotted more metadata, we might also be able to see whether batch or other biological or technical factor affected the clustering, and on what level.
 
-## Histogram of quality scores
 
 
+####INSERT IMAGE HERE
 
 ***
 
