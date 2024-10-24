@@ -268,11 +268,27 @@ Our samples have FRiPs in line with what we might expect for narrow histone mark
 
 ### Non-redundant fraction (NRF)
 
-The non-redundant fraction of reads is the number of distinct uniquely mapping reads (i.e. after removing duplicates) divided by the total number of reads. It is a measure of library complexity. This value is 0-1, and ideally, we would want to see values close to 1. Generally, an NRF of 0.8 and higher indicates acceptable data. The ENCODE website also sets out standardized thresholds for this as well and those are summarized in the table below. In our plot, we use a green, orange, and red dashed line to represent Ideal, Compliant, and Acceptable NRF cutoffs, respectively.
+The non-redundant fraction of reads is the number of distinct uniquely mapping reads (i.e. after removing duplicates and unmapped) divided by the total number of reads. It is a measure of library complexity. This value is 0-1, and ideally, we would want to see values close to 1. Generally, an NRF of 0.8 and higher indicates acceptable data. The ENCODE website also sets out standardized thresholds for this as well and those are summarized in the table below. In our plot, we use a green, orange, and red dashed line to represent Ideal, Compliant, and Acceptable NRF cutoffs, respectively.
 
-Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating NRF [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
+Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. 
 
-This might be using samtools/Picard on bam  (shell script) - WJG
+<details>
+<summary>Click here to get more information on calculating NRF yourself</summary>
+In order to determine the number of uniquely mapping reads, we can run <code>Picard</code>'s <code>MarkDuplicates</code> function. It will mark duplicate reads and also output a metrics file containing the number of total reads, unmapped reads and duplicated reads. The command to run this is:</br></br>
+<pre>
+&#35; Mark duplicates and create metrics file
+java -jar picard.jar MarkDuplicates \
+  --INPUT &lt;SORTED_BAM_FILE&gt; \
+  --OUTPUT &lt;REMOVE_DUPLICATES_BAM_FILE&gt; \
+  --METRICS_FILE &lt;METRICS_FILE&gt;
+</pre></br>
+From this we can derive our NRF:</br>
+<p align="center">
+<img src="https://latex.codecogs.com/svg.image?\frac{\left(TotalReads-UnmappedReads-DuplicateReads\right)}{TotalReads}" />
+</p>
+</details>
+
+Below are the ENCODE guidelines for NRF:
 
 <p align="center">
 <img src="../img/nrf_table.png"  width="400">
