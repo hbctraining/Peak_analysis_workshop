@@ -80,13 +80,7 @@ dbObj=dba.count(dbObj, bParallel=FALSE) # This is the most computationally inten
 
 ```
 
-First step in the pipeline is to read in the metadata that we prepared. The second step involves creating the diffbind object. We do that using `dba` function. This function takes the metadata as `sampleSheet` and `scoreCol` referes to the peak singal score in the peak files. If used MACS software, the scores are generally in the 5th column.
-
-After creating the dba object, next is to filter out the blacklists and greylists regions. Which are the problematic regions ###DEFINE PROBLEMATIC### in the genome. `Blacklist` regions for many reference genomes have been identified as part of the ENCODE project and can be accessed through the `dba.blacklist()` function in DiffBind. If the control samples are available, one can prepare regions to be excluded specific to the experiment. Those are called `Greylists` using the `GreyListChIP` package.
-
-### MAYBE A LITTLE MORE ABOUT BLACKLIST AND GREYLIST FROM OLD MATERIAL###
-
-We have ran our data through nf-core pipeline, which employs blacklist removal in its pipeline so we are skipping this here. 
+First step in the pipeline is to read in the metadata that we prepared. The second step involves creating the diffbind object. We do that using `dba` function. This function takes the metadata as `sampleSheet` and `scoreCol` referes to the peak singal score in the peak files. If used MACS software, the scores are generally in the 5th column. 
 
 ## Affinity binding matrix
 
@@ -165,12 +159,174 @@ dba.plotHeatmap(dbObj, ColAttributes = DBA_TISSUE,
 [correlation_heatmap](../img/correlation_heatmap.png)
 
 
+In our data, we see that the replicates appear to cluster together, which is what we would hope for. Although there is variability between the replicates, the largest amount of variability can be attributed to differences between the two groups.
+
 What do you think about sample concordance?
 Were these plots helpful?
 Discuss about other few possible scenario and what to do in those cases?
 
 
 
+## Differential binding affinity analysis
+
+The core functionality of DiffBind is the differential binding affinity analysis, which enables binding sites to be identified that are statistically significantly differentially bound between sample groups. DiffBind uses DESeq2 for differential binding analysis by default. Input substraction and library-size normalization are set by default in the DiffBind pipeline. We also have option to use edgeR within DiffBind. Each tool will assign a p-value and FDR to each candidate binding site indicating confidence that they are differentially bound.
+
+
+### Establishing a contrast
+
+Before running the differential enrichment analysis, we need to tell DiffBind which samples we want to compare to one another. In our case we only have one factor of interest which is the Condition (WT vs cKO). Contrasts are set up using the dba.contrast function, as follows:
+
+```{r}
+dbObj <- dba.contrast(dbObj, categories = DBA_CONDITION)
+dbObj
+```
+
+If there are only two replicates in any comparison class we need to specify option `minMembers = 2`
+
+If we need to explicitly define a reference class we can do so as below:
+
+```{r}
+dbObj <- dba.contrast(dbObj, reorderMeta = list(Condition="WT"))
+dbObj
+```
+
+### Differential analysis
+Now we can perform differential analysis using `dba.analyze()` function. By default this function will also run blacklist filtering and greylist filtering. These are the problematic regions ###DEFINE PROBLEMATIC### in the genome. 
+Note: 
+  * **Blacklists:** are pre-defined lists of regions specific to a reference genome that are   known to be problematic. The best known lists have been identified as part of the ENCODE     project.
+  * **Greylists:** are specific to a ChIP-seq experiment, and are derived from the controls    generated as part of the experiment. The idea is to identify anomalous regions where a       disproportionate degree of signal is present. These regions can then be excluded from        subsequent analysis.
+
+`Blacklist` regions for many reference genomes identified as part of the ENCODE project can be accessed through the `dba.blacklist()` function in DiffBind. If the control samples are available, one can prepare regions to be excluded specific to the experiment. Those are called `Greylists` using the `GreyListChIP` package.
+
+We have ran our data through nf-core pipeline, which employs blacklist removal in its pipeline so we are skipping this here. We can run differential analysis as below:
+
+```{r}
+dbObj <- dba.analyze(dbObj, method = DBA_ALL_METHODS, bGreylist = FALSE, bBlacklist = FALSE)
+```
+Extract summary of the analysis with `dba.show()` function. We are using the default, 0.05 as the cutoff threshold for multiple test correction for significance test.
+
+
+```{r}
+de_summary <- dba.show(dbObj, bContrasts = T, th=0.05)
+de_summary
+```
+
+This appears as though DESeq2 is a bit more stringent in our analysis and results in fewer peaks compared to edgeR.
+
+Exercise:
+
+The default threshold is padj < 0.05. How many regions are differentially bound between Nanog and Pou5f1? How does this change with a more stringent threshold of 0.01? (HINT: use th=0.01)
+
+## Visualization
+
+### Overlaps of differentially bound sites in two methods
+
+```{r}
+dba.plotVenn(dbObj, contrast = 1, method = DBA_ALL_METHODS)
+```
+It shows that the differentially bound sites detected by DESeq2 is a subset of those detected by edgeR.
+
+### PCA with differentially bound sites
+
+Try plotting a PCA but this time only use the regions that were identified as significant by DESeq2 using the code below.
+
+```{r}
+dba.plotPCA(dbObj, contrast=1, method=DBA_DESEQ2, attributes=DBA_FACTOR, label=DBA_ID)
+```
+
+Exercise:
+Modify the code above so that you only plot a PCA using the regions identified as significant by edgeR.
+
+
+### Venn diagrams
+We can visualize the overlaps between different sets of peaks. for example, among the differentially bound sites in a venn diagram. We can see the differences between the "Gain" sites (peaks with increase binding enrichment in the cKO vs WT) and the "Loss" sites (with lower enrichment in cKO vs WT).
+
+```{r}
+dba.plotVenn(dbObj, contrast = 1, bDB = TRUE, bGain = TRUE, bLoss = TRUE, bAll = FALSE)
+```
+
+### IMAGE ###
+If we had multiple constrasts we could specify the specific number of contrast with contrast option. Here we have only one contrast so contrast is set as = 1.
+
+### Correlation heatmap
+
+We can plot a corrrelation heatmap with differentially bound sites (882) from the analysis.
+
+```{r}
+plot(dbObj, contrast=1)
+```
+
+### MA plot
+
+MA plots show the relationship between the overall binding level at each site and the magnitude of the change in binding enrichment between conditions, as well as the effect of normalization on data. In the plot below, each point represents a binding site, with 882 points in magenta representing sites identified as differnetially bound. There is a blue horizongal line through the origin (0 logFoldChange), as well as a horizontal red curve representing a non-liner loess fit showing the underlying relationship between coverage levels and fold changes.
+
+### IMAGE ###
+
+### Volcano plots
+
+Similar to MA plots, volcano plots also highlight significantly differentially bound sites and show their fold changes.
+
+```{r}
+dba.plotVolcano(dbObj, contrast = 1)
+```
+
+### IMAGE ###
+
+### Binding affinity Heatmaps
+
+Heatmap below shows the patterns of binding affinity in the differentially bound sites. The affinities and clustering of the differentially bound sites are in rows and sample clustering in columns. The normalized counts have been row scaled and plotted with red/green heatmap color palette.
+
+```{r}
+hmap <- colorRampPalette(c("red", "black", "green"))(n = 13)
+readscores <- dba.plotHeatmap(dbObj, correlations = FALSE,
+                              scale="row", colScheme = hmap,)
+```
+### IMAGE ###
+
+
+## Extracting results
+
+To extract the full results from DESeq2 we use dba.report:
+
+```{r}
+res_deseq <- dba.report(dbObj, method=DBA_DESEQ2, contrast = 1, th=1)
+```
+These results files contain the genomic coordinates for all consensus sites and statistics for differential enrichment including fold-change, p-value and FDR.
+
+```{r}
+res_deseq
+```
+
+Before writing to file we need to convert it to a data frame so that genomic coordinates get written as columns and not GRanges.
+
+```{r}
+#Write to a file
+out <- as.data.frame(res_deseq)
+write.table(out, file="results/cKO_vs_WT_deseq2.txt", sep="\t", quote=F, row.names=F)
+```
+
+
+Additionally, we will want to create BED files for each set of significant regions identified by DESeq2, separating them based on the gain or loss of enrichment. We will write these regions to file and use as input for downstream visualization.
+
+```{r}
+# Create bed files for each keeping only significant peaks (p < 0.05)
+
+cKO_enrich <- out %>% 
+  filter(FDR < 0.05 & Fold > 0) %>% 
+  select(seqnames, start, end)
+  
+# Write to file
+write.table(cKO_enrich, file="cKO_enriched.bed", sep="\t", quote=F, row.names=F, col.names=F)
+
+WT_enrich <- out %>% 
+  filter(FDR < 0.05 & Fold < 0) %>% 
+  select(seqnames, start, end)
+
+# Write to file
+write.table(WT_enrich, file="WT_enriched.bed", sep="\t", quote=F, row.names=F, col.names=F)
+```
+
+NOTE: BED files cannot contain headers and so we have added the col.names=F argument to address that. Additionally, we took only the first three columns from the results (genomic coordinates) to adhere to a minimal BED file format.
 
 
 [old material](https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/OLD_diffbind_differential_peaks.md)
