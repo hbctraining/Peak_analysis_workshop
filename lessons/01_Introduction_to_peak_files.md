@@ -26,10 +26,12 @@ Baizabal et al. sought to understand how chromatin-modifying enzymes function in
 * Describe the metadata
 
 ### Setting up 
-Describe the project download and show a screenshot of RStudio.
+Describe the project download and instrcutions on how to open it. Show a screenshot of RStudio.
 
-Discuss the files/folders present in the project.
 
+
+### Data management best practices
+Discuss the files/folders present in the project and need for organization.
 
 
 ## What is a peak?
@@ -101,6 +103,8 @@ A broadPeak (.broadPeak) file is very similar to a narrowPeak file, but it is BE
 ### gappedPeak
 
 A gappedPeak (.gappedPeak) file is a BED12+3 file which contains broad peaks as well as narrow peaks within the broad peaks. You can learn more about this format (and the format of the other files) on the [Encode website](https://genome.ucsc.edu/FAQ/FAQformat.html#format14)
+
+### bigWigs?
 
 
 ***
