@@ -1,13 +1,13 @@
 # Workshop Schedule
 
-> **NOTE:** The *Basic Data Skills* [Introduction to R]() workshop is a prerequisite.
+> **NOTE:** The *Basic Data Skills* [Introduction to R](https://hbctraining.github.io/Intro-to-R-flipped/) workshop is a prerequisite. If you would like some practice wih R prior to taking this workshop, please work through this [R refresher lesson](https://hbctraining.github.io/DGE_workshop_salmon_online/lessons/R_refresher.html).
 
 
 ## Pre-reading:
 
 * Please **study the contents** and **work through all the exercises** within the following lessons:
-  * [Peak calling overview]()
-  * [R refresher](https://hbctraining.github.io/DGE_workshop_salmon_online/lessons/R_refresher.html)
+  * [Workflow overview: From sequenced reads to peaks](../lessons/00a_peak_calling_workflow_review.md)
+  * [Existing workflows for ChIP-seq analysis](../lessons/00b_peak_calling_with_nfcore.md)
   * [Download R project]()
  
   
@@ -15,17 +15,16 @@
 
 | Time |  Topic  | Instructor |
 |:-----------:|:----------:|:--------:|
-| 09:30 - 09:45 | [Workshop Introduction]() |  |
-| 09:45 - 11:00 |  |  |
+| 09:30 - 09:45 | [Workshop Introduction]() | Meeta |
+| 09:45 - 11:00 | [Understanding peak data](../lessons/01_Introduction_to_peak_files.md)  |  |
 | 11:00- 11:05 | Break|  |
-| 11:05 - 12:00 | |  |
-
+| 11:05 - 12:00 | [Assessing peak quality metrics](../lessons/02a_peak_quality_metrics_assesment.md) |  |
 
 
 ### Before the next class:
 
 I. Please **study the contents** and **work through all the code** within the following lessons:
-   1. [Self-learnin lesson]()
+   1. [Quantitative assemement of peak concordance](../lessons/02b_peak_concordance_replicates.md)
       <details>
        <summary><i>Click here for a preview of this lesson</i></summary>
          <br>A two sentence summary of the lesson.... <br><br>In this lesson, we will:<br>
@@ -34,7 +33,7 @@ I. Please **study the contents** and **work through all the code** within the fo
         </details>
    
 
-   2. [Self-learning lesson #2]()
+   2. [Similarity across replicates using peak overlaps](../lessons/03_peak_overlaps.md)
       <details>
        <summary><i>Click here for a preview of this lesson</i></summary>
          <br>A two sentence summary of the lesson.... <br><br>In this lesson, we will:<br>
@@ -42,7 +41,6 @@ I. Please **study the contents** and **work through all the code** within the fo
              - Point 2<br><br>
         </details>
         
-   
 
 3. **Complete the exercises**:
    * Each lesson above contains exercises; please go through each of them.
@@ -56,16 +54,16 @@ I. Please **study the contents** and **work through all the code** within the fo
 
 | Time |  Topic  | Instructor |
 |:-----------:|:----------:|:--------:|
-| 09:30 - 09:45 | Self-learning review |  |
-| 09:45 - 11:00 |  |  |
-| 11:00- 11:05 | Break|  |
-| 11:05 - 12:00 | |  |
+| 09:30 - 10:30 | Self-learning review |  |
+| 10:30 - 11:15 | [Peak annotation and visualization using ChIPseeker](../lessons/04_peak_annotation_and_visualization.md)|  |
+| 11:15- 11:25 | Break|  |
+| 11:25 - 12:00 | [Peak visualization using IGV](05_peak_visualization_with_igv.md)|  |
 
 
 ### Before the next class:
 
 I. Please **study the contents** and **work through all the code** within the following lessons:
-   1. [Self-learnin lesson]()
+   1. [Differential enrichment analsysis using DiffBind](../lessons/06_diffbind_analysis.md)
       <details>
        <summary><i>Click here for a preview of this lesson</i></summary>
          <br>A two sentence summary of the lesson.... <br><br>In this lesson, we will:<br>
@@ -74,7 +72,7 @@ I. Please **study the contents** and **work through all the code** within the fo
         </details>
    
 
-   2. [Self-learning lesson #2]()
+   2. [Annotation and functional analysis of DE regions](../lessons/07_DE_annotation_and_enrichment_analysis.md)
       <details>
        <summary><i>Click here for a preview of this lesson</i></summary>
          <br>A two sentence summary of the lesson.... <br><br>In this lesson, we will:<br>
@@ -95,10 +93,11 @@ I. Please **study the contents** and **work through all the code** within the fo
 
 | Time |  Topic  | Instructor |
 |:-----------:|:----------:|:--------:|
-| 09:30 - 09:45 | Self-learning review |  |
-| 09:45 - 11:00 |  |  |
-| 11:00- 11:05 | Break|  |
-| 11:05 - 12:00 | |  |
+| 09:30 - 10:30 | Self-learning review |  |
+| 10:30 - 11:15 | [Motif analysis/discovery]() |  |
+| 11:15- 11:25 | Break|  |
+| 11:05 - 11:45 | Discussion Q&A |  |
+| 11:45 - 12:00 | [Wrap-up]() |  |
 
 
 ## Answer keys
