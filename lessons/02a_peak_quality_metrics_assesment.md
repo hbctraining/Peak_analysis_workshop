@@ -31,10 +31,10 @@ library(tidyverse)
 
 ### Load data
 
-The input data is the `metrics.csv` file whcih is located in the .... folder in your working directory. This file is a product of the bcbioR package described in lesson 00b. It is simply a file in which each row corresponds to a sample, and each column contains information for a quality metric. If you are not using nfcore you can very easily create this file by:
+Locate the input data called `metrics.csv` which is located in the .... folder in your working directory. We have created for you file which compiles all the metrics for each of the samples in the dataset. This file is a product of the bcbioR package described in lesson 00b. It is a csv in which each row corresponds to a sample, and each column contains information for a quality metric. 
 
-1. create a metadata file
-2. running the commands for each metric and adding the values in as columns
+ For each metric we will describe what it represents and how it is calculated. We provide code for you such that you may use it compute similar metrics for your own dataset, and create your own csv.
+
 
 ```
 ## Load file
@@ -44,6 +44,8 @@ metrics <- read.csv("data/metrics.csv")
 ### Total reads
 
 One of the most basic quality evaluations we can make for any genomic (or transcriptomic) data set is to look at the total number of reads in each sample. Ideally, we want to see consistency across samples, and especially across any treatment groups we might compare. We also want to see a minimum of about 20 million reads (represented by the black dashed line).
+
+To get total number of reads you would run ___ command on your BAM files.
 
 ```
 metrics %>%
@@ -62,12 +64,14 @@ metrics %>%
 This data set isn't perfect -- while most of our samples have close to or more than 20 million reads, we have some variation between samples. In particular, some of our our input samples, especially two of the WT samples, have many more reads than the other samples. Sometimes, if input reads have many more reads in peaks than their antibody counterparts, this can skew or reduce the number of peaks identified in those samples. However if these reads are scattered throughout the genome, they may just be background noise and the sample was simply sequenced more deeply. By looking at other quality control metrics, we can determine how this might affect the data set and, if necessary, take steps to reduce the impact of this kind of variability, such as through down-sampling.
 
 <p align="center">
-<img src="../img/total_reads.png"  width="800">
+<img src="../img/total_reads.png"  width="600">
 </p>
 
 ### Mapping rate
 
-Next, we will look at mapping rate, which is the number of reads that were able to successfully be mapped to a unique region of the reference genome, out of the total number of reads (multi-mapped reads were excluded in our pipeline). We want to see consistent mapping rates between samples and over 70% mapping (the black dashed line)
+Next, we will look at mapping rate, which is the number of reads that were able to successfully be mapped to a unique region of the reference genome, out of the total number of reads (multi-mapped reads were excluded in our pipeline). We want to see consistent mapping rates between samples and over 70% mapping (the black dashed line).
+
+To get mapping rates you would run ___ command on your BAM files.
 
 ```
 metrics %>%
@@ -86,12 +90,11 @@ metrics %>%
 Our samples all have a mapping rate well above the minimum, and the samples are consistent.
 
 <p align="center">
-<img src="../img/mapped_rate.png"  width="800">
+<img src="../img/mapped_rate.png"  width="600">
 </p>
 
-### Normalized strand cross-correlation coefficient (NSC)
 
-###SOMEONE PLEASE CHECK IF WE WANT TO ADD MORE DETAIL ABOUT HOW THIS IS CALCULATED FROM THE LINK, I"M NOT SURE I UNDERSTOOD THE EXPLANATION IN THE LINK
+### Normalized strand cross-correlation coefficient (NSC)
 
 The normalized strand cross-correlation coefficient is a representation of the quality of signal to noise for the peaks of each sample. 
 
