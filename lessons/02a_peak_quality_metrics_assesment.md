@@ -20,7 +20,16 @@ In our peak files we have genomic coordinates identifying regions of the genome 
 **INSERT WORKFLOW IMAGE HERE?**
 
 
-### Loading data
+### Load libraries
+
+First we need to set up our environment by loading some useful packages to help us process our data. 
+
+```
+# Load libraries - add all libraries here
+library(tidyverse)
+```
+
+### Load data
 
 The input data is the `metrics.csv` file whcih is located in the .... folder in your working directory. This file is a product of the bcbioR package described in lesson 00b. It is simply a file in which each row corresponds to a sample, and each column contains information for a quality metric. If you are not using nfcore you can very easily create this file by:
 
@@ -30,13 +39,6 @@ The input data is the `metrics.csv` file whcih is located in the .... folder in 
 ```
 ## Load file
 metrics <- read.csv("data/metrics.csv")
-```
-
-Now we need to set up our environment by loading some useful packages to help us process our data. 
-
-```
-# Load libraries
-library(tidyverse)
 ```
 
 ### Total reads
