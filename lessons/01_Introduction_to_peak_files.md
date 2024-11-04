@@ -28,6 +28,8 @@ Baizabal et al. sought to understand how chromatin-modifying enzymes function in
 ### Setting up 
 Describe the project download and instrcutions on how to open it. Show a screenshot of RStudio.
 
+Open up a script file. Add a comment header and save it, give it a filename.
+
 
 
 ### Data management best practices
