@@ -54,6 +54,9 @@ In order to determine the total number of reads, we can run ... The command to r
 &#35;
  Add code here
 </pre></br>
+
+Note that samtools is a command-line tool and you will need to run this in an environment where the tool is installed.
+ 
 </details>
 
 
@@ -88,6 +91,8 @@ In order to determine the mapping rate, we can run ... The command to run this i
 &#35;
  Add code here
 </pre></br>
+
+Add a note here about the resulting data?
 </details>
 
 ```
@@ -110,23 +115,64 @@ Our samples all have a mapping rate well above the minimum, and the samples are 
 <img src="../img/mapped_rate.png"  width="600">
 </p>
 
+### Strand cross-correlation
+A high-quality ChIP-seq experiment will produce significant clustering of enriched DNA sequence tags/reads at locations bound by the protein of interest; the expectation is that we can observe a bimodal enrichment of reads (sequence tags) on both the forward and the reverse strands.
+
+***How are the Cross-Correlation scores calculated?***
+
+Using a small genomic window as an example, let's walk through the details of the cross-correlation below. It is important to note that the cross-correlation metric is computed as the **Pearson's linear correlation between coverage for each complementary base** (i.e. on the minus strand and the plus strands), by systematically shifting minus strand by k base pairs at a time. This shift is performed over and over again to obtain the correlations for a given area of the genome.
+
+***Plot 1:** At strand shift of zero, the Pearson correlation between the two vectors is 0.*
+
+<p align="center">
+<img src="../img/cc1-new.png" width ="500">
+</p>
+
+***Plot 2:** At strand shift of 100bp, the Pearson correlation between the two vectors is 0.389.*
+
+<p align="center">
+<img src="../img/cc2-new.png" width ="500">
+</p>
+
+***Plot 3:** At strand shift of 175bp, the Pearson correlation between the two vectors is 0.831.*
+
+<p align="center">
+<img src="../img/cc3-new.png" width ="500">
+</p>
+
+When this process is completed we will have a table of values mapping each base pair shift to a Pearson correlation value. ***These Pearson correlation values are computed for every peak for each chromosome and values are multiplied by a scaling factor and then summed across all chromosomes.***
+
+In the end we will have a cross-correlation value for each shift value, and they can be plotted against each other to generate a cross-correlation plot as shown below. The cross-correlation plot typically produces two peaks: a peak of enrichment corresponding to the predominant fragment length (highest correlation value) and a peak corresponding to the read length (“phantom” peak).
+
+<p align="center">
+<img src="../img/cc-example.png" width ="400">
+</p>
+
+There are **two metrics that are computed using the cross-correlation** described below. These metrics are a representation of the **quality of signal to noise** for the peaks of each sample. This is typically only computed for the IP sample and it is derived without dependence on prior determination of enriched regions/peaks.
+
+<details>
+<summary><b>How do we compute strand cross-correlation metrics?</b></summary>
+This is computed using phantompeakqualtools R package. We have a setup for you if youare usin O2 ... The command to run this is:</br></br>
+<pre>
+&#35;
+ Add code here
+</pre></br>
+
+This code will generate the cross-correlation plot along with both NSC and RSC scores (described below).
+</details>
 
 ### Normalized strand cross-correlation coefficient (NSC)
 
-The normalized strand cross-correlation coefficient is a representation of the quality of signal to noise for the peaks of each sample. 
+ _The NSC is the ratio of the maximal cross-correlation value (which occurs at strand shift equal to fragment length) divided by the background cross-correlation (minimum cross-correlation value over all possible strand shifts)._
 
-* higher NSC values indicate more enrichment (better signal:noise)
-* low signal-to-noise: NSC values < 1.1
-* minimum possible NSC value: 1 (no enrichment)
+* Higher NSC values indicate more enrichment (better signal:noise)
+* Low signal-to-noise: NSC values < 1.1
+* Minimum possible NSC value: 1 (no enrichment)
 
-You can read detail more about how this coefficient is calculated [here](https://hbctraining.github.io/In-depth-NGS-Data-Analysis-Course/sessionV/lessons/CC_metrics_extra.html).
+> NOTE: This metric is sensitive to technical effects (i.e. high quality antibodies will generate higher scores) and and biological effects (i.e. narrow peaks typically score higer than broad peaks).
 
-Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you 
-are running a different pipeline, you may need to calculate this statistic yourself.
 
-This is computed using phantompeakqualtools R package (its old and difficult to install). Give code to run it 
-
-You can find code for calculating NSC [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
+##FILTER DATA TO ONLY PLOT IP SAMPLES##
 
 ```
 metrics %>%
@@ -141,7 +187,7 @@ metrics %>%
     ggtitle("Normalized Strand Cross-Correlation")
 ```
 
-In our data, you can see that our antibody samples all have NSC values >1, while our input samples all have the minimum value of 1. This reflects the fact that our antibody samples have real signal (peaks), while our input samples are a representation of background noise.
+In our data, you can see that our antibody samples all have NSC values >1. 
 
 <p align="center">
 <img src="../img/nsc.png"  width="800">
@@ -149,17 +195,13 @@ In our data, you can see that our antibody samples all have NSC values >1, while
 
 ### Relative strand cross-correlation coefficient (RSC)
 
-####CAN WE GET A BETTER TAKEAWAY OF WHAT THIS MEANS?
+_This is the ratio of the fragment-length correlation value minus the background (minimum) cross-correlation value, divided by the phantom-peak cross-correlation value minues the background cross-correlation value._
 
-This is the ratio of the fragment-length correlation value minus the background (minimum) cross-correlation value, divided by the phantom-peak cross-correlation value minues the background cross-correlation value.
+* High enrichment: RSC values > 1
+* Low signal-to-noise: RSC values < 0.8
+* Minimum possible RSC value: 0 (no enrichment)
 
-* high enrichment: RSC values > 1
-* low signal-to-noise: RSC values < 0.8
-* minimum possible RSC value: 0 (no enrichment)
-
-You can read detail more about how this coefficient is calculated [here](https://hbctraining.github.io/In-depth-NGS-Data-Analysis-Course/sessionV/lessons/CC_metrics_extra.html).
-
-Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating RSC [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
+##FILTER DATA TO ONLY PLOT IP SAMPLES##
 
 ```
 metrics %>%
@@ -174,7 +216,6 @@ metrics %>%
     ggtitle("Relative Strand Cross-Correlation")
 ```
 
-####THIS PLOT MAKES NO SENSE IT IS NOT EVEN ON THE CORRECT SCALE I"M NOT SURE WHATS GOING ON
 
 <p align="center">
 <img src="../img/rsc.png"  width="800">
@@ -184,7 +225,15 @@ metrics %>%
 
 This represents the fraction of mapped reads which are mapped to peaks (as opposed to elsewhere in the genome). This is only calculated for antibody samples in our data set. The expected fraction of reads in peaks will vary by protein. Histone marks, which usually have broader peaks, often have higher FRiPs than transcription factors, which usually have much narrower peaks.
 
-Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating FRiP [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
+<details>
+<summary><b>Click here for the code to compute FrIP for you own samples</b></summary>
+In order to determine the FrIP, we can run ... The command to run this is:</br></br>
+<pre>
+&#35;
+ Add code here
+</pre></br>
+
+</details>
 
 This code exists: https://github.com/hbctraining/Peak_analysis_workshop/blob/main/scripts/calculate_frip.sh
 
@@ -212,8 +261,6 @@ Our samples have FRiPs in line with what we might expect for narrow histone mark
 ### Non-redundant fraction (NRF)
 
 The non-redundant fraction of reads is the number of distinct uniquely mapping reads (i.e. after removing duplicates and unmapped) divided by the total number of reads. It is a measure of library complexity. This value is 0-1, and ideally, we would want to see values close to 1. Generally, an NRF of 0.8 and higher indicates acceptable data. The ENCODE website also sets out standardized thresholds for this as well and those are summarized in the table below. In our plot, we use a green, orange, and red dashed line to represent Ideal, Compliant, and Acceptable NRF cutoffs, respectively.
-
-Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. 
 
 <details>
 <summary><b>Click here for the code to compute NRF values from your own data</b></summary>
@@ -261,11 +308,7 @@ All of our samples are at least acceptable, and hover around or surpass the comp
 
 ### Number of peaks
 
-Finally, we want to see a consistent number of peaks between our samples (we only have this metric for our antibody samples.
-
-Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. You can find code for calculating number of peaks [here] (####INSERT LINK OR DROPDOWN TO CODE SNIPPET)
-
-Code snippet wc-l of narrowPeak files (might have header)
+Finally, we want to see a consistent number of peaks between our samples (we only have this metric for our antibody samples). This is computed by taking the narrowPeak files for each sample and counting the total number of lines in it (as each corresponds to a new peak that was called). We can do this on the command-line using `wc -l` or simply opening each file manually.
 
 ```
 metrics %>% filter(!is.na(peak_count)) %>%
