@@ -33,7 +33,9 @@ library(tidyverse)
 
 Locate the input data called `metrics.csv` which is located in the .... folder in your working directory. We have created for you file which compiles all the metrics for each of the samples in the dataset. This file is a product of the bcbioR package described in lesson 00b. It is a csv in which each row corresponds to a sample, and each column contains information for a quality metric. 
 
- For each metric we will describe what it represents and how it is calculated. We provide code for you such that you may use it compute similar metrics for your own dataset, and create your own csv.
+ For each metric we will describe what it represents and how it is calculated. We provide code for you such that you may use it compute similar metrics for your own dataset, and create your own csv. 
+ 
+ > **Note that the majority of the code we provide is for command-line tools, not R.** If you are attempting to run this on your own data it may be beneficial to run this on your local high performac compute cluster where these tools are commonly pre-installed for you.
 
 
 ```
@@ -45,7 +47,15 @@ metrics <- read.csv("data/metrics.csv")
 
 One of the most basic quality evaluations we can make for any genomic (or transcriptomic) data set is to look at the total number of reads in each sample. Ideally, we want to see consistency across samples, and especially across any treatment groups we might compare. We also want to see a minimum of about 20 million reads (represented by the black dashed line).
 
-To get total number of reads you would run ___ command on your BAM files.
+<details>
+<summary><b>Click here for the code to compute total reads from your own data</b></summary>
+In order to determine the total number of reads, we can run ... The command to run this is:</br></br>
+<pre>
+&#35;
+ Add code here
+</pre></br>
+</details>
+
 
 ```
 metrics %>%
@@ -71,7 +81,14 @@ This data set isn't perfect -- while most of our samples have close to or more t
 
 Next, we will look at mapping rate, which is the number of reads that were able to successfully be mapped to a unique region of the reference genome, out of the total number of reads (multi-mapped reads were excluded in our pipeline). We want to see consistent mapping rates between samples and over 70% mapping (the black dashed line).
 
-To get mapping rates you would run ___ command on your BAM files.
+<details>
+<summary><b>Click here for the code to compute mapping rate from your own data</b></summary>
+In order to determine the mapping rate, we can run ... The command to run this is:</br></br>
+<pre>
+&#35;
+ Add code here
+</pre></br>
+</details>
 
 ```
 metrics %>%
@@ -87,7 +104,7 @@ metrics %>%
     geom_hline(yintercept=70, color = "black", linetype = "dashed", linewidth=.5)
 ```
 
-Our samples all have a mapping rate well above the minimum, and the samples are consistent.
+Our samples all have a mapping rate well above the minimum, and the samples are consistent across the dataset.
 
 <p align="center">
 <img src="../img/mapped_rate.png"  width="600">
@@ -199,7 +216,7 @@ The non-redundant fraction of reads is the number of distinct uniquely mapping r
 Thanks to our nf-core/bcbioR pipeline, our `metrics` object already has this data ready to go. However, if you are running a different pipeline, you may need to calculate this statistic yourself. 
 
 <details>
-<summary>Click here to get more information on calculating NRF yourself</summary>
+<summary><b>Click here for the code to compute NRF values from your own data</b></summary>
 In order to determine the number of uniquely mapping reads, we can run <code>Picard</code>'s <code>MarkDuplicates</code> function. It will mark duplicate reads and also output a metrics file containing the number of total reads, unmapped reads and duplicated reads. The command to run this is:</br></br>
 <pre>
 &#35; Mark duplicates and create metrics file
