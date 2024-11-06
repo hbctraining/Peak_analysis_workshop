@@ -451,11 +451,6 @@ write.table(WT_enrich, file="WT_enriched.bed", sep="\t", quote=F, row.names=F, c
 NOTE: BED files cannot contain headers and so we have added the col.names=F argument to address that. Additionally, we took only the first three columns from the results (genomic coordinates) to adhere to a minimal BED file format.
 
 
-[old material](https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/OLD_diffbind_differential_peaks.md)
-- Needs significant updating due to updates to diffbind
-- Go through entire workflow; share dbObj with them because we will compute the affinity binding matrix on cluster (provide code and script)
-- Some Viz such as MA plots, volcano and heatmaps
-
 
 ***
 
