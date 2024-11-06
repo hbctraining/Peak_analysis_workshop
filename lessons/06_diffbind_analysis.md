@@ -195,7 +195,10 @@ By default dba.plotPCA() uses log2 values of the read counts from each samples.
 ```{r}
 dba.plotPCA(dbObj, attributes=DBA_CONDITION, label=DBA_ID, score = DBA_SCORE_NORMALIZED)
 ```
-[pca.plot](../img/pca.plot.png)
+<p align="center">
+<img src="../img/pca.plot.png"  width="600">
+</p>
+
 
 PC1 shows the major source of variation in the data which is 32% in our case. And we see that WT and KO samples are separated in PC1 showing that the major source of variation in our dataset is from the difference in WT and KO condition. We can also see that Replicate 3 in WT samples and Replicate 2 in cKO samples shows more variation compared to other two replicate in PC2. PC2 has variation of 22%
 
@@ -207,7 +210,9 @@ dba.plotHeatmap(dbObj, ColAttributes = DBA_TISSUE,
                 score = DBA_SCORE_NORMALIZED)
 ```
 
-[correlation_heatmap](../img/correlation_heatmap.png)
+<p align="center">
+<img src="../img/correlation_heatmap.png"  width="600">
+</p>
 
 
 In our data, we see that the replicates cluster together, which is what we would hope for. Although there is variability between the replicates, the largest amount of variability can be attributed to differences between the two groups.
@@ -290,7 +295,10 @@ The default threshold is padj < 0.05. How many regions are differentially bound 
 ```{r}
 dba.plotVenn(dbObj, contrast = 1, method = DBA_ALL_METHODS)
 ```
-[venndiagram](../img/venn_deseq2_edgeR.png)
+<p align="center">
+<img src="../img/venn_deseq2_edgeR.png"  width="600">
+</p>
+
 
 It shows that the differentially bound sites detected by DESeq2 is a subset of those detected by edgeR.
 
@@ -314,8 +322,9 @@ We can visualize the overlaps between different sets of peaks. for example, amon
 ```{r}
 dba.plotVenn(dbObj, contrast = 1, bDB = TRUE, bGain = TRUE, bLoss = TRUE, bAll = FALSE)
 ```
-
-[venn_gain_loss](../img/venn_gain_loss.png)
+<p align="center">
+<img src="../img/venn_gain_loss.png"  width="600">
+</p>
 
 If we had multiple constrasts we could specify the specific number of contrast with contrast option. Here we have only one contrast so contrast is set as = 1.
 
@@ -335,7 +344,10 @@ MA plots show the relationship between the overall binding level at each site an
 dba.plotMA(dbObj, method=DBA_DESEQ2)
 ```
 
-[maplot](../img/maplot_deseq2.png)
+<p align="center">
+<img src="../img/maplot_deseq2.png"  width="600">
+</p>
+
 
 ### Volcano plots
 
@@ -344,8 +356,9 @@ Similar to MA plots, volcano plots also highlight significantly differentially b
 ```{r}
 dba.plotVolcano(dbObj, contrast = 1)
 ```
-
-[volcanoplot](../img/volcanoplot_deseq2.png)
+<p align="center">
+<img src="volcanoplot_deseq2.png"  width="600">
+</p>
 
 ### Binding affinity Heatmaps
 
