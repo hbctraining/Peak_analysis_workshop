@@ -357,7 +357,7 @@ Similar to MA plots, volcano plots also highlight significantly differentially b
 dba.plotVolcano(dbObj, contrast = 1)
 ```
 <p align="center">
-<img src="volcanoplot_deseq2.png"  width="600">
+<img src="../img/volcanoplot_deseq2.png"  width="600">
 </p>
 
 ### Binding affinity Heatmaps
