@@ -157,14 +157,14 @@ dbObj
 
 Output:
 ```
-## 6 Samples, 85868 sites in matrix:
-##                         ID Tissue  Factor Condition Replicate    Reads FRiP
-## 1  WT_H3K27ac_ChIPseq_REP1 PRDM16 H3K27ac        WT         1 14916464 0.20
-## 2  WT_H3K27ac_ChIPseq_REP2 PRDM16 H3K27ac        WT         2 21174308 0.18
-## 3  WT_H3K27ac_ChIPseq_REP3 PRDM16 H3K27ac        WT         3 14433557 0.20
-## 4 cKO_H3K27ac_ChIPseq_REP1 PRDM16 H3K27ac       cKO         1 13292841 0.22
-## 5 cKO_H3K27ac_ChIPseq_REP2 PRDM16 H3K27ac       cKO         2 13900397 0.20
-## 6 cKO_H3K27ac_ChIPseq_REP3 PRDM16 H3K27ac       cKO         3 16677061 0.20
+6 Samples, 85868 sites in matrix:
+        ID Tissue  Factor Condition Replicate    Reads FRiP
+1  WT_REP1 PRDM16 H3K27ac        WT         1 14916464 0.20
+2  WT_REP2 PRDM16 H3K27ac        WT         2 21174308 0.18
+3  WT_REP3 PRDM16 H3K27ac        WT         3 14433557 0.20
+4 cKO_REP1 PRDM16 H3K27ac       cKO         1 13292841 0.22
+5 cKO_REP2 PRDM16 H3K27ac       cKO         2 13900397 0.20
+6 cKO_REP3 PRDM16 H3K27ac       cKO         3 16677061 0.20
 ```
 Here we can see that there are 85,868 total sites in the consensus peaksets from 6 samples. First five column displays the sample metadata we supplied through our sample sheet to create diffbind object. Reads column shows the number of reads in each sample. FRiP score represents fraction of all mapped reads that fall into the consensus peaksets. Multiplying the number of reads by FRiP gives the number of reads that overlap the consensus peaksets. We can calculate this using `dba.show` function.
 
@@ -179,13 +179,13 @@ libsizes
 Output:
 
 ```
-##                          LibReads FRiP PeakReads
-## WT_H3K27ac_ChIPseq_REP1  14916464 0.20   2983293
-## WT_H3K27ac_ChIPseq_REP2  21174308 0.18   3811375
-## WT_H3K27ac_ChIPseq_REP3  14433557 0.20   2886711
-## cKO_H3K27ac_ChIPseq_REP1 13292841 0.22   2924425
-## cKO_H3K27ac_ChIPseq_REP2 13900397 0.20   2780079
-## cKO_H3K27ac_ChIPseq_REP3 16677061 0.20   3335412
+         LibReads FRiP peakReads
+WT_REP1  14916464 0.20   2983293
+WT_REP2  21174308 0.18   3811375
+WT_REP3  14433557 0.20   2886711
+cKO_REP1 13292841 0.22   2924425
+cKO_REP2 13900397 0.20   2780079
+cKO_REP3 16677061 0.20   3335412
 ```
 ### PCA
 
@@ -193,10 +193,10 @@ We can perform Principal Component Analysis (PCA) to explore the sample similari
 By default dba.plotPCA() uses log2 values of the read counts from each samples.
 
 ```{r}
-dba.plotPCA(dbObj, attributes=DBA_CONDITION, label=DBA_ID, score = DBA_SCORE_NORMALIZED)
+dba.plotPCA(dbObj, attributes=DBA_CONDITION, label=DBA_ID, score = DBA_SCORE_NORMALIZED, labelSize = 0.6)
 ```
 <p align="center">
-<img src="../img/pca.plot.png"  width="600">
+<img src="../img/diffbind_pca.png"  width="600">
 </p>
 
 
@@ -211,7 +211,7 @@ dba.plotHeatmap(dbObj, ColAttributes = DBA_TISSUE,
 ```
 
 <p align="center">
-<img src="../img/correlation_heatmap.png"  width="600">
+<img src="../img/diffbind_correlation_heatmap.png"  width="600">
 </p>
 
 
@@ -235,15 +235,16 @@ Before running the differential enrichment analysis, we need to tell DiffBind wh
 dbObj <- dba.contrast(dbObj, categories = DBA_CONDITION)
 dbObj
 ```
+
 ```{r, output}
 6 Samples, 85868 sites in matrix:
-                        ID Tissue  Factor Condition Replicate    Reads FRiP
-1  WT_H3K27ac_ChIPseq_REP1 PRDM16 H3K27ac        WT         1 14916464 0.20
-2  WT_H3K27ac_ChIPseq_REP2 PRDM16 H3K27ac        WT         2 21174308 0.18
-3  WT_H3K27ac_ChIPseq_REP3 PRDM16 H3K27ac        WT         3 14433557 0.20
-4 cKO_H3K27ac_ChIPseq_REP1 PRDM16 H3K27ac       cKO         1 13292841 0.22
-5 cKO_H3K27ac_ChIPseq_REP2 PRDM16 H3K27ac       cKO         2 13900397 0.20
-6 cKO_H3K27ac_ChIPseq_REP3 PRDM16 H3K27ac       cKO         3 16677061 0.20
+        ID Tissue  Factor Condition Replicate    Reads FRiP
+1  WT_REP1 PRDM16 H3K27ac        WT         1 14916464 0.20
+2  WT_REP2 PRDM16 H3K27ac        WT         2 21174308 0.18
+3  WT_REP3 PRDM16 H3K27ac        WT         3 14433557 0.20
+4 cKO_REP1 PRDM16 H3K27ac       cKO         1 13292841 0.22
+5 cKO_REP2 PRDM16 H3K27ac       cKO         2 13900397 0.20
+6 cKO_REP3 PRDM16 H3K27ac       cKO         3 16677061 0.20
 
 Design: [~Condition] | 1 Contrast:
      Factor Group Samples Group2 Samples2
@@ -296,7 +297,7 @@ The default threshold is padj < 0.05. How many regions are differentially bound 
 dba.plotVenn(dbObj, contrast = 1, method = DBA_ALL_METHODS)
 ```
 <p align="center">
-<img src="../img/venn_deseq2_edgeR.png"  width="600">
+<img src="../img/diffbind_venn_deseq2_edgeR.png"  width="600">
 </p>
 
 
@@ -310,7 +311,10 @@ Try plotting a PCA but this time only use the regions that were identified as si
 dba.plotPCA(dbObj, contrast=1, method=DBA_DESEQ2, attributes=DBA_FACTOR, label=DBA_ID)
 ```
 
-###INSERT IMAGE of pca plot
+<p align="center">
+<img src="../img/diffbind_pca_deseq2.png"  width="600">
+</p>
+
 
 Exercise:
 Modify the code above so that you only plot a PCA using the regions identified as significant by edgeR.
@@ -323,7 +327,7 @@ We can visualize the overlaps between different sets of peaks. for example, amon
 dba.plotVenn(dbObj, contrast = 1, bDB = TRUE, bGain = TRUE, bLoss = TRUE, bAll = FALSE)
 ```
 <p align="center">
-<img src="../img/venn_gain_loss.png"  width="600">
+<img src="../img/diffbind_venn_gain_loss.png"  width="600">
 </p>
 
 If we had multiple constrasts we could specify the specific number of contrast with contrast option. Here we have only one contrast so contrast is set as = 1.
@@ -335,6 +339,9 @@ We can plot a corrrelation heatmap with differentially bound sites from the anal
 ```{r}
 plot(dbObj, contrast=1)
 ```
+<p align="center">
+<img src="../img/diffbind_heatmap.png"  width="600">
+</p>
 
 ### MA plot
 
@@ -345,7 +352,7 @@ dba.plotMA(dbObj, method=DBA_DESEQ2)
 ```
 
 <p align="center">
-<img src="../img/maplot_deseq2.png"  width="600">
+<img src="../img/diffbind_maplot_deseq2.png"  width="600">
 </p>
 
 
@@ -357,7 +364,7 @@ Similar to MA plots, volcano plots also highlight significantly differentially b
 dba.plotVolcano(dbObj, contrast = 1)
 ```
 <p align="center">
-<img src="../img/volcanoplot_deseq2.png"  width="600">
+<img src="../img/diffbind_volcanoplot_deseq2.png"  width="600">
 </p>
 
 ### Binding affinity Heatmaps
@@ -369,7 +376,9 @@ hmap <- colorRampPalette(c("red", "black", "green"))(n = 13)
 readscores <- dba.plotHeatmap(dbObj, correlations = FALSE,
                               scale="row", colScheme = hmap,)
 ```
-### IMAGE ###
+<p align="center">
+<img src="../img/diffbind_heatmap_deseq2.png"  width="600">
+</p>
 
 
 ## Extracting results
