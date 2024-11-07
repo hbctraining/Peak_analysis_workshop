@@ -415,9 +415,9 @@ GRanges object with 85868 ranges and 6 metadata columns:
 The value columns are described below:
 
 - Conc: mean read concentration over all the samples (the default calculation uses log2 normalized ChIP read counts with control read counts subtracted)
-Conc_cKO: mean concentration over the first (cKO) group
-Conc_WT: mean concentration over the second (WT) group
-Fold: shows the difference in mean concentrations between the two groups, with a positive value indicating increased binding affinity in the cKO group and a negative value indicating increased binding affinity in the WT group.
+- Conc_cKO: mean concentration over the first (cKO) group
+- Conc_WT: mean concentration over the second (WT) group
+- Fold: shows the difference in mean concentrations between the two groups, with a positive value indicating increased binding affinity in the cKO group and a negative value indicating increased binding affinity in the WT group.
 
 
 Before writing to file we need to convert it to a data frame so that genomic coordinates get written as columns and not GRanges.
