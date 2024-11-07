@@ -418,9 +418,15 @@ The value columns are described below:
 - Conc_cKO: mean concentration over the first (cKO) group
 - Conc_WT: mean concentration over the second (WT) group
 - Fold: shows the difference in mean concentrations between the two groups, with a positive value indicating increased binding affinity in the cKO group and a negative value indicating increased binding affinity in the WT group.
+- p-value: pvalue from the significance test
+- FDR: False discovery rate after multiple correction
 
+Let's save the GRange object for downstream analysis. We can save GRange file as RDS object.
+```{r}
+saveRDS(res_deseq, file = "res_deseq.rds")
+```
 
-Before writing to file we need to convert it to a data frame so that genomic coordinates get written as columns and not GRanges.
+We can also convert the GRange to a data frame where the genomic coordinates get written as columns and can be saved as a table.
 
 ```{r}
 #Write to a file
@@ -428,7 +434,7 @@ out <- as.data.frame(res_deseq)
 write.table(out, file="results/cKO_vs_WT_deseq2.txt", sep="\t", quote=F, row.names=F)
 ```
 
-Additionally, we will want to create BED files for each set of significant regions identified by DESeq2, separating them based on the gain or loss of enrichment. We will write these regions to file and use as input for downstream visualization.
+Additionally, we can also create BED files for each set of significant regions identified by DESeq2, separating them based on the gain or loss of enrichment. We will write these regions to file and use as input for downstream visualization.
 
 ```{r}
 # Create bed files for each keeping only significant peaks (p < 0.05)
