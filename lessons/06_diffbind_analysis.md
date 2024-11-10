@@ -421,9 +421,19 @@ The value columns are described below:
 - p-value: pvalue from the significance test
 - FDR: False discovery rate after multiple correction
 
-Let's save the GRange object for downstream analysis. We can save GRange file as RDS object.
+Let's save the GRange object for downstream analysis. We can save it as RDS object.
 ```{r}
-saveRDS(res_deseq, file = "res_deseq.rds")
+saveRDS(res_deseq, file = "all_res_deseq2.rds")
+```
+
+Exercise: 
+Extract only the significantly differentially bound sites in the analysis with pvalue cutoff of 0.05 and save it as RDS object.
+
+Solution:
+```{r}
+sig_res_deseq <- dba.report(dbObj, method=DBA_DESEQ2, contrast = 1, th=0.5)
+
+saveRDS(sig_res_deseq, file = "sig_res_deseq2.rds")
 ```
 
 We can also convert the GRange to a data frame where the genomic coordinates get written as columns and can be saved as a table.
