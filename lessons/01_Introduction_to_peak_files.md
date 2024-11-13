@@ -1,32 +1,60 @@
 ---
 title: "Intro to dataset and peak call file formats"
-author: "Heather Wick, Upendra Bhattarai, Meeta Mistry"
+author: "Heather Wick, Upendra Bhattarai, Meeta Mistry, Will Gammerdinger"
 date: "Aug 13th, 2024"
 ---
 
-Contributors: Heather Wick, Upendra Bhattarai, Meeta Mistry
+Contributors: Heather Wick, Upendra Bhattarai, Meeta Mistry, Will Gammerdinger
 
-Approximate time: 
+Approximate time: 40 minutes
 
 ## Learning Objectives
 
-* Describe the dataset and biological context
-* Describing peaks as genomic coordinate data
-* Understand file formats for peak data
+In this lesson, we will:
+
+* Explain the dataset and the biological context
+* Define peaks as genomic coordinate data
+* Describe file formats for peak data
 
 ## Introduction to the dataset
 
-For this workshop we will be working with ChIP-seq data from a publication in Neuron by Baizabal et al. (2018) [1](https://pmc.ncbi.nlm.nih.gov/articles/PMC6667181/).
+For this workshop we will be working with ChIP-seq data from a publication in Neuron by *Baizabal et al., 2018* [1](https://pmc.ncbi.nlm.nih.gov/articles/PMC6667181/).
 
-> Please note that even though we are utilizing a ChIP-seq dataset for histone mark in this workshop, some of these steps in eth workflow can very similarly be used for other peak data such as ATAC-seq or CUT&RUN.
+> Please note that even though we are utilizing a ChIP-seq dataset for histone mark in this workshop, some of these steps in the workflow can very similarly be used for other peak data such as ATAC-seq or CUT&RUN.
 
-Baizabal et al. sought to understand how chromatin-modifying enzymes function in neural stem cells to establish the epigenetic landscape that determines cell type and stage-specific gene expression. Chromatin-modifying enzymes are transcriptional regulators that control gene expression through covalent modification of DNA or histones.... Explain how the H3K27Ac data fits in here!
+*Baizabal et al.,* sought to understand how chromatin-modifying enzymes function in neural stem cells to establish the epigenetic landscape that determines cell type and stage-specific gene expression. Chromatin-modifying enzymes are transcriptional regulators that control gene expression through covalent modification of DNA or histones. In this workshop, we will be evaluating ***H3K27Ac*** (Histone 3 Lysine 27 Acetylation) modifications, which are post-translational modifications associated with increased transcriptional activation.
 
-* Describe the experiemental design (amybe using a figure?)
-* Describe the metadata
+<p align="center">
+<img src="../img/05Epigenetics06-edit.png" width="400">
+</p>
+
+_Image adapted from: [American Society of Hematology](https://www.hematology.org/research/ash-agenda-for-hematology-research/epigenetic-mechanisms)_
+
+### PRDM16
+
+The transcriptional regulator **PRDM16 is a chromatin-modifying enzyme** that belongs to the larger PRDM (Positive Regulatory Domain) protein family, that is structurally defined by the **presence of a conserved N-terminal histone methyltransferase PR domain** ([Hohenauer and Moore, 2012](https://journals.biologists.com/dev/article/139/13/2267/45169/The-Prdm-family-expanding-roles-in-stem-cells-and)). 
+
+* PRDM16 has been shown to function *in vitro* as a histone 3 lysine 9 (H3K9) and histone 3 lysine 4 (H3K4) mono-methyltransferase ([Pinheiro et al., 2012](https://www.sciencedirect.com/science/article/pii/S0092867412009385), [Zhou et al., 2016](https://www.sciencedirect.com/science/article/pii/S109727651600188X)). 
+* PRDM16 also regulates gene expression by forming complexes with transcriptional co-factors and other histone-modifying proteins ([Chi and Cohen, 2016](https://www.sciencedirect.com/science/article/pii/S104327601500226X?casa_token=VOBAb4QhyXgAAAAA:c69XzQwZ86M4BcPt02cNKjn163X5pBZMTQHJX4D2HdMvgO3hrQE7N6L0YmFSWwucs2GhXPhBtw)). 
+* PRDM16 was previously shown to control embryonic and post-natal neural stem cell maintenance and differentiation in the brain ([Chuikov et al., 2010](https://www.nature.com/articles/ncb2101), [Inoue et al., 2017](https://journals.biologists.com/dev/article/144/3/385/48274/Prdm16-is-crucial-for-progression-of-the), [Shimada et al., 2017](http://genesdev.cshlp.org/content/31/11/1134.short)). 
+
+
+**How PRDM16 functions to regulate transcriptional programs in the developing cerebral cortex remains largely unknown.**
+
+In this paper, the authors use various techniques to identify and validate the targets and activities of PRDM16, including ChIP-seq, bulk RNA-seq, FACS, in-situ hybridization and immunofluorescent microscopy on brain samples from embryonic mice and a generation of PRDM16 conditional knockout mice. 
+
+<p align="center">
+<img src="../img/graphical_abstract.png" width="500">
+</p>
+
+
+From the RNA-seq data, they found that the absence of PRDM16 in cortical neurons resulted in the misregulation of over a thousand genes during neurogenesis. To identify the subset of genes that are transcriptional targets of PRDM16 and to understand how these genes are directly regulated, they performed chromatin immunoprecipitation followed by sequencing (ChIP-seq).
+
+
+**Hypothesis:** How does the histone methyltransferase PRDM16 work with other chromatin machinery to either silence or activate expression of sets of genes that impact the organization of the cerebral cortex?
 
 ### Setting up 
-Describe the project download and instrcutions on how to open it. Show a screenshot of RStudio.
+Describe the project download and instructions on how to open it. Show a screenshot of RStudio.
 
 Open up a script file. Add a comment header and save it, give it a filename.
 
@@ -37,9 +65,9 @@ Discuss the files/folders present in the project and need for organization.
 
 
 ## What is a peak?
-A peak represents a region of the genome which was found to be bound to the protein or histone modification of choice. Chromatin Immunoprecipitation followed by sequencing (ChIP-seq) is a central method in epigenomic research which allows us to query peaks. A typical ChIPseq workflow is outlined in the image below. 
+A peak represents a region of the genome which was found to be bound to the protein or histone modification of choice. Chromatin Immunoprecipitation followed by sequencing (ChIP-seq) is a central method in epigenomic research which allows us to query peaks. A typical ChIP-seq workflow is outlined in the image below. 
 
-In ChIP experiments, a transcription factor, cofactor, histone modification, or other chromatin protein of interest is enriched by immunoprecipitation from cross-linked cells, along with its associated DNA. The immunoprecipitated DNA fragments are then sequenced, followed by identification of enriched regions of DNA or peaks using peak-calling software, such as Macs2. These peak calls can then be used to make biological inferences by determining the associated genomic features and/or over-represented sequence motifs.
+In ChIP-seq experiments, a transcription factor, cofactor, histone modification, or other chromatin protein of interest is enriched by immunoprecipitation from cross-linked cells, along with its associated DNA. The immunoprecipitated DNA fragments are then sequenced, followed by identification of enriched regions of DNA or peaks using peak-calling software, such as MACS2. These peak calls can then be used to make biological inferences by determining the associated genomic features and/or over-represented sequence motifs.
 
 <p align="center">
 <img src="../img/chip_expt_workflow.png" width="400">
@@ -47,11 +75,11 @@ In ChIP experiments, a transcription factor, cofactor, histone modification, or 
 
 _Image source: ["From DNA to a human: What the ENCODE and Roadmap Epigenome Projects can teach us about how we are who we are"](https://portlandpress.com/biochemist/article/37/5/24/773/From-DNA-to-a-human-What-the-ENCODE-and-Roadmap)_
 
-For more detailed information on the process of going from sequenced reads to peaks, please see the pre-reading lesson (link 00a). In this workshop, we will describe a range of different analyses that can be done using peaks.
+For more detailed information on the process of going from sequenced reads to peaks, please see the [pre-reading lesson](00a_peak_calling_workflow_review.md). In this workshop, we will describe a range of different analyses that can be done using peaks.
 
 
 ## Peak file formats
-In this lesson, we will introduce you to several important file formats that you will encounter when working with peak calls called the **BED format** (**B**rowser **E**xtensible **D**ata). We will also describe the contents of the **narrowPeak** files (output from MACS2) and how it relates to BED. 
+In this lesson, we will introduce you to several important file formats that you will encounter when working with peak calls, which follow the **BED format** (**B**rowser **E**xtensible **D**ata). We will also describe the contents of the **narrowPeak** files (output from MACS2) and how it relates to BED. 
 
 
 ### BED
@@ -59,7 +87,7 @@ In this lesson, we will introduce you to several important file formats that you
 The BED file format is tab-delimited (columns separated by tabs) and contains information about the coordinates for particular genome features.
 
 <p align="center">
-<img src="../img/bed.png" width="400">
+<img src="../img/bed.png" width="700">
 </p>
 
 **The coordinates in BED files are 0-based**. What does this mean? Among standard file formats, genomic coordinates can be represented in two different ways as shown in the image below. 
@@ -78,7 +106,7 @@ Given the example above, **what coordinates would you use to define the sequence
 
 The benefits to having a **zero-based system** is the **ease of calculating distance or length** of sequences. We can easily determine the length of the `ATG` sequence using the zero-based coordinates by subtracting the start from the end, whereas for one-based coordinates we would need to add one after the subtraction. Therefore, many file formats used in computation, including **the BED file format**, use zero-based coordinates. 
 
-BED files **require at least 3 fields** indicating the **genomic location of the feature**, including the chromosome and the start and end coordinates. However, there are 9 additional fields that are optional, as shown in the image below.
+BED files **require at least 3 fields** indicating the **genomic location of the feature**, including the chromosome along with the start and end coordinates. However, there are 9 additional fields that are optional, as shown in the image below.
 
 <p align="center">
 <img src="../img/bed_file.png" width="800">
@@ -104,9 +132,9 @@ A broadPeak (.broadPeak) file is very similar to a narrowPeak file, but it is BE
 
 ### gappedPeak
 
-A gappedPeak (.gappedPeak) file is a BED12+3 file which contains broad peaks as well as narrow peaks within the broad peaks. You can learn more about this format (and the format of the other files) on the [Encode website](https://genome.ucsc.edu/FAQ/FAQformat.html#format14)
+A gappedPeak (.gappedPeak) file is a BED12+3 file which contains broad peaks as well as narrow peaks within the broad peaks. You can learn more about this format (and the format of the other files) on the [Encode website](https://genome.ucsc.edu/FAQ/FAQformat.html#format14).
 
-
+[Back to the Scheudle](../schedule/README.md) [Next lesson >>](02a_peak_quality_metrics_assesment.md)
 
 ***
 
