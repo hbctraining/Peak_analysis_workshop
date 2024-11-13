@@ -55,16 +55,16 @@ I. Please **study the contents** and **work through all the code** within the fo
 
 | Time |  Topic  | Instructor |
 |:-----------:|:----------:|:--------:|
-| 09:30 - 10:30 | Self-learning review |  |
-| 10:30 - 11:15 | [Peak annotation and visualization using ChIPseeker](../lessons/04_peak_annotation_and_visualization.md)|  |
-| 11:15- 11:25 | Break|  |
-| 11:25 - 12:00 | [Peak visualization using IGV](05_peak_visualization_with_igv.md)|  |
+| 09:30 - 10:00 | Self-learning review |  |
+| 10:00 - 10:45 | [Peak annotation and visualization using ChIPseeker](../lessons/04_peak_annotation_and_visualization.md)|  |
+| 10:45- 10:55 | Break|  |
+| 10:55 - 12:00 | [Differential enrichment analsysis using DiffBind](../lessons/06_diffbind_analysis.md) |  |
 
 
 ### Before the next class:
 
 I. Please **study the contents** and **work through all the code** within the following lessons:
-   1. [Differential enrichment analsysis using DiffBind](../lessons/06_diffbind_analysis.md)
+   1. [Peak visualization using IGV](05_peak_visualization_with_igv.md)
       <details>
        <summary><i>Click here for a preview of this lesson</i></summary>
          <br>A two sentence summary of the lesson.... <br><br>In this lesson, we will:<br>
