@@ -238,8 +238,8 @@ metrics %>%
 This represents the fraction of mapped reads which are mapped to peaks (as opposed to elsewhere in the genome). This is only calculated for antibody samples in our data set. The expected fraction of reads in peaks will vary by protein. Histone marks, which usually have broader peaks, often have higher FRiPs than transcription factors, which usually have much narrower peaks.
 
 <details>
-<summary><b>Click here for the code to compute FrIP for you own samples</b></summary>
-In order to determine the FrIP, we can run ... The command to run this is:</br></br>
+<summary><b>Click here for the code to compute FRiP for you own samples</b></summary>
+In order to determine the FRiP, we can run ... The command to run this is:</br></br>
 <pre>
 &#35;
  Add code here
@@ -354,6 +354,10 @@ metrics %>%
 ### Summary
 
 Overall, our data looks pretty good. We do have a large number of reads in some of our input samples, but all of the other QC metrics look acceptable. We can go ahead and take a look at some additional QC metrics in our next lesson, where we will examine more closely the relationship between samples.
+
+[Back to Schedule](../schedule/README.md)
+
+[Next Lesson >>](02b_peak_concordance_replicates.md)
 
 ***
 
