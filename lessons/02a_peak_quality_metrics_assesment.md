@@ -6,11 +6,13 @@ date: "Aug 13th, 2024"
 
 Contributors: Heather Wick, Upendra Bhattarai, Meeta Mistry, Will Gammerdinger
 
-Approximate time: 
+Approximate time: 45 minutes
 
 ## Learning Objectives
 
-* Describe various metrics for peak quality
+In this lesson, we will:
+
+* Interpret various metrics for peak quality
 * Evaluate metrics for assessing the quality of peaks called
 
 ## Quality Control
@@ -62,22 +64,26 @@ Note that samtools is a command-line tool and you will need to run this in an en
 
 ```
 metrics %>%
-    ggplot(aes(x = sample,
-               y = total_reads/1e6, 
-               fill = antibody)) +
-    geom_bar(stat = "identity") +
-    coord_flip() +
-    scale_y_continuous(name = "million reads") +
-    scale_x_discrete(limits = rev) +
-    xlab("") + 
-    ggtitle("Total reads")+
-    geom_hline(yintercept=20, color = "black", linetype = "dashed", linewidth=.5)
+  ggplot(aes(x = sample,
+             y = total_reads/1e6, 
+             fill = antibody)) +
+  geom_bar(stat = "identity") +
+  theme_bw() + 
+  coord_flip() +
+  scale_y_continuous(name = "Millions of reads") +
+  scale_x_discrete(limits = rev) +
+  xlab("") + 
+  ggtitle("Total reads") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(fill = "Antibody") +
+  theme(legend.title = element_text(hjust = 0.5)) + 
+  geom_hline(yintercept=20, color = "black", linetype = "dashed", linewidth=.5)
 ```
 
 This data set isn't perfect -- while most of our samples have close to or more than 20 million reads, we have some variation between samples. In particular, some of our our input samples, especially two of the WT samples, have many more reads than the other samples. Sometimes, if input reads have many more reads in peaks than their antibody counterparts, this can skew or reduce the number of peaks identified in those samples. However if these reads are scattered throughout the genome, they may just be background noise and the sample was simply sequenced more deeply. By looking at other quality control metrics, we can determine how this might affect the data set and, if necessary, take steps to reduce the impact of this kind of variability, such as through down-sampling.
 
 <p align="center">
-<img src="../img/total_reads.png"  width="600">
+<img src="../img/total_reads_2.png"  width="800">
 </p>
 
 ### Mapping rate
@@ -91,28 +97,31 @@ In order to determine the mapping rate, we can run ... The command to run this i
 &#35;
  Add code here
 </pre></br>
-
 Add a note here about the resulting data?
 </details>
 
 ```
 metrics %>%
-    ggplot(aes(x = sample,
-               y = mapped_reads_pct, 
-               fill = antibody)) +
-    geom_bar(stat = "identity") +
-    coord_flip() +
-    scale_y_continuous(name = "% reads mapped") +
-    scale_x_discrete(limits = rev) +
-    xlab("") +
-    ggtitle("Mapping rate") + xlab("") +
-    geom_hline(yintercept=70, color = "black", linetype = "dashed", linewidth=.5)
+  ggplot(aes(x = sample,
+             y = mapped_reads_pct, 
+             fill = antibody)) +
+  geom_bar(stat = "identity") +
+  theme_bw() + 
+  coord_flip() +
+  scale_y_continuous(name = "Percent of Reads Mapped") +
+  scale_x_discrete(limits = rev) +
+  xlab("") +
+  ggtitle("Mapping Rate") + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(fill = "Antibody") +
+  theme(legend.title = element_text(hjust = 0.5)) + 
+  geom_hline(yintercept=70, color = "black", linetype = "dashed", linewidth=.5)
 ```
 
 Our samples all have a mapping rate well above the minimum, and the samples are consistent across the dataset.
 
 <p align="center">
-<img src="../img/mapped_rate.png"  width="600">
+<img src="../img/mapped_rate_2.png"  width="800">
 </p>
 
 ### Strand cross-correlation
@@ -171,26 +180,27 @@ This code will generate the cross-correlation plot along with both NSC and RSC s
 
 > NOTE: This metric is sensitive to technical effects (i.e. high quality antibodies will generate higher scores) and and biological effects (i.e. narrow peaks typically score higer than broad peaks).
 
-
-##FILTER DATA TO ONLY PLOT IP SAMPLES##
-
 ```
 metrics %>%
-    ggplot(aes(x = sample,
-               y = nsc, 
-               fill = antibody)) +
-    geom_bar(stat = "identity") +
-    coord_flip() +
-    scale_y_continuous(name = "NSC coefficient") +
-    scale_x_discrete(limits = rev) +
-    xlab("") +
-    ggtitle("Normalized Strand Cross-Correlation")
+  filter(antibody != "input") %>% 
+  ggplot(aes(x = sample,
+             y = nsc, 
+             fill = antibody)) +
+  geom_bar(stat = "identity") +
+  theme_bw() + 
+  coord_flip() +
+  scale_y_continuous(name = "NSC coefficient") +
+  scale_x_discrete(limits = rev) +
+  xlab("") +
+  ggtitle("Normalized Strand Cross-Correlation") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(legend.position = "none")
 ```
 
 In our data, you can see that our antibody samples all have NSC values >1. 
 
 <p align="center">
-<img src="../img/nsc.png"  width="800">
+<img src="../img/nsc_2.png"  width="800">
 </p>
 
 ### Relative strand cross-correlation coefficient (RSC)
@@ -201,24 +211,26 @@ _This is the ratio of the fragment-length correlation value minus the background
 * Low signal-to-noise: RSC values < 0.8
 * Minimum possible RSC value: 0 (no enrichment)
 
-##FILTER DATA TO ONLY PLOT IP SAMPLES##
-
 ```
 metrics %>%
-    ggplot(aes(x = sample,
-               y = rsc, 
-               fill = antibody)) +
-    geom_bar(stat = "identity") +
-    coord_flip() +
-    scale_y_continuous(name = "RSC coefficient") +
-    scale_x_discrete(limits = rev) +
-    xlab("") + 
-    ggtitle("Relative Strand Cross-Correlation")
+  filter(antibody != "input") %>% 
+  ggplot(aes(x = sample,
+             y = rsc, 
+             fill = antibody)) +
+  geom_bar(stat = "identity") +
+  theme_bw() + 
+  coord_flip() +
+  scale_y_continuous(name = "RSC Coefficient") +
+  scale_x_discrete(limits = rev) +
+  xlab("") + 
+  ggtitle("Relative Strand Cross-Correlation") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(legend.position = "none")
 ```
 
 
 <p align="center">
-<img src="../img/rsc.png"  width="800">
+<img src="../img/rsc_2.png"  width="800">
 </p>
 
 ### Fraction of reads in peaks (FRiP)
@@ -238,22 +250,26 @@ In order to determine the FrIP, we can run ... The command to run this is:</br><
 This code exists: https://github.com/hbctraining/Peak_analysis_workshop/blob/main/scripts/calculate_frip.sh
 
 ```
-metrics %>% filter(!is.na(frip)) %>%
-    ggplot(aes(x = sample,
-               y = frip, 
-               fill = antibody)) +
-    geom_bar(stat = "identity") +
-    coord_flip() +
-    scale_y_continuous(name = "FRiP") +
-    scale_x_discrete(limits = rev) +
-    xlab("") + 
-    ggtitle("Fraction of reads in peaks")
+metrics %>% 
+  filter(antibody != "input") %>% 
+  ggplot(aes(x = sample,
+             y = frip, 
+             fill = antibody)) +
+  geom_bar(stat = "identity") +
+  theme_bw() + 
+  coord_flip() +
+  scale_y_continuous(name = "FRiP") +
+  scale_x_discrete(limits = rev) +
+  xlab("") + 
+  ggtitle("Fraction of Reads in Peaks") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(legend.position = "none")
 ```
 
 Our samples have FRiPs in line with what we might expect for narrow histone marks, and they are fairly consistent.
 
 <p align="center">
-<img src="../img/frips.png"  width="800">
+<img src="../img/frips_2.png"  width="800">
 </p>
 
 
@@ -286,22 +302,26 @@ Below are the ENCODE guidelines for NRF:
 
 ```
 metrics %>% 
-    ggplot(aes(x = sample,
-               y = nrf, 
-               fill = antibody)) +
-    geom_bar(stat = "identity") +
-    coord_flip() +
-    scale_y_continuous(name = "Non-Redundant Fraction") +
-    scale_x_discrete(limits = rev) +
-    xlab("") + 
-    ggtitle("Non-Redundant Fraction")+
-    geom_hline(yintercept = 0.9, linetype = "dashed", color="green") +
-    geom_hline(yintercept = 0.8, linetype = "dashed", color="orange") +
-    geom_hline(yintercept = 0.5, linetype = "dashed", color="red")
+  ggplot(aes(x = sample,
+             y = nrf, 
+             fill = antibody)) +
+  geom_bar(stat = "identity") +
+  theme_bw() + 
+  coord_flip() +
+  scale_y_continuous(name = "Non-Redundant Fraction") +
+  scale_x_discrete(limits = rev) +
+  xlab("") + 
+  ggtitle("Non-Redundant Fraction") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(fill = "Antibody") +
+  theme(legend.title = element_text(hjust = 0.5)) + 
+  geom_hline(yintercept = 0.9, linetype = "dashed", color="green") +
+  geom_hline(yintercept = 0.8, linetype = "dashed", color="orange") +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color="red")
 ```
 
 <p align="center">
-<img src="../img/nrf.png"  width="800">
+<img src="../img/nrf_2.png"  width="800">
 </p>
 
 All of our samples are at least acceptable, and hover around or surpass the compliant or ideal thresholds.
@@ -311,20 +331,24 @@ All of our samples are at least acceptable, and hover around or surpass the comp
 Finally, we want to see a consistent number of peaks between our samples (we only have this metric for our antibody samples). This is computed by taking the narrowPeak files for each sample and counting the total number of lines in it (as each corresponds to a new peak that was called). We can do this on the command-line using `wc -l` or simply opening each file manually.
 
 ```
-metrics %>% filter(!is.na(peak_count)) %>%
-    ggplot(aes(x = sample,
-               y = peak_count, 
-               fill = antibody)) +
-    geom_bar(stat = "identity") +
-    coord_flip() +
-    scale_y_continuous(name = "Number of Peaks") +
-    scale_x_discrete(limits = rev) +
-    xlab("") +
-    ggtitle("Number of Peaks")
+metrics %>% 
+  filter(antibody != "input") %>% 
+  ggplot(aes(x = sample,
+             y = peak_count, 
+             fill = antibody)) +
+  geom_bar(stat = "identity") +
+  theme_bw() + 
+  coord_flip() +
+  scale_y_continuous(name = "Number of Peaks") +
+  scale_x_discrete(limits = rev) +
+  xlab("") +
+  ggtitle("Number of Peaks") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(legend.position = "none")
 ```
 
 <p align="center">
-<img src="../img/num_peaks.png" width="800">
+<img src="../img/num_peaks_2.png" width="800">
 </p>
 
 ### Summary
