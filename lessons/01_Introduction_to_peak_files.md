@@ -54,6 +54,9 @@ From the RNA-seq data, they found that the absence of PRDM16 in cortical neurons
 **Hypothesis:** How does the histone methyltransferase PRDM16 work with other chromatin machinery to either silence or activate expression of sets of genes that impact the organization of the cerebral cortex?
 
 ### Setting up 
+
+> Prior to the workshop, we asked that you download and uncompress the R Project that we will be using thoroughout this workshop. If you haven't had a chance to do this, please right click [this link](https://www.dropbox.com/scl/fi/q65yhy60q41p0zpv7ffat/Peak_analysis.zip?rlkey=mfzg1bnbjkabox1zwxb7gn9od&st=4xxsrmkd&dl=1) and select **"Save Link As..."** in order to download the compressed R Project to your desired location. Next, double-click on the compressed ZIP file in order to uncompress it. 
+
 Describe the project download and instructions on how to open it. Show a screenshot of RStudio.
 
 Open up a script file. Add a comment header and save it, give it a filename.
