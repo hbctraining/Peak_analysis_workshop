@@ -25,7 +25,7 @@ Working knowledge of R is required or completion of the [Introduction to R works
 
 
 ### Lessons
-* [Workshop schedule (trainer-led learning)]()
+* [Workshop schedule (trainer-led learning)](schedule/README.md)
 * [Self-learning]()
 
   
