@@ -160,13 +160,128 @@ It shows statistics associated with a user-selected top number (default=10) of s
 <img src="../img/ORA_dotplot_go.png"  width="600">
 </p>
 
+## Enrichment plot
+Enrichment map arranges enriched terms into a network, where nodes represents the enriched terms and edges representing gene overlaps between nodes. This way nodes with bigger number of overlapping genes tends to cluster closer, making it easy to identify functional modules. Before creating the plot, we will need to obtain the similarity between terms using the `pairwise_termsim()` function [instructions for emapplot](https://rdrr.io/github/GuangchuangYu/enrichplot/man/emapplot.html). In the enrichment plot, the color represents the p-values relative to the other displayed terms (brighter red is more significant), and the size of the terms represents the number of genes that are significant from our list.
 
-~~~~~~~~~~~~~~~~~~~`
-- Annotate DE regions with target genes.
-- IGV validation of differentially enriched regions
-- Functional analysis
-    [old material](https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/OLD_ChipSeeker_analysis.md#functional-enrichment-r-based-tools)
-    [webased functional analysis](https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/OLD_web_based_functional_analysis.md)
+```{r}
+go_ORA_Up <- enrichplot::pairwise_termsim(go_ORA_Up)
+emapplot(go_ORA_Up)
+```
+
+<p align="center">
+<img src="../img/ORA_enrichment_plot.png"  width="600">
+</p>
+
+# Gene Set Enrichment Analysis (GSEA)
+
+GSEA follows a different statistical approach on functional enrichment of gene sets. Unlike ORA, which requires to subset the gene of interest using an arbitrary threshold, GSEA takes all the genes as input. The gene-level statistics from the dataset are aggregated to generate a single pathway-level statistic and statistical significance of each pathway is reported. This type of analysis can be particularly helpful if the differential expression analysis only outputs a small list of significant DE genes.
+
+A commonly used example of an FCS method is GSEA [Subramanium A. et al, 2005](https://www.pnas.org/doi/10.1073/pnas.0506580102). Gene set enrichment analysis utilizes the gene-level statistics or log2 fold changes for all genes to look to see whether gene sets for particular biological pathways (e.g., derived from KEGG pathways, Gene Ontology terms, MSigDB, etc) are enriched among the large positive or negative fold changes.
+
+<p align="center">
+<img src="../img/gsea_overview.png"  width="600">
+</p>
+
+Image source: [Subramanium A. et al, 2005](https://www.pnas.org/doi/10.1073/pnas.0506580102)
+
+This image describes the theory of GSEA, with the 'gene set S' showing the metric used (in our case, ranked log2 fold changes) to determine enrichment of genes in the gene set. There are four main steps that are being performed:
+
+1. Rank genes:
+  - Genes in a data set are ranked based on the given statistic, which in our case is the log2 fold changes.
+2. Calculate enrichment scores for each gene set
+  - This score reflects how often genes in the set appear at the top or bottom of the ranked list.
+  - The score is calculated by walking down the list of log2 fold changes and increasing the running-sum statistic every time a gene in the gene set is encountered and decreasing it when genes are not part of the gene set.
+  - Increase/decrease is determined by magnitude of fold change.
+3. Estimate statistical significance
+  - A permutation test is used to calculate a null distribution for the enrichment score. This produces a p-value that represents the probability of observing a given enrichment score.
+4. Adjust for multiple hypothesis testing
+  - Enrichment scores are normalized for the size of each gene set and a false discovery rate is calculated to prevent false positives.
+    
+## Running GSEA with MSigDB gene sets
+
+The clusterProfiler package offers several functions to perform GSEA using different genes sets, including but not limited to GO, KEGG, and MSigDb. We will use the MSigDb gene sets in our example below. The Molecular Signatures Database (also known as MSigDB) is a collection of annotated gene sets.
+
+We can use msigdbr_species() function to look at the information about species included in the dataset.
+
+```{r}
+msigdbr_species()
+```
+
+To look at what gene sets are available
+
+```{r}
+msigdbr_collections()
+```
+For our analysis we will select the human C5 collection. which is the collection of GO database. From the table, we only need two columns, Gene set name and the Gene symbol.
+
+```{r}
+m_t2g <- msigdbr(species = "Homo sapiens", category = "C5") %>%
+  dplyr::select(gs_name, gene_symbol)
+```
+
+Now we need to extract fold chance and gene identifier. GSEA will use the fold changes obtained from the differential expression analysis for every gene to perform the analysis. We need to create an ordered and named vector for input to clusterProfiler.
+
+```{r}
+fold_change <- annot_res_all_df$Fold
+names(fold_change) <- annot_res_all_df$SYMBOL
+fold_change <- sort(fold_change, decreasing = TRUE)
+```
+
+Now lets run GSEA
+```{r}
+msig_GSEA <- GSEA(fold_change, TERM2GENE = m_t2g, verbose = FALSE)
+msig_GSEA_results <- msig_GSEA@result
+
+# write results to a file
+write.csv(msig_GSEA_results, "results/gsea_msigdb_GO_cko_vs_wt.csv, quote=F)
+```
+
+NOTE: The permutations are performed using random reordering, so every time we run the function we will get slightly different results. If we would like to use the same permutations every time we run a function, then we use the set.seed() function prior to running. The input to set.seed() can be any number.
+
+Take a look at the results table and reorder by NES (normalized enrichment score). What terms do you see positively enriched? Does this overlap with what we observed from ORA analysis?
+
+```{r}
+msig_GSEA_results %>% arrange(-NES) %>% View()
+```
+
+- The first few columns of the results table identify the gene set information.
+- The following columns include the associated statistics.
+- The last column will report which genes are part of the 'core enrichment'. These are the genes associated with the pathway which contributed to the observed enrichment score (i.e., in the extremes of the ranking).
+
+### Dotplot
+
+ ```{r}
+dotplot(msig_GSEA, split=".sign") +facet_grid(.~.sign)
+```
+
+### GSEA visualization
+Let's explore the GSEA plot of enrichment of one of the pathways in the ranked list using a built-in function from clusterProfiler. We can pick the top term
+
+```{r}
+gseaplot(msig_GSEA, geneSetID = 'GOBP_MUSCLE_STRUCTURE_DEVELOPMENT')
+```
+
+
+<p align="center">
+<img src="../img/gsea_muscle_structure.png"  width="600">
+</p>
+
+In this plot, the lines in plot represent the genes in the gene set 'GOBP_MUSCLE_STRUCTURE_DEVELOPMENT', and where they occur among the log2 fold changes. The largest positive log2 fold changes are on the left-hand side of the plot, while the largest negative log2 fold changes are on the right. The top plot shows the magnitude of the log2 fold changes for each gene, while the bottom plot shows the running sum, with the enrichment score peaking at the red dotted line (which is among the positive log2 fold changes). This suggests the up-regulation of this function.
+
+
+## Resources for functional analysis
+In this lesson we reviewed two different approaches for functional analysis and demonstrated the with the use of the clusterProfiler package. Note that there are numerous other options out there, including the use of web-based tools. Below we list a few tools that we are familiar with:
+
+g:Profiler - http://biit.cs.ut.ee/gprofiler/index.cgi
+DAVID - https://david.ncifcrf.gov
+clusterProfiler - http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html
+ReviGO (visualizing GO analysis, input is GO terms) - http://revigo.irb.hr/
+WGCNA - https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/ (no longer maintained)
+GSEA - http://software.broadinstitute.org/gsea/index.jsp
+SPIA - https://www.bioconductor.org/packages/release/bioc/html/SPIA.html
+GAGE/Pathview - http://www.bioconductor.org/packages/release/bioc/html/gage.html
+
+
 ***
 
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
