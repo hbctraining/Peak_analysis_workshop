@@ -21,21 +21,28 @@ In our peak files we have genomic coordinates identifying regions of the genome 
 
 **INSERT WORKFLOW IMAGE HERE?**
 
+**SUBSETTED QC STEP IMAGE**
 
 ### Load libraries
 
 First we need to set up our environment by loading some useful packages to help us process our data. 
 
 ```
-# Load libraries - add all libraries here
+# Load libraries
 library(tidyverse)
+library(ChIPseeker)
+library(DiffBind)
+library(clusterProfiler)
+library(AnnotationDbi)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(EnsDb.Hsapiens.v75)
 ```
 
 ### Load data
 
-Locate the input data called `metrics.csv` which is located in the .... folder in your working directory. We have created for you file which compiles all the metrics for each of the samples in the dataset. This file is a product of the bcbioR package described in lesson 00b. It is a csv in which each row corresponds to a sample, and each column contains information for a quality metric. 
+Locate the metrics summary file called `metrics.csv` which is located in the `data` folder of your working directory. We have created for you file which compiles all the metrics for each of the samples in the dataset. **This file is a product of the bcbioR package described in lesson 00b.** It is a CSV in which each row corresponds to a sample, and each column contains information for a quality metric. 
 
- For each metric we will describe what it represents and how it is calculated. We provide code for you such that you may use it compute similar metrics for your own dataset, and create your own csv. 
+For each metric we will describe what it represents and how it is calculated. We provide code for you such that you may use it compute similar metrics for your own dataset and create your own CSV. 
  
  > **Note that the majority of the code we provide is for command-line tools, not R.** If you are attempting to run this on your own data it may be beneficial to run this on your local high performac compute cluster where these tools are commonly pre-installed for you.
 
