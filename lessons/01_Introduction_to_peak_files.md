@@ -55,17 +55,48 @@ From the RNA-seq data, they found that the absence of PRDM16 in cortical neurons
 
 ### Setting up 
 
-> Prior to the workshop, we asked that you download and uncompress the R Project that we will be using thoroughout this workshop. If you haven't had a chance to do this, please right click [this link](https://www.dropbox.com/scl/fi/q65yhy60q41p0zpv7ffat/Peak_analysis.zip?rlkey=mfzg1bnbjkabox1zwxb7gn9od&st=4xxsrmkd&dl=1) and select **"Save Link As..."** in order to download the compressed R Project to your desired location. Next, double-click on the compressed ZIP file in order to uncompress it. 
+> Prior to the workshop, we asked that you download and uncompress the R Project that we will be using during this workshop. If you haven't had a chance to do this, please right click [this link](https://www.dropbox.com/scl/fi/q65yhy60q41p0zpv7ffat/Peak_analysis.zip?rlkey=mfzg1bnbjkabox1zwxb7gn9od&st=4xxsrmkd&dl=1) and select **"Save Link As..."** in order to download the compressed R Project to your desired location. Next, double-click on the compressed ZIP file in order to uncompress it. 
 
-Describe the project download and instructions on how to open it. Show a screenshot of RStudio.
+1) Once you have uncompressed the R Project, you can double-click "Peak_analysis.Rproj" wihtin the "Peak_analysis" directory to open the R Project. It should look like:
 
-Open up a script file. Add a comment header and save it, give it a filename.
+<p align="center">
+<img src="../img/R_studio.png" width="800">
+</p>
 
+2) Open an R script by clicking **"File"**, then **"New File >"** and selecting **"R script"**.
+3) Save the new R script, by clicking **"File"**, and selecting **"Save As..."**
+4) Name the file **"peak_analysis.R"** and click **"Save"**
 
+Now your R Studio should look like:
+
+<p align="center">
+<img src="../img/R_studio_with_script.png" width="800">
+</p>
 
 ### Data management best practices
 Discuss the files/folders present in the project and need for organization.
 
+Within this project we currently have 3 directories:
+- **data** - This directory contains data that we have pre-processed and also contains a summary files *metrics.csv*
+- **meta** - This directory is where we will be placing any metadata
+- **results** - This directory is where we will be placing our figures 
+
+We will also need to add a header to the top of our R Script. This should let future you, as well as, collaboratos know key pieces of information about the script:
+
+- **What** is the name of the script
+- **Who** wrote the script
+- **When** the script was written
+- **Why** the script was written
+- **Usage** information that someone using the script should be aware of
+
+Let's create this and add it to the top of our script:
+
+```
+# peak_analysis.R
+# Written by the Harvard Chan Bioinformatics Core on November 15th, 2024
+# This script was written as a demo for the Peak Analysis Workshop
+# In order to use this script, the user will need to have downloaded and uncompress the R project from https://www.dropbox.com/scl/fi/q65yhy60q41p0zpv7ffat/Peak_analysis.zip?rlkey=mfzg1bnbjkabox1zwxb7gn9od&st=4xxsrmkd&dl=1
+```
 
 ## What is a peak?
 A peak represents a region of the genome which was found to be bound to the protein or histone modification of choice. Chromatin Immunoprecipitation followed by sequencing (ChIP-seq) is a central method in epigenomic research which allows us to query peaks. A typical ChIP-seq workflow is outlined in the image below. 
