@@ -40,7 +40,9 @@ library(EnsDb.Hsapiens.v75)
 
 ### Load data
 
-Locate the metrics summary file called `metrics.csv` which is located in the `data` folder of your working directory. We have created for you file which compiles all the metrics for each of the samples in the dataset. **This file is a product of the bcbioR package described in lesson 00b.** It is a CSV in which each row corresponds to a sample, and each column contains information for a quality metric. 
+Locate the metrics summary file called `metrics.csv` which is located in the `data` folder of your working directory. We have created for you file which compiles all the metrics for each of the samples in the dataset. It is a CSV in which each row corresponds to a sample, and each column contains information for a quality metric. 
+
+> NOTE: For more information on how this metrics.csv, you can [link to lesson](00b).
 
 For each metric we will describe what it represents and how it is calculated. We provide code for you such that you may use it compute similar metrics for your own dataset and create your own CSV. 
  
