@@ -316,6 +316,9 @@ msig_GSEA_results %>% arrange(-NES) %>% View()
  ```{r}
 dotplot(msig_GSEA, split=".sign") +facet_grid(.~.sign)
 ```
+<p align="center">
+<img src="../img/gsea_msig.png"  width="600">
+</p>
 
 ### GSEA visualization
 Let's explore the GSEA plot of enrichment of one of the pathways in the ranked list using a built-in function from clusterProfiler. We can pick the top term
