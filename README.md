@@ -4,7 +4,6 @@
 :----------|:----------|:----------|:----------|
 | Biologists | Intermediate | None | Introduction to R |
 
-> NOTE: **This workshop is currently under development.**
 
 This repository has teaching materials for a hands-on **Peak Analysis** workshop. This workshop will use the R statistical programming environment to evaluate files generated from peak calling of ChIP-seq (and related approaches i.e. CUT&RUN and ATAC-seq) data. We will provide participants with a suite of tools and a basic workflow beginning with quality metrics through to annotation and visualization. This workshop will introduce participants to:
 
@@ -31,7 +30,7 @@ Working knowledge of R is required or completion of the [Introduction to R works
   
 ### Dataset - ADD LINKS
 
-### Installation Requirements - UPDATE
+### Installation Requirements 
 
 Download the most recent versions of R and RStudio for your laptop:
 
@@ -46,6 +45,8 @@ Download the most recent versions of R and RStudio for your laptop:
 ```r
 install.packages("BiocManager")
 install.packages("tidyverse")
+install.packages("pheatmap")
+install.packages("UpSetR")
 ```
 
 **Note that these package names are case sensitive!**
@@ -66,13 +67,13 @@ Note that these package names are case sensitive!
 ChIPseeker
 DiffBind
 clusterProfiler
-AnnotationDbi
-TxDb.Hsapiens.UCSC.hg19.knownGene
-EnsDb.Hsapiens.v75
-org.Hs.eg.db
+TxDb.Mmusculus.UCSC.mm10.knownGene
+IRanges
+GenomicRanges
+
 ```
 
-> **NOTE:** The library used for the annotations associated with genes (here we are using `TxDb.Hsapiens.UCSC.hg19.knownGene` and `EnsDb.Hsapiens.v75`) will change based on organism (e.g. if studying mouse, would need to install and load `TxDb.Mmusculus.UCSC.mm10.knownGene`). The list of different organism packages are given [here](https://github.com/hbctraining/Training-modules/raw/master/DGE-functional-analysis/img/available_annotations.png).
+> **NOTE:** The library used for the annotations associated with genes (here we are using `TxDb.Mmusculus.UCSC.mm10.knownGene` and `EnsDb.Hsapiens.v75`) will change based on organism (e.g. if studying mouse, would need to install and load `TxDb.Mmusculus.UCSC.mm10.knownGene`). The list of different organism packages are given [here](https://github.com/hbctraining/Training-modules/raw/master/DGE-functional-analysis/img/available_annotations.png).
 
 (3) Finally, please check that all the packages were installed successfully by **loading them one at a time** using the `library()` function.  
 
