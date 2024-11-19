@@ -14,42 +14,52 @@ Approximate time:
 * Perform over-representation analysis using clusterProfiler on the significant genes from DiffBind.
 * Discuss the Functional analysis approaches and the biological insights from the analysis.
 
-
-
 ## Overview
 
-Functional enrichment analysis will determine whether some functions are enriched in the differentially bound sites. Here, we will map the differentially bound sites to a functional annotation database and visualize the enrichment. Functional enrichment analysis gives insights on the collective function of the group of genes rather than individuals.
+Functional enrichment analysis will determine whether some functions are enriched in the differentially bound sites. In this step, we will map the differentially bound sites to a functional annotation database and visualize the enrichment. This analysis provides insights into the collective function of a group of genes rather than focusing on individual genes.
 
-This is the next step after we get a list of differentially bound sites in the comparison.
-Functional enrihment analysis generally follows following three decision steps.
+Functional enrichment analysis typically involves three key decision steps:
 
-1. Use of different gene identifiers and gene descriptions for functional annotation (Entrezid, Uniprot, KEGG, etc.)
-2. Over-Representation Analysis (ORA) vs Gene Set Enrichment Analysis.
-3. Using R or Web-based tools.
+1. Over-Representation Analysis (ORA) vs Gene Set Enrichment Analysis.
+2. Use of different gene identifiers and gene descriptions for functional annotation (Entrezid, Uniprot, KEGG, etc.)
+3. Using R/python or Web-based tools.
 4. Interpreting the results.
 
-In this session, we will peform Over-representation analysis (ORA) using an R Bioconductor package called `clusterProfiler`.
+In this session, we will peform Over Representation Analysis (ORA) using the R Bioconductor package called `clusterProfiler`.
 
 # Over-representation analysis
 
-Over-representation analysis is used to determine whether the biological functions or pathways represented in the list of interesting genes occur more than expected by chance (over-represented) compared to the biological functions or pathway in the complete list of genes. Most genes in the genome have some pre-existing annotation associated with it which has been compiled through a combination of manual curation and computational algorithms. There are a number of existing databases which define genes using a controlled vocabulary and then categorize genes into groups (gene sets) based on shared function, or involvement in a pathway, or presence in a specific cellular location etc. A very commonly used gene annotataion resource is the Gene Ontology (GO) database, and is what we will use in our workflow.
+Over Representation Analysis (ORA) determines whether the biological functions or pathways associated with a list of genes of interest are over-represented (i.e occur more frequently than expected by chance) when compared to the complete list of genes. 
+
+Most genes in the genome have pre-existing annotations compiled through a combination of manual curation and computational algorithms. Various databases use controlled vocabularies to define genes and categorize them into groups (gene sets) based on shared functions, pathway involved, callular localization and more. 
+
+A widely used gene annotation resource is the Gene Ontology (GO) database, which we will utilize in this workflow. 
+
 
 ## Hypergeometric test
-The statistical test that will determine whether something is actually over-represented is the Hypergeometric test.
+The statistical method used to determine whether a category is over-represented is the Hypergeometric test.
 
-Hypergeometric distribution is a probability distribution that describes the probability of some number of genes (k) being associated with "Functional category 1", for all genes in our gene list (n), compared to drawing some number of genes (M) associated with "Functional category 1" from a population of all of the genes in entire genome (N).
+The hypergeometric distribution describes the probability of observing some number of genes (k) associated with a specific functional category (e.g "Functional category 1") in a list of of all of the genes (n), compared to the total number of genes (M) associated with that functional category in the entire genome with (N) genes.
 
-The p-value can be calculated as:
+The p-value is calcualted using the formula:
 
 $$ P(X = k) = \frac{\binom{K}{k} \binom{N - K}{n - k}}{\binom{N}{n}} $$
 
-This test will result in an adjusted p-value (after multiple test correction) for each category tested.
+Where:
+
+- k: Number of genes assocaited with the functional category in the gene list.
+- n: Total number of genes in the gene list.
+- M: Total number of genes associated with the functional category in the genome.
+- N: Total number of genes in the genome.
+
+
+The test produces a p-value for each category tested, and multiple testing correction is applied to adjust these p-values. This ensures statistical rigor when identifying significantly over-represented categories.
 
 # Running ORA with clusterProfiler
 
-Now lets take our significantly differentially bound sites and their nearest gene annotation to determine if there are any GO terms over-represented in the list of our gene of interest. 
+Now, let's analyze our significantly differentially bound sites and their nearest gene annotations to determine if any GO terms are over-represented in our gene list of interest. 
 
-First open a R script in our RStudio and load the GRange object saved with the result from DiffBind analysis.
+First, open an R script in RStudio and load the GRange object saved from the results of the DiffBind analysis along with the packages we will need.
 
 
 ```{r}
@@ -59,48 +69,64 @@ library(ChIPseeker)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 library(clusterProfiler)
 
+# Load result from DiffBind analysis
 res_all <- readRDS("res_all.rds")
-
 ```
 
-Annotate the with ChipSeeker
-This GRange object contains the result output from the Diffbind analysis. It has the information about the sites those were analysed with genomic coordinates and the other statistics like Fold change, pvalue and FDR for each of those sites.
-Before we proceed with the functional analysis, we need to annotate the site loci with the nearest gene name. To do that we will use chipSeeker.
+## Annotating Peaks with ChIPseeker
+This GRange object `res_all` contains results from the Diffbind analysis, including genomic coordinates, fold change, p-values, and FDR for each analyzed site. Before functional analysis, we need to annotate the genomic loci with their nearest gene names.
 
 ```{r}
-annot_res_all <- annotatePeak(res_all, tssRegion = c(-3000, 3000), TxDb = TxDb.Hsapiens.UCSC.hg38.knownGene, annoDb = "org.Hs.eg.db")
+annot_res_all <- annotatePeak(res_all, tssRegion = c(-3000, 3000), TxDb = TxDb.Hsapiens.UCSC.hg19.knownGene, annoDb = "org.Hs.eg.db")
 ```
 
-Note: You can plot the annotation using chipSeeker to see the distribution of genomic features in our result file.
+## Visualization of Peak Annotation
+We can visualize the annotation to better understand the distribution of genomic features.
 
+### Pie chart
 ```{r}
 plotAnnoPie(annot_res_all)
+```
+
+### Bar plot
+```{r}
 plotAnnoBar(annot_res_all)
+```
+
+### Upset plot
+```{r}
 upsetplot(annot_res_all)
+```
+
+### Distance to TSS
+```{r}
 plotDistToTSS(annot_res_all)
 ```
+
+## Preparing Data for ORA
 
 To run ORA analysis we need a background dataset and a query dataset. In our case, we will use all the sites in our analysis as a background and significantly upregulated sites in cKO vs WT as a query set for the hypergeometric test.
 
 
-Lets convert the annotated GRange object to a dataframe.
+Convert the annotated GRange object to a dataframe.
 ```{r}
 annot_res_all_df <- as.data.frame(annot_res_all)
 ```
 
-Create a background dataset for the hypergeometric testing.
-
+Create the background dataset.
 ```{r}
 background_set <- as.character(annot_res_all_df$geneID)
 ```
 
-Extract gene list for the significantly upregulated genes in cKO vs WT to prepare a query set for ORA.
+Extract gene list for the significantly upregulated genes in cKO vs WT to prepare a query set.
 
 ```{r}
 sigUP <- dplyr::filter(annot_res_all_df, FDR < 0.1, Fold > 0)
 sigUp_genes <- as.character(sigUp$geneId)
 ```
+
 Now we can perform ORA with Gene Ontology (GO) dataset as follows.
+
 ```{r}
 go_ORA_Up <- enrichGO(gene = sigUp_genes,
                       universe = background_set,
@@ -112,11 +138,7 @@ go_ORA_Up <- enrichGO(gene = sigUp_genes,
                       readable = TRUE)
 ```
 
-Note: Note 1: The different organisms with annotation databases available to use with for the OrgDb argument can be found here.
-
-Note 2: The keyType argument may be coded as keytype in different versions of clusterProfiler.
-
-Note 3: The ont argument can accept either "BP" (Biological Process), "MF" (Molecular Function), and "CC" (Cellular Component) subontologies, or "ALL" for all three.
+    Note: The ont argument can accept either "BP" (Biological Process), "MF" (Molecular Function), and "CC" (Cellular Component) subontologies, or "ALL" for all three.
 
 Lets save the ORA results
 
@@ -127,10 +149,11 @@ write.csv(go_ORA_Up_df, "results/GO_ORA_clusterProfiler_cKO_vs_WT_Upregulated.cs
 
 # Exploring results from ORA analysis.
 
-Let's take a look at what terms are identified as over-represented in the genes up-regulated in cold conditions.
+Let's take a look at what terms are identified as over-represented in the up-regulated genes in cKO vs WT.
 ```{r}
 View(go_ORA_Up_df)
 ```
+#### Key Columns in Results
 In the first few columns we see the GO identifier and the descriptive term name. In the next two columns that follow, we observe GeneRatio and BgRatio. These values allows us to compare the overlaps to the background.
 
 BgRatio: M/N
@@ -151,17 +174,23 @@ Exercise:
 
 # Plotting the ORA results
 
-There are multiple options to plot the ORA results through clusterProfiler. Lets explore few of them:
+There are multiple options to plot the ORA results through clusterProfiler. Lets explore a few of them:
 
 ## Dotplot
-It shows statistics associated with a user-selected top number (default=10) of significant terms. The color of the dots represent the p-adjusted values for these terms, and size of the dots corresponds to the total count of sig DE genes annotated with the GO term (count). This plot displays the enriched GO terms ordered by gene ratio, not p-adjusted value.
+This plot visualizes the top GO terms based on gene ratio not p-adjusted value. The dot size reflect the gene count and color represents the adjusted p-values.
 
 <p align="center">
 <img src="../img/ORA_dotplot_go.png"  width="600">
 </p>
 
 ## Enrichment plot
-Enrichment map arranges enriched terms into a network, where nodes represents the enriched terms and edges representing gene overlaps between nodes. This way nodes with bigger number of overlapping genes tends to cluster closer, making it easy to identify functional modules. Before creating the plot, we will need to obtain the similarity between terms using the `pairwise_termsim()` function [instructions for emapplot](https://rdrr.io/github/GuangchuangYu/enrichplot/man/emapplot.html). In the enrichment plot, the color represents the p-values relative to the other displayed terms (brighter red is more significant), and the size of the terms represents the number of genes that are significant from our list.
+An enrichment map organizes enriched terms into a network where nodes represent the enriched terms, and edges signify gene overlaps between those terms. Terms with a greater number of overlapping genes tend to cluster closer together, forming functional modules. This visualization makes it easier to identify related biological themes or processes.
+
+Before generating the enrichment plot, the similarity between terms must be computed using the `pairwise_termsim()` function. For detailed instrucitons, refer to the [emapplot documentation](https://rdrr.io/github/GuangchuangYu/enrichplot/man/emapplot.html). 
+
+In the enrichment plot, the node color indicates the p-value of the terms relative to the displayed ones. The size of the terms represent the number of genes associated with each term.
+
+This visualization provides an intuitive way to explore enriched pathways and their interconnections. 
 
 ```{r}
 go_ORA_Up <- enrichplot::pairwise_termsim(go_ORA_Up)
@@ -174,9 +203,9 @@ emapplot(go_ORA_Up)
 
 # Gene Set Enrichment Analysis (GSEA)
 
-GSEA follows a different statistical approach on functional enrichment of gene sets. Unlike ORA, which requires to subset the gene of interest using an arbitrary threshold, GSEA takes all the genes as input. The gene-level statistics from the dataset are aggregated to generate a single pathway-level statistic and statistical significance of each pathway is reported. This type of analysis can be particularly helpful if the differential expression analysis only outputs a small list of significant DE genes.
+Gene Set Enrichment Analysis (GSEA) employs a differnt statistical approach for functional enrichment of gene sets compared to Over-Representation Analysis (ORA). Unlike ORA, which subsets genes of interst using an arbitrary threshold, GSEA considers all genes as input. Gene-level statistics (e.g. log2 fold changes) are aggregated to generate pathway-level statistics, and the statistical significance of each pathway is reported. This approach is particularly useful when differnetial expression analysis yields a small list of significant differentially expressed (DE) genes. 
 
-A commonly used example of an FCS method is GSEA [Subramanium A. et al, 2005](https://www.pnas.org/doi/10.1073/pnas.0506580102). Gene set enrichment analysis utilizes the gene-level statistics or log2 fold changes for all genes to look to see whether gene sets for particular biological pathways (e.g., derived from KEGG pathways, Gene Ontology terms, MSigDB, etc) are enriched among the large positive or negative fold changes.
+A widely used example of a Functional Class Scoring (FCS) method is GSEA [Subramanium A. et al, 2005](https://www.pnas.org/doi/10.1073/pnas.0506580102). Gene set enrichment identifies whether gene sets associated with specific biological pathways (e.g. KEGG, Gene Ontology, MSigDB, etc) are enriched among genes with the highest or lowest fold changes.
 
 <p align="center">
 <img src="../img/gsea_overview.png"  width="600">
@@ -184,18 +213,28 @@ A commonly used example of an FCS method is GSEA [Subramanium A. et al, 2005](h
 
 Image source: [Subramanium A. et al, 2005](https://www.pnas.org/doi/10.1073/pnas.0506580102)
 
-This image describes the theory of GSEA, with the 'gene set S' showing the metric used (in our case, ranked log2 fold changes) to determine enrichment of genes in the gene set. There are four main steps that are being performed:
+This image illustrates the theory of GSEA, where 'gene set S' highlights the metric used (e.g. ranked log2 fold changes) to assess the enrichment of genes in the gene set. The analysis involces four main steps:
 
 1. Rank genes:
-  - Genes in a data set are ranked based on the given statistic, which in our case is the log2 fold changes.
+   
+  - Genes are ranked based on a statistic, such as log2 fold changes.
+    
 2. Calculate enrichment scores for each gene set
-  - This score reflects how often genes in the set appear at the top or bottom of the ranked list.
-  - The score is calculated by walking down the list of log2 fold changes and increasing the running-sum statistic every time a gene in the gene set is encountered and decreasing it when genes are not part of the gene set.
-  - Increase/decrease is determined by magnitude of fold change.
+   
+  - This score measures how often genes in a set appear at the extremes (top or bottom) of the ranked list.
+    
+  - The score is computed by walking through the ranked list and:
+        - Increasing the running-sum statistic for each gene in the set.
+        - Decreasing the score for genes not in the set.
+        - The magnitude of the score change depends on the fold change.
+
 3. Estimate statistical significance
-  - A permutation test is used to calculate a null distribution for the enrichment score. This produces a p-value that represents the probability of observing a given enrichment score.
+  - A permutation test is used to calculate a null distribution of enrichment score, providing a p-value for each pathway.
+    
 4. Adjust for multiple hypothesis testing
-  - Enrichment scores are normalized for the size of each gene set and a false discovery rate is calculated to prevent false positives.
+  - Enrichment scores are normalized for gene set size, and a false discovery rate (FDR) is calculated to control for false positives.
+
+~~~~~~~~~~~~~~~~~
     
 ## Running GSEA with MSigDB gene sets
 
