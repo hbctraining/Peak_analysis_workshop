@@ -74,6 +74,11 @@ res_all <- readRDS("res_all.rds")
 ```
 
 ## Annotating Peaks with ChIPseeker
+
+Many annotation tools use nearest gene methods for assigning a peak to a gene in which the algorithm looks for the nearest TSS to the given genomic coordinates and annotates the peak with that gene. This can be misleading as binding sites might be located between two start sites of different genes.
+
+The `annotatePeak()` function, as part of the `ChIPseeker`///÷ package, uses the nearest gene method described above but also provides parameters to specify a max distance from the TSS. For annotating genomic regions, annotatePeak will not only give the gene information but also reports detail information when genomic region is Exon or Intron.
+
 This GRange object `res_all` contains results from the Diffbind analysis, including genomic coordinates, fold change, p-values, and FDR for each analyzed site. Before functional analysis, we need to annotate the genomic loci with their nearest gene names.
 
 ```{r}
@@ -88,20 +93,33 @@ We can visualize the annotation to better understand the distribution of genomic
 plotAnnoPie(annot_res_all)
 ```
 
+<p align="center">
+<img src="../img/Chipseq_piechart.png"  width="600">
+</p>
+
 ### Bar plot
 ```{r}
 plotAnnoBar(annot_res_all)
 ```
+<p align="center">
+<img src="../img/Chipseq_featuredist.png"  width="600">
+</p>
 
 ### Upset plot
 ```{r}
 upsetplot(annot_res_all)
 ```
+<p align="center">
+<img src="../img/Chipseq_upsetR.png"  width="600">
+</p>
 
 ### Distance to TSS
 ```{r}
 plotDistToTSS(annot_res_all)
 ```
+<p align="center">
+<img src="../img/Chipseq_tssdist.png"  width="600">
+</p>
 
 ## Preparing Data for ORA
 
@@ -234,31 +252,32 @@ This image illustrates the theory of GSEA, where 'gene set S' highlights the met
 4. Adjust for multiple hypothesis testing
   - Enrichment scores are normalized for gene set size, and a false discovery rate (FDR) is calculated to control for false positives.
 
-~~~~~~~~~~~~~~~~~
+
     
 ## Running GSEA with MSigDB gene sets
 
-The clusterProfiler package offers several functions to perform GSEA using different genes sets, including but not limited to GO, KEGG, and MSigDb. We will use the MSigDb gene sets in our example below. The Molecular Signatures Database (also known as MSigDB) is a collection of annotated gene sets.
+The `clusterProfiler` package offers several functions to perform GSEA using various genes sets, including GO, KEGG, and MSigDb. Below is an example using MSigDb gene sets. MSigDB (Molecular Signatures Database) is a curated collection of annotated gene sets.
 
-We can use msigdbr_species() function to look at the information about species included in the dataset.
+We can use `msigdbr_species()` function to look at the information about species included in the dataset.
 
 ```{r}
 msigdbr_species()
 ```
 
-To look at what gene sets are available
+To look at the available gene sets collections:
 
 ```{r}
 msigdbr_collections()
 ```
-For our analysis we will select the human C5 collection. which is the collection of GO database. From the table, we only need two columns, Gene set name and the Gene symbol.
+For our analysis, we use the human C5 collection (Gene Ontology). Extract only the Gene set name and the Gene symbol columns.
 
 ```{r}
 m_t2g <- msigdbr(species = "Homo sapiens", category = "C5") %>%
   dplyr::select(gs_name, gene_symbol)
 ```
+### Prepare input for GSEA
 
-Now we need to extract fold chance and gene identifier. GSEA will use the fold changes obtained from the differential expression analysis for every gene to perform the analysis. We need to create an ordered and named vector for input to clusterProfiler.
+Extract fold changes and gene identifiers. GSEA will use the fold changes obtained from the differential expression analysis for every gene to perform the analysis. We need to create a sorted and named vector for input to `clusterProfiler`.
 
 ```{r}
 fold_change <- annot_res_all_df$Fold
@@ -266,7 +285,7 @@ names(fold_change) <- annot_res_all_df$SYMBOL
 fold_change <- sort(fold_change, decreasing = TRUE)
 ```
 
-Now lets run GSEA
+### Run GSEA
 ```{r}
 msig_GSEA <- GSEA(fold_change, TERM2GENE = m_t2g, verbose = FALSE)
 msig_GSEA_results <- msig_GSEA@result
@@ -275,7 +294,12 @@ msig_GSEA_results <- msig_GSEA@result
 write.csv(msig_GSEA_results, "results/gsea_msigdb_GO_cko_vs_wt.csv, quote=F)
 ```
 
-NOTE: The permutations are performed using random reordering, so every time we run the function we will get slightly different results. If we would like to use the same permutations every time we run a function, then we use the set.seed() function prior to running. The input to set.seed() can be any number.
+    NOTE: The permutations are performed using random reordering, so every time we run the function we will get slightly different results. If we would like to use the same permutations every time we run a function, then we use the set.seed() function prior to running. The input to set.seed() can be any number.
+    ```{r}
+    set.seed(123) # replace 123 with any number
+    ```
+    
+### Inspect Results
 
 Take a look at the results table and reorder by NES (normalized enrichment score). What terms do you see positively enriched? Does this overlap with what we observed from ORA analysis?
 
@@ -305,19 +329,37 @@ gseaplot(msig_GSEA, geneSetID = 'GOBP_MUSCLE_STRUCTURE_DEVELOPMENT')
 <img src="../img/gsea_muscle_structure.png"  width="600">
 </p>
 
-In this plot, the lines in plot represent the genes in the gene set 'GOBP_MUSCLE_STRUCTURE_DEVELOPMENT', and where they occur among the log2 fold changes. The largest positive log2 fold changes are on the left-hand side of the plot, while the largest negative log2 fold changes are on the right. The top plot shows the magnitude of the log2 fold changes for each gene, while the bottom plot shows the running sum, with the enrichment score peaking at the red dotted line (which is among the positive log2 fold changes). This suggests the up-regulation of this function.
+In the plot:
+1. The lines in plot represent the genes in the gene set 'GOBP_MUSCLE_STRUCTURE_DEVELOPMENT', and where they occur among the log2 fold changes.
+2. The largest positive log2 fold changes are on the left-hand side of the plot, while the largest negative log2 fold changes are on the right.
+3. The top plot shows the magnitude of the log2 fold changes for each gene.
+4. The bottom plot shows the running sum, with the enrichment score peaking at the red dotted line (which is among the positive log2 fold changes). This suggests the up-regulation of this function.
 
+
+
+# Functional enrichment: Web based tools
+
+There are also web-based tool for enrichment analysis on genomic regions, and a popular one is [GREAT](http://great.stanford.edu/public/html/) (Genomic Regions Enrichment of Annotations Tool). GREAT is used to analyze the functional significance of cis-regulatory regions identified by localized measurements of DNA binding events across an entire genome [Reference paper](http://bejerano.stanford.edu/papers/GREAT.pdf). It incorporates annotations from 20 different ontologies and is an easy to use tool which generates annotation and downstream functional enrichement results for genomic coordinate files. The utility of GREAT is not limited to ChIP-seq, as it could also be applied to open chromatin, localized epigenomic markers and similar functional data sets, as well as comparative genomics sets.
+
+In the interest of time we will not go into the details of using GREAT, however we have materials linked [here](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/web_based_functional_analysis.html) if you are interested in testing it out with this dataset. There also [demo datasets](http://great.stanford.edu/public/html/demo.php) on the GREAT website that you can use to test out the functionality of the tool.
 
 ## Resources for functional analysis
-In this lesson we reviewed two different approaches for functional analysis and demonstrated the with the use of the clusterProfiler package. Note that there are numerous other options out there, including the use of web-based tools. Below we list a few tools that we are familiar with:
+In this lesson, we reviewed a few approaches for functional analysis and demonstrated the use of clusterProfiler package. Note that there are numerous other options out there, including the use of web-based tools. Below we list a few tools that we are familiar with:
 
 g:Profiler - http://biit.cs.ut.ee/gprofiler/index.cgi
+
 DAVID - https://david.ncifcrf.gov
+
 clusterProfiler - http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html
+
 ReviGO (visualizing GO analysis, input is GO terms) - http://revigo.irb.hr/
+
 WGCNA - https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/ (no longer maintained)
+
 GSEA - http://software.broadinstitute.org/gsea/index.jsp
+
 SPIA - https://www.bioconductor.org/packages/release/bioc/html/SPIA.html
+
 GAGE/Pathview - http://www.bioconductor.org/packages/release/bioc/html/gage.html
 
 
