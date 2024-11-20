@@ -8,7 +8,7 @@
 * Please **study the contents** and **work through all the exercises** within the following lessons:
   * [Workflow overview: From sequenced reads to peaks](../lessons/00a_peak_calling_workflow_review.md)
   * [Existing workflows for ChIP-seq analysis](../lessons/00b_peak_calling_with_nfcore.md)
-  * Download the compressed R Project that we will be using by right-clicking on [this link](https://www.dropbox.com/scl/fi/q65yhy60q41p0zpv7ffat/Peak_analysis.zip?rlkey=mfzg1bnbjkabox1zwxb7gn9od&st=4xxsrmkd&dl=1) and selecting **"Save Link As..."** and download the compressed R Project to your desired location. Double-click on the compressed ZIP file in order to uncompress it.
+  * Download the compressed R Project that we will be using by right-clicking on [this link](https://www.dropbox.com/scl/fi/s9mxwd7ttqgjt040m6bm2/Peak_analysis.zip?rlkey=ceqbv4pyx59jxsoa0xoh9l6kb&st=q7rlclil&dl=1) and selecting **"Save Link As..."** and download the compressed R Project to your desired location. Double-click on the compressed ZIP file in order to uncompress it.
  
   
 ## Day 1
