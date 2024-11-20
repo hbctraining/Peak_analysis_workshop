@@ -25,35 +25,30 @@ In our peak files we have genomic coordinates identifying regions of the genome 
 
 ### Load libraries
 
-First we need to set up our environment by loading some useful packages to help us process our data. 
+First we need to set up our environment by loading required libraries to help us process our data. In this lesson we are mostly creating figures using data contained in `metrics.csv`. These figures will created using `ggplot2` and so we load the tidyverse suite, which provides additional functionality for data wrangling shoudl we need it.
 
 ```
 # Load libraries
 library(tidyverse)
-library(ChIPseeker)
-library(DiffBind)
-library(clusterProfiler)
-library(AnnotationDbi)
-library(TxDb.Hsapiens.UCSC.hg19.knownGene)
-library(EnsDb.Hsapiens.v75)
 ```
 
 ### Load data
 
-Locate the metrics summary file called `metrics.csv` which is located in the `data` folder of your working directory. We have created for you file which compiles all the metrics for each of the samples in the dataset. It is a CSV in which each row corresponds to a sample, and each column contains information for a quality metric. 
-
-> NOTE: For more information on how this metrics.csv, you can [link to lesson](00b).
-
-For each metric we will describe what it represents and how it is calculated. We provide code for you such that you may use it compute similar metrics for your own dataset and create your own CSV. 
- 
- > **Note that the majority of the code we provide is for command-line tools, not R.** If you are attempting to run this on your own data it may be beneficial to run this on your local high performac compute cluster where these tools are commonly pre-installed for you.
-
+Locate the metrics summary file called `metrics.csv` which is located in the `meta` folder of your working directory. It is a CSV file in which each row corresponds to a sample, and each column contains information for a quality metric. 
 
 ```
 ## Load file
 metrics <- read.csv("data/metrics.csv")
+View(metrics)
 ```
 
+> #### How was `metrics.csv` generated?
+> As discussed in the [pre-reading lesson](00b_peak_calling_with_nfcore.md), this dataset was run through the nf-core/chipseq pipeline. All of the outputs from the pipeline are used as input to various parts of this workshop. **The `metrics.csv` was compiled using an R package called [`bcbioR`](https://github.com/bcbio/bcbioR/tree/main).** This package takes the output folder from an nf-core run and compiles data and code into a .Rmd template that can be used to look at the same QC metrics that we discuss in this workshop.
+>
+> _We acknowledge that most participants if this workshop will not be using nf-core._ As such for each metric, we will describe what it represents and how it is computed. We **provide code for you such that you may use it compute similar metrics** for your own dataset and create your own CSV.
+
+ **Note that the majority of the code we provide is for command-line tools, not R.** If you are attempting to run this on your own data it may be beneficial to run this on your local high performac compute cluster where these tools are commonly pre-installed for you.
+ 
 ### Total reads
 
 One of the most basic quality evaluations we can make for any genomic (or transcriptomic) data set is to look at the total number of reads in each sample. Ideally, we want to see consistency across samples, and especially across any treatment groups we might compare. We also want to see a minimum of about 20 million reads (represented by the black dashed line).
