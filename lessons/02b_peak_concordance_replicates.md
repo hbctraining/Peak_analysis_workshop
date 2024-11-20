@@ -12,83 +12,44 @@ Approximate time:
 
 * Evaluate signal enrichment vs rank plots for samples in dataset
 * Plot PCA and hierarchical clustering to assess inter-sample variability
-* Histogram of quality scores
   
 ## Concordant peak calls between samples
 
-In the previous lesson, we evaluated quality metrics concerning peaks and reads in peaks in individual samples. But these aren't the only ways to measure quality in our data set. We did look for consistency of these metrics across all of our samples, but now it's time for a closer look at our samples to see how concordant they are, particularly for samples within treatment groups, as we expect these samples to look more similar to each other than they do to samples in other treatment groups.
+In the previous lesson, we evaluated quality metrics concerning peaks and reads in peaks in individual samples. But these aren't the only ways to measure quality in our data set. We did look for consistency of these metrics across all of our samples, but now it's **time for a closer look at our samples to see how they comapre for samples within treatment groups and between groups**. To do this we will be visualizing our data using two different types of data: 1) read count distribution across the genome and 2) siganl enrichment within regions called as peaks.
 
-## Variance Stabilizing Transformation (VST)
+## Read count density 
+Two commonly used methods for evaluating sample similarity is the use of Principal Components Analysis (PCA) and hierarchical clustering. In order to implement both of these, we need the **appropriate inputs**. The requirement is a data matrix. In the case of ChIP-seq or related data, this **matrix would have samples in the columns and genomic regions in the rows**. This matrix can be created using a command-line tool called [`multiBamSummary`](https://deeptools.readthedocs.io/en/develop/content/tools/multiBamSummary.html) from the [deepTools suite](https://deeptools.readthedocs.io/en/develop/index.html) for exploring deep sequencing data. Since this is an R-based workshop, **we have created the matrix for you**, but have provided the code in the drop-down below if you wanted to use it on your own data.
 
-Before we look at peak concordance, we will want to normalize our samples to account for library size and composition. This will make our samples more comparable. If your data was processed using nf-core and our bcbioR pipeline, then this step will already be taken care of for us. But if you're working from your own data set, you'll need to load the DESeq2 library and run the `vst()` function on your raw counts. Conveniently, the `vst()` function will calculate the library size of your files, so you don't have to take an extra step to do that:
 
-```
-library(DESeq2)
+<details>
+<summary><b>Click here for the code to create a read count matrix using deepTools</b></summary>
+<br>The command <code>multiBamSummary</code> computes the read coverages for genomic regions for two or more BAM files. The analysis can be performed for the entire genome by running the program in ‘bins’ mode. If you want to count the read coverage for specific regions only (for example only consensus regions), you can use the BED-file mode instead. <br><br>
+The standard output of multiBamSummary is a compressed numpy array (.npz), which can be used with other functions in deepTools to create PCA plots and correlation heatmaps. <b>Instead we opt to get a tab-delimited file to allow us flexibility to create our own plots by using the <code>--outRawCounts</code> parameter.</b><br>
 
-vst_norm_counts <- vst(raw_counts)
-```
+The command to run this is:</br></br>
+<pre>
+multiBamSummary bins \
+	  --bamfiles cKO_H3K27ac_ChIPseq_REP1.mLb.clN.sorted.bam cKO_H3K27ac_ChIPseq_REP2.mLb.clN.sorted.bam cKO_H3K27ac_ChIPseq_REP3.mLb.clN.sorted.bam \
+               cKO_H3K27ac_input_REP1.mLb.clN.sorted.bam cKO_H3K27ac_input_REP2.mLb.clN.sorted.bam cKO_H3K27ac_input_REP3.mLb.clN.sorted.bam \
+               WT_H3K27ac_ChIPseq_REP1.mLb.clN.sorted.bam WT_H3K27ac_ChIPseq_REP2.mLb.clN.sorted.bam WT_H3K27ac_ChIPseq_REP3.mLb.clN.sorted.bam \
+               WT_H3K27ac_input_REP1.mLb.clN.sorted.bam WT_H3K27ac_input_REP2.mLb.clN.sorted.bam WT_H3K27ac_input_REP3.mLb.clN.sorted.bam \
+	  --outFileName multiBamsummary.npz \
+	  --labels cKO_1 cKO_2 cKO_3 cKO_i1 cKO_i2 cKO_i3 WT_1 WT_2 WT_3 WT_i1 WT_i2 WT_i3 \
+	  -p 6 \
+	  --outRawCounts multiBAMsummary.tab
+</pre></br>
 
-However, as mentioned, this step is already taken care of for us. We can load our data in and move on to the next steps.
+</details>
 
-First, we will load in two additional data objects, `dds` and `peaks.rds`.
-
-The `dds.rds` object contains counts from a DESeq2 dds object ####COUNT DATA FROM WHAT, HOW DOES THIS DIFFER FROM PEAKS ALSO THE OBJECT IS ACTUALLY A FULL DDS DESPITE LOAD_DATA.R ALLEGEDLY EXTRACTING ONLY THE COUNTS. It was created from the `H3K27ac.consensus_peaks.rds` output from nf-core ###EXPLAIN WHAT NFCORE DID TO THIS DATA. You can download the `dds` object [here] ####INSERT LINK. 
-
-The `peaks.rds` object was created from XXXX output from nf-coure, which then underwent some addditional processing in our `load_data.R` script ###EXPLAIN WHAT NFCORE AND LOAD_DATA.R DID TO THIS DATA. It contains peaks data ####EXPLAIN IN MORE DETAIL. ####LINK TO SCRIPT AS REFERENCE. You can download the `peaks.rds` object [here] ####INSERT LINK. 
-
-```
-peaks <- readRDS("peaks.rds")
-dds <- readRDS("dds.rds")
-```
-
-Then, we will do some additional processing to add metadata (`coldata`) from our `metrics` object to our `dds` and `peaks` objects to make them easier to plot:
-
-```
-#extract metadata from metrics corresponding to the sample names in dds
-rownames(metrics) <- metrics$sample
-coldata_for_dds = metrics[colnames(dds),]
-stopifnot(all(colnames(dds) == rownames(coldata_for_dds)))
-```
-
-Now we are ready to start looking at peak concordancE
-
-## Signal enrichment vs peak rank
-
-One way to evaluate concordance of peaks between samples is a signal enrichment vs peak rank plot. This shows the rank of each peak vs the strength of each peak for each repilcate. It will help us evaluate the number of peaks we would retain if thresholding by peak enrichment:
+We have created two versions of the read count matrix: one that contains ChIP and input samples and another that contains ChIP samples only. Both of these files can be found in the `data/multBamSummary` folder. Let's read in the data:
 
 ```
-ggplot(peaks, aes(x = peak_rank, y = peak_enrichment, color = sample)) + 
-  geom_line() +
-  xlab("Peak rank") + ylab("Peak enrichment")
-```
-
-It is also valuable to see how this differs between replicates within a sample group. By adding faceting to our plot, we can more easily look at samples within each genotaype to evaluate sample similarity:
+# Read in data
 
 ```
-ggplot(peaks, aes(x = peak_rank, y = peak_enrichment, color = sample)) + 
-  geom_line() +
-  facet_grid(. ~ genotype) +
-  xlab("Peak rank") + ylab("Peak enrichment")
-```
 
-####INSERT PR v PE PLOT HERE
+> #### Should we normalize the data matrix?
 
-Our data looks pretty consistent between samples until enrichment is low ####COMMENT ON MEANING BHIND THIS
-
-## Histogram of quality scores
-
-Here, we plot a histogram of peak signal values for each sample. This plot can be used to help determine a minimum value for peak enrichment that can be used for filtering. 
-
-```
-ggplot(peaks, aes(x = peak_enrichment, fill = .data[[params$factor_of_interest]])) + 
-  geom_histogram(aes(peak_enrichment)) +
-  scale_fill_cb_friendly() +
-  xlab("Peak enrichment")
-```
-
-####INSERT IMAGE HERE
-
-####WRITE NOTE ABOUT HOW OUR DATA LOOKS AND WHETHER WE SHOULD DO ANY FILTERING
 
 ## Principal Component Analysis (PCA)
 
@@ -157,6 +118,51 @@ As expected given what we saw in the PCA plots, our samples cluster nicely by ge
 
 
 ####INSERT IMAGE HERE
+
+
+## Signal concordance across peaks
+
+
+
+## Signal enrichment vs peak rank
+
+One way to evaluate concordance of peaks between samples is a signal enrichment vs peak rank plot. This shows the rank of each peak vs the strength of each peak for each repilcate. It will help us evaluate the number of peaks we would retain if thresholding by peak enrichment:
+
+```
+ggplot(peaks, aes(x = peak_rank, y = peak_enrichment, color = sample)) + 
+  geom_line() +
+  xlab("Peak rank") + ylab("Peak enrichment")
+```
+
+It is also valuable to see how this differs between replicates within a sample group. By adding faceting to our plot, we can more easily look at samples within each genotaype to evaluate sample similarity:
+
+```
+ggplot(peaks, aes(x = peak_rank, y = peak_enrichment, color = sample)) + 
+  geom_line() +
+  facet_grid(. ~ genotype) +
+  xlab("Peak rank") + ylab("Peak enrichment")
+```
+
+####INSERT PR v PE PLOT HERE
+
+Our data looks pretty consistent between samples until enrichment is low ####COMMENT ON MEANING BHIND THIS
+
+## Histogram of quality scores
+
+Here, we plot a histogram of peak signal values for each sample. This plot can be used to help determine a minimum value for peak enrichment that can be used for filtering. 
+
+```
+ggplot(peaks, aes(x = peak_enrichment, fill = .data[[params$factor_of_interest]])) + 
+  geom_histogram(aes(peak_enrichment)) +
+  scale_fill_cb_friendly() +
+  xlab("Peak enrichment")
+```
+
+####INSERT IMAGE HERE
+
+####WRITE NOTE ABOUT HOW OUR DATA LOOKS AND WHETHER WE SHOULD DO ANY FILTERING
+
+
 
 ***
 
