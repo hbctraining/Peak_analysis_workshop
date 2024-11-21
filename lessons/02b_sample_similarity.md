@@ -15,10 +15,10 @@ Approximate time:
   
 ## Assessing sample similarity
 
-In the previous lesson, we evaluated quality metrics concerning peaks and reads in peaks in individual samples. But these aren't the only ways to measure quality in our data set. We did look for consistency of these metrics across all of our samples, but now it's **time for a closer look at our samples to see how they comapre for samples within treatment groups and between groups**. To do this we will be visualizing our data using two different types of data: 1) read count distribution across the genome and 2) siganl enrichment within regions called as peaks.
+In the previous lesson, we evaluated quality metrics concerning peaks and reads in peaks in individual samples. But these aren't the only ways to measure quality in our data set. We did look for consistency of these metrics across all of our samples, but now it's **time for a closer look at our samples to see how they comapre for samples within treatment groups and between groups**. To do this we will be visualizing our data using two different types of data: 1) read count distribution across the genome and 2) signal enrichment within regions called as peaks.
 
 ## Read count density 
-Two commonly used methods for evaluating sample similarity is the use of Principal Components Analysis (PCA) and hierarchical clustering. In order to implement both of these, we need the **appropriate inputs**. The requirement is a data matrix. In the case of ChIP-seq or related data, this **matrix would have samples in the columns and genomic regions in the rows**. This matrix can be created using a command-line tool called [`multiBamSummary`](https://deeptools.readthedocs.io/en/develop/content/tools/multiBamSummary.html) from the [deepTools suite](https://deeptools.readthedocs.io/en/develop/index.html) for exploring deep sequencing data. Since this is an R-based workshop, **we have created the matrix for you**, but have provided the code in the drop-down below if you wanted to use it on your own data.
+Two commonly used methods for evaluating sample similarity is the use of Principal Components Analysis (PCA) and hierarchical clustering. In order to implement both of these, we need the **appropriate inputs**. The requirement is a data matrix. In the case of ChIP-seq or related data, this **matrix would have samples in the columns and genomic regions in the rows**. This matrix can be created using a command-line tool called [`multiBamSummary`](https://deeptools.readthedocs.io/en/develop/content/tools/multiBamSummary.html) from the [deepTools suite](https://deeptools.readthedocs.io/en/develop/index.html) for exploring deep sequencing data. Since this is an R-based workshop, **we have created the matrix for you**, but have provided the code in the drop-down below if you wanted to create it for your own data.
 
 
 <details>
@@ -43,10 +43,33 @@ We have created two versions of the read count matrix: one that contains ChIP an
 
 ```
 # Read in data
-
+counts <- read.delim("data/multiBamSummary/multiBAMsummary_noinput.tab", sep="\t")
 ```
 
-> #### Should we normalize the data matrix?
+Next, we will wrangle the data to keep only the columns with count data. We will also create a metadata dataframe:
+
+```
+# remove genomic coordinate info
+plot_counts <- data.frame(counts[, 4:ncol(counts)])
+
+# Change column names
+colnames(plot_counts) <- colnames(plot_counts) %>% 
+  str_replace( "X.", "") %>% 
+  str_remove( "\\.$")
+
+# Create meta
+meta <- data.frame(row.names = colnames(plot_counts), 
+                   genotype=colnames(plot_counts) %>% str_remove("\\_[0-9]"))
+```
+
+### Transforming the counts
+To make a fair comparison across samples, we need to normalize the data. We are working with a count matrix in which highly enriched regions consume more sequencing resources and thereby suppress the representation of other regions. This data resembles something quite similar to RNA-seq and gene expression, we can apply similar methods. Since we are simply visualizing data at this point (and not performing any statistical analysis), a **variance stabilizing transform** (vst) would be adequate rather than normalization. The vst is a transformation method is a log2 transform with an additional step to avoid any bias from the abundance of low-count genes. In short, for genes with lower counts, the values are shrunken towards the genes’ averages across all samples. 
+
+> Later in this workshop when we perform [differential enrichment analysis](), we will discuss normalization in more detail.
+
+
+
+
 
 
 ## Principal Component Analysis (PCA)
