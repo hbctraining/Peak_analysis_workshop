@@ -52,6 +52,7 @@ install.packages("BiocManager")
 install.packages("tidyverse")
 install.packages("pheatmap")
 install.packages("UpSetR")
+install.packages("RColorBrewer")
 ```
 
 **Note that these package names are case sensitive!**
@@ -75,7 +76,7 @@ BiocManager::install("clusterProfiler")
 BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 BiocManager::install("IRanges")
 BiocManager::install("GenomicRanges")
-
+BiocManager::install("DESeq2")
 ```
 
 > **NOTE:** The library used for the annotations associated with genes (here we are using `TxDb.Mmusculus.UCSC.mm10.knownGene`) will change based on organism. The list of different organism packages are given [here](https://github.com/hbctraining/Training-modules/raw/master/DGE-functional-analysis/img/available_annotations.png).
@@ -92,6 +93,8 @@ library(clusterProfiler)
 library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 library(IRanges)
 library(GenomicRanges)
+library(DESeq2)
+library(RColorBrewer)
 ```
 
 (4) Once all packages have been loaded, run sessionInfo().  
