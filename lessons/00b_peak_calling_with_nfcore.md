@@ -64,6 +64,8 @@ For this workshop, the dataset was run through the [nf-core/chip-seq](https://nf
 * [nf-core tutorials](https://nf-co.re/docs/tutorials/)
 * An article on ["The Story of Nextflow"](https://elifesciences.org/labs/d193babe/the-story-of-nextflow-building-a-modern-pipeline-orchestrator)
 
+***
+
 [Back to Schedule](../schedule/README.md)
 
 ***
