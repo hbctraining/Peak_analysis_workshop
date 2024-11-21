@@ -1,10 +1,10 @@
 ---
 title: "Assessing sample similarity"
-author: "Heather Wick, Upendra Bhattarai, Meeta Mistry"
+author: "Will Gammerdinger, Meeta Mistry"
 date: "Aug 13th, 2024"
 ---
 
-Contributors: Heather Wick, Upendra Bhattarai, Meeta Mistry
+Contributors: Will Gammerdinger, Meeta Mistry
 
 Approximate time: 
 
