@@ -53,6 +53,7 @@ install.packages("tidyverse")
 install.packages("pheatmap")
 install.packages("UpSetR")
 install.packages("RColorBrewer")
+install.packages("ggrepel")
 ```
 
 **Note that these package names are case sensitive!**
@@ -95,6 +96,7 @@ library(IRanges)
 library(GenomicRanges)
 library(DESeq2)
 library(RColorBrewer)
+library(ggrepel)
 ```
 
 (4) Once all packages have been loaded, run sessionInfo().  
