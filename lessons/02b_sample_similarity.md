@@ -46,7 +46,12 @@ We have created two versions of the read count matrix: one that contains ChIP an
 counts <- read.delim("data/multiBamSummary/multiBAMsummary_noinput.tab", sep="\t")
 ```
 
-Next, we will wrangle the data to keep only the columns with count data. We will also create a metadata dataframe:
+<p align="center">
+<img src="../img/counts_table.png" width="650">
+</p>
+
+If we look at the file, you can see that the first three columns correspond to genomic coordinate data and also the headers could use some formatting.
+Next, we will **wrangle the data** to keep only the columns with count data and clean up the column names. We will also create a metadata dataframe:
 
 ```
 # remove genomic coordinate info
@@ -94,9 +99,10 @@ plot_pca <- data.frame(pc$x, meta)
 summary(pc) # will tell you how much variance is explained by each PC
 
 # Plot with sample names used as data points
-ggplot(plot_pca) + 
+ggplot(plot_pca, aes(PC1, PC2, color = genotype, label=rownames(plot_pca)), size =3 ) + 
   theme_bw() +
-  geom_point( aes(PC1, PC2, color = genotype), size =3) +
+  geom_point() +
+  geom_text_repel() +
   xlab('PC1 (33% of variance)') +
   ylab('PC2 (22% of variance)') +
   scale_x_continuous(expand = c(0.3,  0.3)) +
@@ -107,16 +113,20 @@ ggplot(plot_pca) +
 
 ```
 
-
 ### Interpreting PCA plots
-Essentially, if two samples have similar levels of expression peak enrichment that contribute significantly to the variation represented by a given PC (Principal Component), they will be plotted close together on the axis that represents that PC. Therefore, we would expect that biological replicates to have similar scores (because our expectation is that the same genes are changing) and cluster together. This is easiest to understand by visualizing some example PCA plots.
+Essentially, if two samples have similar levels of expression peak enrichment that contribute significantly to the variation represented by a given PC (Principal Component), they will be plotted close together on the axis that represents that PC. Therefore, we would expect that biological replicates to have similar scores (because our expectation is that there is that same enrichment of the histone marks present) and they would cluster together. 
 
-We can run PCA to evaluate the variation amongst our samples and whether or not the greatest sources of variation in the data (PC1 and PC2) can be attributed to the factors of interest in this experiment.
+<p align="center">
+<img src="../img/pca_plot.png" width="650">
+</p>
 
-We will be plotting the Variance Stabalized Transformation (VST) counts from our dds object and usin a package called degPCA which automatically performs the PCA dimensionality reduction and plots the results. To start, we will look at both PC1 vs PC2 and PC3 vs PC4 colored by the condition "genotype", since that is the primaro factor of interest for us:
+Below we highlight some features of our plot:
 
+* From the PCA plot it looks like our samples **mostly separate on PC1, and can be attributed to genotype**.
+ 	* PC1 does only explain 33% of the variance, and as observed on the plot there are clearly other contributions to the observed variance.
+* If you look at within group variability you see the first **replicate from both WT and cKO are slightly separated from their respective groups on PC2**.
 
-We are fortunate that our data separates on PC1, which accounts for the most amount of variance in the data, by genotype. If this were not the case, we would want to consider coloring our data points by other aspects of the metadata (`coldata_for_dds` object). In our case, that would be mostly technical factors, but if our samples were processed in different batches, or performed on different dates; or if the samples were from tissues with different sexes or other features, these would be important features to label our plot by when looking at PCA. If any factor contributed to a large amount of variance in the data, we might need to take further steps to take these factors into account
+If our biological factor of interest was not explained by these two components, we would want to consider coloring our data points by other aspects of the metadata to identify a covariate. In our case, that would be mostly technical factors (found in `metrics.csv`), but if our samples were processed in different batches, or performed on different dates; or if the samples were from tissues with different sexes or other features, these would be important features to label our plot by when looking at PCA. We could also plot beyond the first two principal components ato see if our factor was explained by these.
 
 ## Hierarchical clustering
 
