@@ -156,7 +156,7 @@ go_ORA_Up <- enrichGO(gene = sigUp_genes,
                       readable = TRUE)
 ```
 
-    Note: The ont argument can accept either "BP" (Biological Process), "MF" (Molecular Function), and "CC" (Cellular Component) subontologies, or "ALL" for all three.
+> Note: The ont argument can accept either "BP" (Biological Process), "MF" (Molecular Function), and "CC" (Cellular Component) subontologies, or "ALL" for all three.
 
 Lets save the ORA results
 
@@ -293,7 +293,7 @@ dim(goGSEA)[1]
 ```{r, output}
 [1] 341
 ```
-    Note: we have set pAdjustMethod as none for this run. To use Benjamin Hochberg multiple correction, set it as "BH" and check the output.
+> Note: we have set pAdjustMethod as none for this run. To use Benjamin Hochberg multiple correction, set it as "BH" and check the output.
 
 
 Saving the results
@@ -304,10 +304,10 @@ go_GSEA_results <- go_GSEA@result
 write.csv(go_GSEA_results, "results/go_GSEA_cko_vs_wt.csv", quote = FALSE)
 ```
 
-    NOTE: The permutations are performed using random reordering, so every time we run the function we will get slightly different results. If we would like to use the same permutations every time we run a function, then we use the set.seed() function prior to running. The input to set.seed() can be any number.
-    ```{r}
-    set.seed(123) # replace 123 with any number
-    ```
+> NOTE: The permutations are performed using random reordering, so every time we run the function we will get slightly different results. If we would like to use the same permutations every time we run a function, then we use the set.seed() function prior to running. The input to set.seed() can be any number.
+>  ```{r}
+>   set.seed(123) # replace 123 with any number
+ > ```
     
 ### Inspect Results
 
