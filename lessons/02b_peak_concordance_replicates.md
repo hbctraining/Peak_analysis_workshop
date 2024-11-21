@@ -1,5 +1,5 @@
 ---
-title: "Concordance of peaks across replicates"
+title: "Assessing sample similarity"
 author: "Heather Wick, Upendra Bhattarai, Meeta Mistry"
 date: "Aug 13th, 2024"
 ---
@@ -13,7 +13,7 @@ Approximate time:
 * Evaluate signal enrichment vs rank plots for samples in dataset
 * Plot PCA and hierarchical clustering to assess inter-sample variability
   
-## Concordant peak calls between samples
+## Assessing sample similarity
 
 In the previous lesson, we evaluated quality metrics concerning peaks and reads in peaks in individual samples. But these aren't the only ways to measure quality in our data set. We did look for consistency of these metrics across all of our samples, but now it's **time for a closer look at our samples to see how they comapre for samples within treatment groups and between groups**. To do this we will be visualizing our data using two different types of data: 1) read count distribution across the genome and 2) siganl enrichment within regions called as peaks.
 
