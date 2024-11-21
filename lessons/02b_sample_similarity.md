@@ -67,16 +67,46 @@ To make a fair comparison across samples, we need to normalize the data. We are 
 
 > Later in this workshop when we perform [differential enrichment analysis](), we will discuss normalization in more detail.
 
+In order to perform the vst, we will use the [DESeq2 package](https://bioconductor.org/packages/release/bioc/html/DESeq2.html). First, we create a DESeq2 object and then we run the `vst()` function. Following that we can extract the vst transformed counts for visualization.
 
+```
+# Create DESeq2 object
+dds <- DESeqDataSetFromMatrix(plot_counts, meta, design = ~genotype)
 
+# Run vst and extract transformed counts
+vst <- vst(dds)
+vst_counts <- assay(vst)
 
-
+```
 
 ## Principal Component Analysis (PCA)
 
 Principal Component Analysis (PCA) is a technique used to emphasize variation and bring out strong patterns in a dataset (dimensionality reduction). This is a very important technique used in the QC and analysis of ChIPseq.
 
-If you've done any RNAseq or single cell analysis, you're likely familiar with the concept of PCA, as this technique is used to evaluate. If you'd like to refamiliarize yourself on the details of how PCA is calculated, we recommend you read our materials [[here]](https://hbctraining.github.io/DGE_workshop_salmon_online/lessons/principal_component_analysis.html) or [[watch this useful video from StatQuest]](https://www.youtube.com/watch?v=_UVHneBUBW0&ab_channel=StatQuestwithJoshStarmer).
+If you've done any RNA-seq or single cell analysis, you're likely familiar with the concept of PCA, as this technique is used to evaluate. If you'd like to refamiliarize yourself on the details of how PCA is calculated, we recommend you read our materials [[here]](https://hbctraining.github.io/DGE_workshop_salmon_online/lessons/principal_component_analysis.html) or [[watch this useful video from StatQuest]](https://www.youtube.com/watch?v=_UVHneBUBW0&ab_channel=StatQuestwithJoshStarmer).
+
+To perform PCA, we first need to compute the principal components from our read density data. Once we have that, we can plot PC1 and PC2 which explain the most amount of variation in our data.
+
+```
+# Compute principal components
+pc <- prcomp(t(vst_counts))
+plot_pca <- data.frame(pc$x, meta)
+summary(pc) # will tell you how much variance is explained by each PC
+
+# Plot with sample names used as data points
+ggplot(plot_pca) + 
+  theme_bw() +
+  geom_point( aes(PC1, PC2, color = genotype), size =3) +
+  xlab('PC1 (33% of variance)') +
+  ylab('PC2 (22% of variance)') +
+  scale_x_continuous(expand = c(0.3,  0.3)) +
+  theme(plot.title = element_text(size = rel(1.5)),
+        axis.title = element_text(size = rel(1.5)),
+        axis.text = element_text(size = rel(1.25)))
+
+
+```
+
 
 ### Interpreting PCA plots
 Essentially, if two samples have similar levels of expression peak enrichment that contribute significantly to the variation represented by a given PC (Principal Component), they will be plotted close together on the axis that represents that PC. Therefore, we would expect that biological replicates to have similar scores (because our expectation is that the same genes are changing) and cluster together. This is easiest to understand by visualizing some example PCA plots.
@@ -85,19 +115,6 @@ We can run PCA to evaluate the variation amongst our samples and whether or not 
 
 We will be plotting the Variance Stabalized Transformation (VST) counts from our dds object and usin a package called degPCA which automatically performs the PCA dimensionality reduction and plots the results. To start, we will look at both PC1 vs PC2 and PC3 vs PC4 colored by the condition "genotype", since that is the primaro factor of interest for us:
 
-```
-library(degPCA)
-pca1v2 <- degPCA(assays(dds)$vst, coldata_for_dds,
-              condition = "genotype", data = T)[["plot"]]
-pca3v4 <- degPCA(assays(dds)$vst, coldata_for_dds,
-              condition = "genotype", data = T, pc1="PC3", pc2="PC4")[["plot"]]
-
-pca1v2
-pca3v4
-
-```
-
-####INSERT pc1v2 AND pca3v4 SIDE BY SIDE
 
 We are fortunate that our data separates on PC1, which accounts for the most amount of variance in the data, by genotype. If this were not the case, we would want to consider coloring our data points by other aspects of the metadata (`coldata_for_dds` object). In our case, that would be mostly technical factors, but if our samples were processed in different batches, or performed on different dates; or if the samples were from tissues with different sexes or other features, these would be important features to label our plot by when looking at PCA. If any factor contributed to a large amount of variance in the data, we might need to take further steps to take these factors into account
 
