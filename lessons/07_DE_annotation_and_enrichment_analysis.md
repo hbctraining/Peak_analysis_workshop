@@ -82,7 +82,7 @@ The `annotatePeak()` function, as part of the `ChIPseeker`///÷ package, uses th
 This GRange object `res_all` contains results from the Diffbind analysis, including genomic coordinates, fold change, p-values, and FDR for each analyzed site. Before functional analysis, we need to annotate the genomic loci with their nearest gene names.
 
 ```{r}
-annot_res_all <- annotatePeak(res_all, tssRegion = c(-3000, 3000), TxDb = TxDb.Hsapiens.UCSC.hg19.knownGene, annoDb = "org.Hs.eg.db")
+annot_res_all <- annotatePeak(res_all, tssRegion = c(-3000, 3000), TxDb = TxDb.Mmusculus.UCSC.mm10.knownGene, annoDb = "org.Mm.eg.db")
 ```
 
 ## Visualization of Peak Annotation
@@ -139,7 +139,7 @@ background_set <- as.character(annot_res_all_df$geneID)
 Extract gene list for the significantly upregulated genes in cKO vs WT to prepare a query set.
 
 ```{r}
-sigUP <- dplyr::filter(annot_res_all_df, FDR < 0.1, Fold > 0)
+sigUp <- dplyr::filter(annot_res_all_df, FDR < 0.05, Fold > 0)
 sigUp_genes <- as.character(sigUp$geneId)
 ```
 
@@ -149,7 +149,7 @@ Now we can perform ORA with Gene Ontology (GO) dataset as follows.
 go_ORA_Up <- enrichGO(gene = sigUp_genes,
                       universe = background_set,
                       keyType = "ENTREZID",
-                      OrgDb = org.Hs.eg.db,
+                      OrgDb = org.Mm.eg.db,
                       ont = "ALL",
                       pAdjustMethod = "BH",
                       qvalueCutoff = 0.05,
@@ -254,44 +254,54 @@ This image illustrates the theory of GSEA, where 'gene set S' highlights the met
 
 
     
-## Running GSEA with MSigDB gene sets
+## Running GSEA with GO database
 
-The `clusterProfiler` package offers several functions to perform GSEA using various genes sets, including GO, KEGG, and MSigDb. Below is an example using MSigDb gene sets. MSigDB (Molecular Signatures Database) is a curated collection of annotated gene sets.
+The `clusterProfiler` package offers several functions to perform GSEA using various genes sets, including GO, KEGG, and MSigDb. Below is an example using GO database.
 
 We can use `msigdbr_species()` function to look at the information about species included in the dataset.
 
-```{r}
-msigdbr_species()
-```
-
-To look at the available gene sets collections:
-
-```{r}
-msigdbr_collections()
-```
-For our analysis, we use the human C5 collection (Gene Ontology). Extract only the Gene set name and the Gene symbol columns.
-
-```{r}
-m_t2g <- msigdbr(species = "Homo sapiens", category = "C5") %>%
-  dplyr::select(gs_name, gene_symbol)
-```
 ### Prepare input for GSEA
 
 Extract fold changes and gene identifiers. GSEA will use the fold changes obtained from the differential expression analysis for every gene to perform the analysis. We need to create a sorted and named vector for input to `clusterProfiler`.
 
 ```{r}
-fold_change <- annot_res_all_df$Fold
-names(fold_change) <- annot_res_all_df$SYMBOL
-fold_change <- sort(fold_change, decreasing = TRUE)
+gene_list <- annot_res_all_df$Fold
+names(gene_list) <- annot_res_all_df$geneId
+
+# remove duplicate genes
+gene_list_dedup <- gene_list[!duplicated(names(gene_list))]
+
+# sort gene list in decreasing order of the fold change
+gene_list_sorted <- sort(gene_list_dedup, decreasing = TRUE)
 ```
 
 ### Run GSEA
 ```{r}
-msig_GSEA <- GSEA(fold_change, TERM2GENE = m_t2g, verbose = FALSE)
-msig_GSEA_results <- msig_GSEA@result
+go_GSEA <- gseGO(geneList = gene_list_sorted,
+               ont = "BP",
+               keyType = "ENTREZID",
+               verbose = FALSE,
+               OrgDb = "org.Mm.eg.db",
+               pAdjustMethod = "none")
+```
+
+Check the number of enriched terms
+```{r}
+dim(goGSEA)[1]
+```
+
+```{r, output}
+[1] 341
+```
+    Note: we have set pAdjustMethod as none for this run. To use Benjamin Hochberg multiple correction, set it as "BH" and check the output.
+
+
+Saving the results
+```{r}
+go_GSEA_results <- go_GSEA@result
 
 # write results to a file
-write.csv(msig_GSEA_results, "results/gsea_msigdb_GO_cko_vs_wt.csv, quote=F)
+write.csv(go_GSEA_results, "results/go_GSEA_cko_vs_wt.csv", quote = FALSE)
 ```
 
     NOTE: The permutations are performed using random reordering, so every time we run the function we will get slightly different results. If we would like to use the same permutations every time we run a function, then we use the set.seed() function prior to running. The input to set.seed() can be any number.
@@ -304,7 +314,7 @@ write.csv(msig_GSEA_results, "results/gsea_msigdb_GO_cko_vs_wt.csv, quote=F)
 Take a look at the results table and reorder by NES (normalized enrichment score). What terms do you see positively enriched? Does this overlap with what we observed from ORA analysis?
 
 ```{r}
-msig_GSEA_results %>% arrange(-NES) %>% View()
+go_GSEA_results %>% arrange(-NES) %>% View()
 ```
 
 - The first few columns of the results table identify the gene set information.
@@ -314,26 +324,26 @@ msig_GSEA_results %>% arrange(-NES) %>% View()
 ### Dotplot
 
  ```{r}
-dotplot(msig_GSEA, split=".sign") +facet_grid(.~.sign)
+dotplot(go_GSEA, showCategory=10, split = ".sign") +facet_grid(.~.sign)
 ```
 <p align="center">
-<img src="../img/gsea_msig.png"  width="600">
+<img src="../img/GSEA_go.png"  width="600">
 </p>
 
 ### GSEA visualization
-Let's explore the GSEA plot of enrichment of one of the pathways in the ranked list using a built-in function from clusterProfiler. We can pick the top term
+Let's explore the GSEA plot of enrichment of one of the pathways in the ranked list using a built-in function from clusterProfiler.
 
 ```{r}
-gseaplot(msig_GSEA, geneSetID = 'GOBP_MUSCLE_STRUCTURE_DEVELOPMENT')
+gseaplot(go_GSEA, geneSetID = 'GO:0033363')
 ```
 
 
 <p align="center">
-<img src="../img/gsea_muscle_structure.png"  width="600">
+<img src="../img/GSEA_secretory_granule_organization.png"  width="600">
 </p>
 
 In the plot:
-1. The lines in plot represent the genes in the gene set 'GOBP_MUSCLE_STRUCTURE_DEVELOPMENT', and where they occur among the log2 fold changes.
+1. The lines in plot represent the genes in the gene set 'GO:0033363', and where they occur among the log2 fold changes.
 2. The largest positive log2 fold changes are on the left-hand side of the plot, while the largest negative log2 fold changes are on the right.
 3. The top plot shows the magnitude of the log2 fold changes for each gene.
 4. The bottom plot shows the running sum, with the enrichment score peaking at the red dotted line (which is among the positive log2 fold changes). This suggests the up-regulation of this function.
