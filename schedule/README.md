@@ -25,16 +25,17 @@
 ### Before the next class:
 
 I. Please **study the contents** and **work through all the code** within the following lessons:
-   1. [Quantitative assemement of peak concordance](../lessons/02b_peak_concordance_replicates.md)
+   1. [Assessing sample similarity and idetifying potential outliers](../lessons/02b_sample_similarity.md)
       <details>
        <summary><i>Click here for a preview of this lesson</i></summary>
-         <br>A two sentence summary of the lesson.... <br><br>In this lesson, we will:<br>
-             - Point 1<br>
-             - Point 2<br><br>
+         <br>One step in the QC of samples is to see how samples compare to one another. Generally, we expect replicates from each sample group to be more similar to each other and dissimilar to replicates from a different sample group. Here, we use read density (counts across the genome) and peak signal data to check if it meets our expectations.<br><br>In this lesson you will:<br>
+             - Create PCA plots and inter-sample correlation heatmaps<br>
+             - Evaluat plots to identify potential outliers and other effects<br>
+             - Create visualiations using signal data from peaks to identify proposed thresholds for downstream analysis<br><br>
         </details>
    
 
-   2. [Similarity across replicates using peak overlaps](../lessons/03_peak_overlaps.md)
+   2. [Concordance across replicates using peak overlaps](../lessons/03_peak_overlaps.md)
       <details>
        <summary><i>Click here for a preview of this lesson</i></summary>
          <br>A two sentence summary of the lesson.... <br><br>In this lesson, we will:<br>
