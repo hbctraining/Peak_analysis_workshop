@@ -30,13 +30,11 @@ The command to run this is:</br></br>
 <pre>
 multiBamSummary bins \
 	  --bamfiles cKO_H3K27ac_ChIPseq_REP1.mLb.clN.sorted.bam cKO_H3K27ac_ChIPseq_REP2.mLb.clN.sorted.bam cKO_H3K27ac_ChIPseq_REP3.mLb.clN.sorted.bam \
-               cKO_H3K27ac_input_REP1.mLb.clN.sorted.bam cKO_H3K27ac_input_REP2.mLb.clN.sorted.bam cKO_H3K27ac_input_REP3.mLb.clN.sorted.bam \
                WT_H3K27ac_ChIPseq_REP1.mLb.clN.sorted.bam WT_H3K27ac_ChIPseq_REP2.mLb.clN.sorted.bam WT_H3K27ac_ChIPseq_REP3.mLb.clN.sorted.bam \
-               WT_H3K27ac_input_REP1.mLb.clN.sorted.bam WT_H3K27ac_input_REP2.mLb.clN.sorted.bam WT_H3K27ac_input_REP3.mLb.clN.sorted.bam \
-	  --outFileName multiBamsummary.npz \
-	  --labels cKO_1 cKO_2 cKO_3 cKO_i1 cKO_i2 cKO_i3 WT_1 WT_2 WT_3 WT_i1 WT_i2 WT_i3 \
+	  --outFileName multiBamsummary_noInput.npz \
+	  --labels cKO_1 cKO_2 cKO_3 WT_1 WT_2 WT_3  \
 	  -p 6 \
-	  --outRawCounts multiBAMsummary.tab
+	  --outRawCounts multiBAMsummary_noInput.tab
 </pre></br>
 
 </details>
