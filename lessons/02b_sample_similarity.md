@@ -10,8 +10,9 @@ Approximate time:
 
 ## Learning Objectives
 
-* Evaluate signal enrichment vs rank plots for samples in dataset
+* Assess sample similarity using read density data
 * Plot PCA and hierarchical clustering to assess inter-sample variability
+* Evaluate signal enrichment to look at concordance across replicates
   
 ## Assessing sample similarity
 
@@ -70,7 +71,7 @@ meta <- data.frame(row.names = colnames(plot_counts),
 ### Transforming the counts
 To make a fair comparison across samples, we need to normalize the data. We are working with a count matrix in which highly enriched regions consume more sequencing resources and thereby suppress the representation of other regions. This data resembles something quite similar to RNA-seq and gene expression, we can apply similar methods. Since we are simply visualizing data at this point (and not performing any statistical analysis), a **variance stabilizing transform** (vst) would be adequate rather than normalization. The vst is a transformation method is a log2 transform with an additional step to avoid any bias from the abundance of low-count genes. In short, for genes with lower counts, the values are shrunken towards the genes’ averages across all samples. 
 
-> Later in this workshop when we perform [differential enrichment analysis](), we will discuss normalization in more detail.
+> _Later in this workshop when we perform differential enrichment analysis], we will discuss normalization in more detail._
 
 In order to perform the vst, we will use the [DESeq2 package](https://bioconductor.org/packages/release/bioc/html/DESeq2.html). First, we create a DESeq2 object and then we run the `vst()` function. Following that we can extract the vst transformed counts for visualization.
 
@@ -84,7 +85,7 @@ vst_counts <- assay(vst)
 
 ```
 
-## Principal Component Analysis (PCA)
+### Principal Component Analysis (PCA)
 
 Principal Component Analysis (PCA) is a technique used to emphasize variation and bring out strong patterns in a dataset (dimensionality reduction). This is a very important technique used in the QC and analysis of ChIPseq.
 
@@ -113,89 +114,144 @@ ggplot(plot_pca, aes(PC1, PC2, color = genotype, label=rownames(plot_pca)), size
 
 ```
 
-### Interpreting PCA plots
+#### Interpreting PCA plots
 Essentially, if two samples have similar levels of expression peak enrichment that contribute significantly to the variation represented by a given PC (Principal Component), they will be plotted close together on the axis that represents that PC. Therefore, we would expect that biological replicates to have similar scores (because our expectation is that there is that same enrichment of the histone marks present) and they would cluster together. 
 
 <p align="center">
-<img src="../img/pca_plot.png" width="650">
+<img src="../img/pca_plot.png" width="550">
 </p>
 
 Below we highlight some features of our plot:
 
-* From the PCA plot it looks like our samples **mostly separate on PC1, and can be attributed to genotype**.
+* It looks like our samples **mostly separate on PC1, and can be attributed to genotype**.
  	* PC1 does only explain 33% of the variance, and as observed on the plot there are clearly other contributions to the observed variance.
 * If you look at within group variability you see the first **replicate from both WT and cKO are slightly separated from their respective groups on PC2**.
 
-If our biological factor of interest was not explained by these two components, we would want to consider coloring our data points by other aspects of the metadata to identify a covariate. In our case, that would be mostly technical factors (found in `metrics.csv`), but if our samples were processed in different batches, or performed on different dates; or if the samples were from tissues with different sexes or other features, these would be important features to label our plot by when looking at PCA. We could also plot beyond the first two principal components ato see if our factor was explained by these.
+If our biological factor of interest was not explained by these two components, we would want to consider coloring our data points by other aspects of the metadata to identify a covariate. In our case, that would be mostly technical factors (found in `metrics.csv`), but if our samples were processed in different batches, or performed on different dates; or if the samples were from tissues with different sexes or other features, these would be important features to label our plot by when looking at PCA. We could also plot beyond the first two principal components to see if our factor was explained by these.
 
-## Hierarchical clustering
+### Inter-sample correlation 
 
-Inter-correlation analysis (ICA) is another way to look at how well samples cluster by plotting the correlation between the peak regions of the samples. We can also add metadata to this plot to see if any factors explain any of the clustering on any level.
+Inter-correlation analysis (ICA) is another way to look at how well samples cluster by plotting the correlation between the peak regions of the samples. 
+This method is complementary to PCA, and is helpful in identifying strong patterns in a dataset and potential outliers. The heatmap displays **the correlation of normalized read density across all regions, for all pairwise combinations of samples** in the dataset. Since the difference in read density between WT and cKO are small in comparison to all peaks called, samples will generally have high correlations with each other (values higher than 0.80). Samples below 0.80 may indicate an outlier in your data and/or sample contamination.  
 
-First, we will compute the correlation of our VST-normalized peak counts using the Pearson correlation ####INCLUDE EXPLANATION? RATIONAL? INFO ABOUT COR() AND OTHER OPTIONS?:
+The hierarchical tree along the axes indicates which samples are more similar to each other, i.e. cluster together. The color blocks at the top indicate substructure in the data, and you would expect to see your replicates cluster together as a block for each sample group. Our expectation would be that the samples cluster together similar to the groupings we've observed in the PCA plot. 
 
-```
-vst_cor <- cor(assays(dds)$vst)
-```
-
-Then, we will subset our metadata. Here, we are just selecting genotype, but it is a good idea to plot other things, like batch, or other technical factors, especially if we saw our data segregate by them on any of the PCs
+We can also add metadata to this plot to aid in identifying any factors explain any of the clustering on any level.
 
 ```
-colma=coldata_for_dds %>% as.data.frame()
-rownames(colma) <- colma$sample
-colma <- colma[rownames(vst_cor), ]
-colma <- colma %>% dplyr::select(genotype)
+# Set annotation and colors
+annotation <- meta
+heat.colors <- brewer.pal(6, "YlOrRd")
+
+pheatmap(cor(vst_counts), color=heat.colors, annotation=annotation)
 ```
 
-Finally, we can make the heatmap itself:
+<p align="center">
+<img src="../img/corr_heatmap.png" width="550">
+</p>
 
-```
-p <- pheatmap(vst_cor, 
-         annotation = colma,
-         #annotation_colors = anno_colors,
-         show_rownames = T, 
-         show_colnames = T, 
-         )
-p
-```
+As expected given what we saw in the PCA plots, our samples cluster nicely by genotype. The block structure is not as emphasized, but this is likely due t the fact that we are looking at binned regions across the entire genome. If we subset to only look at consensu regions, this would change. If we had more samples and plotted more metadata, we might also be able to see whether batch or other biological or technical factor affected the clustering, and on what level.
 
-####INSERT HEATMAP HERE
+***
 
-As expected given what we saw in the PCA plots, our samples cluster nicely by genotype. If we had more samples and plotted more metadata, we might also be able to see whether batch or other biological or technical factor affected the clustering, and on what level.
+**Exercise**
 
+1. Read in the file `data/multiBAMsummary.tab` and save it to a variable. This matrix contains counts for input samples as well.
+2. Transform the data using `vst()`.
+3. Use the vst data to draw a PCA plot. How do samples separate on the plot? How much variance is explained by PC1 and PC2?
+4. Use the vst data to draw a correlation heatmap. How does this result compare to the PCA plot? Do we see defined block structure in the heatmap?
 
-
-####INSERT IMAGE HERE
+***
 
 
 ## Signal concordance across peaks
+Next, we will look at the actual peak data to assess sample similarity. The narrowPeak files contain **genomic coordinates for only those regions that were called as peaks.** For each of these peaks we have some peak calling statistics reported in columns 7 through 9. In particular, we are interested in the **signal** column, which is a **measure of overall enrichment for a given region**. Higher values of signal indicate large amounts of observed read density and usually suggests a higher likelihood of a true binding event. We will use this peak signal data to create two different plots outlined below.
 
 
+### Signal enrichment vs Peak rank
 
-## Signal enrichment vs peak rank
+One way to evaluate concordance of peaks between samples is a signal enrichment vs peak rank plot. This shows the rank of each peak vs the strength of each peak for each replicate. It will help us evaluate the number of peaks we would retain if thresholding by peak enrichment. 
 
-One way to evaluate concordance of peaks between samples is a signal enrichment vs peak rank plot. This shows the rank of each peak vs the strength of each peak for each repilcate. It will help us evaluate the number of peaks we would retain if thresholding by peak enrichment:
+Let's first begin by loading in the data. We will use a for loop to go through and load the narrowPeak file for each sample and then we will save the columns we need into individual dataframes.
 
 ```
-ggplot(peaks, aes(x = peak_rank, y = peak_enrichment, color = sample)) + 
+# Get all narrowpeak file names and path
+sample_files <- list.files(path = "./data/macs2/narrowPeak/", full.names = T)
+
+# Create a vector of short names
+vars <- str_remove( sample_files, "./data/macs2/narrowPeak//") %>% 
+  str_remove("_peaks.narrowPeak")
+
+# Loop through to create a dataframe for each sample with columns required
+for(r in 1:length(sample_files)){
+  peaks <- read.delim(sample_files[r], header = FALSE)
+  df <- data.frame(peak_enrichment = peaks$V7, peak_rank = rank(dplyr::desc(peaks$V7))) %>% 
+    dplyr::arrange(peak_rank) 
+  assign(vars[r], df)
+}
+
+```
+
+In your environment you should now see that **six new dataframes have appeared**. Next, we will combine dataframes for the WT replicates and then plot signal versus rank, with each colored line representing a different replicate.
+
+
+```
+##  WT only
+wt <- bind_rows("WT_H3K27ac_ChIPseq_REP1" = WT_H3K27ac_ChIPseq_REP1, 
+                     "WT_H3K27ac_ChIPseq_REP2" = WT_H3K27ac_ChIPseq_REP2,
+                     "WT_H3K27ac_ChIPseq_REP3" = WT_H3K27ac_ChIPseq_REP3,
+                     .id = "reps")
+
+ggplot(wt, aes(peak_rank, peak_enrichment, color = reps)) + 
   geom_line() +
+  ggtitle("WT samples") +
+  theme_bw() +
+  geom_hline(yintercept=4, linetype='dashed', color="red") +
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.title = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()) +
   xlab("Peak rank") + ylab("Peak enrichment")
+
+````
+
+<p align="center">
+<img src="../img/wt_signal_vs_rank.png" width="650">
+</p>
+
+
+Now, let's **do the same for cKO replicates**:
+
 ```
 
-It is also valuable to see how this differs between replicates within a sample group. By adding faceting to our plot, we can more easily look at samples within each genotaype to evaluate sample similarity:
+## cKO only
+cko <- bind_rows("cKO_H3K27ac_ChIPseq_REP1" = cKO_H3K27ac_ChIPseq_REP1, 
+                "cKO_H3K27ac_ChIPseq_REP2" = cKO_H3K27ac_ChIPseq_REP2,
+                "cKO_H3K27ac_ChIPseq_REP3" = cKO_H3K27ac_ChIPseq_REP3,
+                .id = "reps")
 
-```
-ggplot(peaks, aes(x = peak_rank, y = peak_enrichment, color = sample)) + 
+ggplot(cko, aes(peak_rank, peak_enrichment, color = reps)) + 
   geom_line() +
-  facet_grid(. ~ genotype) +
+  ggtitle("cKO samples") +
+  theme_bw() +
+  geom_hline(yintercept=4, linetype='dashed', color="red") +
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.title = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()) +
   xlab("Peak rank") + ylab("Peak enrichment")
+
+
 ```
 
-####INSERT PR v PE PLOT HERE
+<p align="center">
+<img src="../img/cKO_signal_vs_rank.png" width="650">
+</p>
+
 
 Our data looks pretty consistent between samples until enrichment is low ####COMMENT ON MEANING BHIND THIS
 
-## Histogram of quality scores
+### Histogram of quality scores
 
 Here, we plot a histogram of peak signal values for each sample. This plot can be used to help determine a minimum value for peak enrichment that can be used for filtering. 
 
