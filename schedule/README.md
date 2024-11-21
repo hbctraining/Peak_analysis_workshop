@@ -25,7 +25,7 @@
 ### Before the next class:
 
 I. Please **study the contents** and **work through all the code** within the following lessons:
-   1. [Assessing sample similarity and idetifying potential outliers](../lessons/02b_sample_similarity.md)
+   1. [Assessing sample similarity and identifying potential outliers](../lessons/02b_sample_similarity.md)
       <details>
        <summary><i>Click here for a preview of this lesson</i></summary>
          <br>One step in the QC of samples is to see how samples compare to one another. Generally, we expect replicates from each sample group to be more similar to each other and dissimilar to replicates from a different sample group. Here, we use read density (counts across the genome) and peak signal data to check if it meets our expectations.<br><br>In this lesson you will:<br>
