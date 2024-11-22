@@ -284,7 +284,6 @@ After plotting the data you will see that **enrichment** value are considerably 
 ### Summary
 Overall, our replicates seem to show considerable amount of similarity within group as they share trends at both the read density level across the entire genome and signal value within called peaks. It doesn't seem necessary to threshold on signal, but there does appear to be differences in signal levels between groups. Our next step is to look at how the actual regions (genomic coordinates) overlap between samples.
 
-
 [Back to Schedule](../schedule/README.md)
 
 [Next Lesson >>](02b_peak_concordance_replicates.md)
