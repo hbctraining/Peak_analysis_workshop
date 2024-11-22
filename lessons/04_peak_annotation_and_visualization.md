@@ -10,34 +10,90 @@ Approximate time:
 
 ## Learning Objectives
 
-* Annotate peaks with genomic features using Chipseeker
-* Visualize the annotation and compare peak coverage between experimental groups.
-* Explore the biological content using functional enrichment analysis
+* Annotate peaks with genomic features using Chipseeker.
+* Visualize annotations and compare peak coverage between experimental groups.
+* Explore biological content using functional enrichment analysis.
 
 
 
 ## Overview
 
-The insights on the biological questions on the ChIP-seq experiments comes after annotating the peaks and exploring the differences between classes under comparisons. ChIPseeker is a Bioconductor package in R, developed to annotate the nearest genes and genomic features to the peaks. It also supports various ways of visualization, comparisons of the peak profiles and coverage between the experimental groups. We can also use ChIPseeker to investigate the sample concordance, carryout the functional annotation and also use it to infer cooperative regulation, for example if the data using two different binding proteins overlap significantly, these two proteins may form a complex or have interaction in regulating gene expression or chromosomal remodeling.
+Understanding the biological questions addressed by ChIP-seq experiments begins with annotating peaks and comparing differences between experimental groups. ChIPseeker, a Bioconductor package in R, facilitates the annotation of genomic features and nearest genes to peaks. It provides tools for visualization, peak profile comparisons, and coverage analyses between experimental conditions.
 
-ChIPseeker can also be used to access GEO database to compare the experimental ChIP seq dataset with the publicly available one. It supports statistical testing of significant overlap abmong ChIP seq data sets.
+Additionally, ChIPseeker can assess sample concordance, perform functional annotations, and infer cooperative regulation. For instance, overlapping data from two binding proteins may indicate interaction in regulating gene expression or chromosomal remodeling.
 
-In this tutorial we use ChIPseeker to annotate peaks, visualize, explore various features, and compare peak profiles and coverage between the experimental groups. We will also perform functional annotation and analysis to explore the biology in our dataset.
+ChIPseeker also supports querying the GEO database to compare experimental datasets with publicly available ChIP-seq data and offers statistical testing for significant overlaps among datasets.
 
-# cKO_Rep1
-Importing peak sets
+This tutorial demonstrates how to use ChIPseeker to annotate peaks, visualize features, compare profiles, and perform functional analyses to explore the biological context of a dataset.
+
+## Analyzing peaks in a single sample
+
+### cKO_Rep1
+
+We can use `readPeakFile()` function to load peaks from a BED file. It will convert the bed file into GRange object.
+
 ```{r}
 ckoR1 <- readPeakFile("data/macs2/narrowPeak/cKO_H3K27ac_ChIPseq_REP1_peaks.narrowPeak")
 
 ```
 
-Annotating peaks
+### Peak coverage plot
+To look at the coverage of the peaks over the whole genome or a section of a genome, we can use `covplot()` function.
 
 ```{r}
-txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
+covplot(ckoR1, weightCol = "V5", chrs = c("chr1", "chr2"))
+```
 
+<p align="center">
+<img src="../img/chipseq_covplot1.png"  width="600">
+</p>
+
+### Heatmap profile of ChIP binding to TSS regions
+To plot the profile of peaks binding to TSS region, we need to prepare the TSS regions. These are the flanking sequence of the TSS sites, here we are settting up the flanking regions of 2000bp upstream and 2000bp downstream. Then align the peaks that are mapping to these regions, and generate the tagMatrix. This tagMatrix can be visualized as a heatmap with the function `tagHeatmap()`.
+
+```{r}
+txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
+promoter <- getPromoters(TxDb = txdb, upstream = 2000, downstream = 2000)
+tagMatrix_ckoR1 <- getTagMatrix(ckoR1, windows = promoter)
+tagHeatmap(tagMatrix_ckoR1)
+```
+
+<p align="center">
+<img src="../img/Chipseq_tagheatmap1.png"  width="600">
+</p>
+
+
+> Note: Tag matrices can also be created for other genomic regions and visualized as heatmaps.
+
+### Average profile of ChIP peaks binding to TSS region
+
+```{r}
+plotAvgProf(tagMatrix_ckoR1, xlim=c(-2000, 2000), 
+            xlab="Genomic Region (5'->3')", ylab = "Read Count Frequency")
+```
+
+<p align="center">
+<img src="../img/Chipseq_avg.profile1.png"  width="600">
+</p>
+
+> Note: Confidence intervals, estimated using bootstrap methods, are supported for characterizing binding profiles.
+
+### Peak annotation
+
+Annotation of the peaks to the nearest gene and for various genomic characteristics is performed by `annotatePeak()` function. By default TSS region is defined as -3kb to +3kb, however user can define their region. The result of the annotation comes in csAnno (a special format for ChIP-seq annotation). This can be converted to GRanges with `as.GRanges()` format and to data frame with `as.data.frame()` function.
+
+> Note: Bioconductor provides annotation database `TxDb` for commonly used genome version to use for annotation in ChIPseeker, e.g. `TxDb.Mmusculus.UCSC.mm10.knownGene`, `TxDb.Mmusculus.UCSC.mm9.knownGene`, `TxDb.Hsapiens.UCSC.hg38.knownGene`, `TxDb.Hsapiens.UCSC.hg19.knownGene`, User can also prepare prepare their own database object using UCSC Genome Bioinformatics and BioMart database in R with `makeTxDbFromBiomart()` and `makeTxDbFromUCSC.TxDb()`
+
+Lets annotate our peakset:
+
+```{r}
+txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
 annot.ckoR1 = annotatePeak(ckoR1, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
 ```
+
+>Note: The parameter `annoDb` is optional, if provided extra information about the annotation including gene symbol, genename, ensembl/entrezid will be added in extra columns.
+
+The annotation output file retains all the information from the peak file and also reports the annotation information. The nearest genes, their position and strand information along with the distance from peak to the tSS of its nearest gene is also reported.
 
 Genomic annotation summary
 
@@ -66,29 +122,24 @@ Feature                     Frequency
 5	Distal Intergenic	  27.68187781
 ```
 
-## Annotation visualization
+### Annotation visualization
 
-### UpsetR
+There are several visualization tools provided by ChIPseeker package to effectively visualize annotation of various genomic features. 
+
+Pie, Bar, and upsetR plots are supported to visualize the genomic annotation.
+
+#### Piechart
+
+
 ```{r}
-upsetplot(annot.ckoR1)
+plotAnnoPie(annot.ckoR1)
 ```
 
 <p align="center">
-<img src="../img/Chipseq_upset1.png"  width="600">
+<img src="../img/annot.pie1.png"  width="600">
 </p>
 
-### Distribution of loci with respect to TSS
-
-```{r}
-plotDistToTSS(annot.ckoR1)
-```
-
-<p align="center">
-<img src="../img/chipseq_tss1.png"  width="600">
-</p>
-
-
-### Genomic annotation by barplot
+#### Barplot
 
 ```{r}
 plotAnnoBar(annot.ckoR1)
@@ -99,39 +150,204 @@ plotAnnoBar(annot.ckoR1)
 </p>
 
 
-### Heatmap of ChIP bindin to TSS regions
+#### UpsetR
 
+Annotation overlaps can be visualized by upsetR plot.
 ```{r}
-promoter <- getPromoters(TxDb = txdb, upstream = 3000, downstream = 3000)
-tagMatrix_ckoR1 <- getTagMatrix(ckoR1, windows = promoter)
-tagHeatmap(tagMatrix_ckoR1)
+upsetplot(annot.ckoR1)
 ```
 
 <p align="center">
-<img src="../img/Chipseq_tagheatmap1.png"  width="600">
+<img src="../img/Chipseq_upset1.png"  width="600">
 </p>
 
-## CKO_Rep2
+### Distribution of TF-binding loci with respect to TSS
+
+The distance between peak and the TSS of the nearest gene is reported in the annotation output and can be visualzed with barplot.
+
+```{r}
+plotDistToTSS(annot.ckoR1)
+```
+
+<p align="center">
+<img src="../img/chipseq_tss1.png"  width="600">
+</p>
+
+
+## Exercise:
+
+Carryout similar visualization and annotation for a replicate of WT sample `WT_Rep1`.
+Work along the codes below:
+
+Use `readPeakFile()` function to import the peakset as GRange object.
+
+```{r}
+wtR1 <- readPeakFile("data/macs2/narrowPeak/WT_H3K27ac_ChIPseq_REP1_peaks.narrowPeak")
+
+```
+
+### Peak coverage plot
+Use `covplot()` to visualize the coverage of the peaks in the genome.
+You can look at a different chromosome or the whole genome by removing `chrs=` options. 
+
+```{r}
+covplot(wtR1, weightCol = "V5", chrs = c("chr1", "chr2"))
+```
+
+Image below is for chromosome 1 and 2.
+
+<p align="center">
+<img src="../img/chipseq_covplot4.png"  width="600">
+</p>
+
+### Heatmap profile of ChIP binding to TSS regions
+
+Generate the tagMatrix and plot the heatmap.
+
+
+```{r}
+txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
+promoter <- getPromoters(TxDb = txdb, upstream = 2000, downstream = 2000)
+tagMatrix_wtR1 <- getTagMatrix(wtR1, windows = promoter)
+tagHeatmap(tagMatrix_wtR1)
+```
+
+<p align="center">
+<img src="../img/Chipseq_tagheatmap4.png"  width="600">
+</p>
+
+
+### Average profile of ChIP peaks binding to TSS region
+
+```{r}
+plotAvgProf(tagMatrix_wtR1, xlim=c(-2000, 2000), 
+            xlab="Genomic Region (5'->3')", ylab = "Read Count Frequency")
+```
+
+<p align="center">
+<img src="../img/Chipseq_avg.profile4.png"  width="600">
+</p>
+
+
+### Peak annotation
+
+Annotation of the peaks to the nearest gene and for various genomic characteristics is performed by `annotatePeak()` function. By default TSS region is defined as -3kb to +3kb, however user can define their region. The result of the annotation comes in csAnno (a special format for ChIP-seq annotation). This can be converted to GRanges with `as.GRanges()` format and to data frame with `as.data.frame()` function.
+
+> Note: Bioconductor provides annotation database `TxDb` for commonly used genome version to use for annotation in ChIPseeker, e.g. `TxDb.Mmusculus.UCSC.mm10.knownGene`, `TxDb.Mmusculus.UCSC.mm9.knownGene`, `TxDb.Hsapiens.UCSC.hg38.knownGene`, `TxDb.Hsapiens.UCSC.hg19.knownGene`, User can also prepare prepare their own database object using UCSC Genome Bioinformatics and BioMart database in R with `makeTxDbFromBiomart()` and `makeTxDbFromUCSC.TxDb()`
+
+Annotate the peakset using `annotatePeak()` function
+
+```{r}
+txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
+annot.wtR1 = annotatePeak(wtR1, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
+```
+
+Genomic annotation summary:
+
+```{r}
+annot.wtR1
+```
+
+```{r, output}
+Annotated peaks generated by ChIPseeker
+100559/100570  peaks were annotated
+Genomic Annotation Summary:
+ 
+Feature                     Frequency
+<fctr>                          <dbl>
+9	Promoter (<=1kb)	       20.81762945		
+10	Promoter (1-2kb)	       3.84749252		
+11	Promoter (2-3kb)	       3.17226703		
+4	5' UTR	                  0.20883263		
+3	3' UTR	                  1.83275490		
+1	1st Exon	                1.59806681		
+7	Other Exon	              2.97337881		
+2	1st Intron	             11.96909277		
+8	Other Intron	           25.65459084		
+6	Downstream (<=300)	      0.07856084
+5	Distal Intergenic	      27.84733341					
+```
+
+### Annotation visualization
+ 
+
+Use Pie, Bar, and upsetR plots to visualize the genomic annotation.
+
+#### Piechart
+
+
+```{r}
+plotAnnoPie(annot.wtR1)
+```
+
+<p align="center">
+<img src="../img/annot.pie4.png"  width="600">
+</p>
+
+#### Barplot
+
+```{r}
+plotAnnoBar(annot.wtR1)
+```
+
+<p align="center">
+<img src="../img/Chipseq_annotbar4.png"  width="600">
+</p>
+
+
+#### UpsetR
+
+
+```{r}
+upsetplot(annot.wtR1)
+```
+
+<p align="center">
+<img src="../img/Chipseq_upset4.png"  width="600">
+</p>
+
+### Distribution of TF-binding loci with respect to TSS
+
+The distance between peak and the TSS of the nearest gene is reported in the annotation output and can be visualzed with barplot.
+
+```{r}
+plotDistToTSS(annot.wtR1)
+```
+
+<p align="center">
+<img src="../img/Chipseq_tss4.png"  width="600">
+</p>
+
+---
+
+
+## Dataset comparison
+
+We need the tagMatrix and annotations from other samples to carryout the overall comparison and visualization.
+
+#### Sample CKO_Rep2
 
 Importing peak sets
 ```{r}
 ckoR2 <- readPeakFile("data/macs2/narrowPeak/cKO_H3K27ac_ChIPseq_REP2_peaks.narrowPeak"
+```
+Generate TagMatrix:
 
+```{r}
+promoter <- getPromoters(TxDb = txdb, upstream = 2000, downstream = 2000)
+tagMatrix_ckoR2 <- getTagMatrix(ckoR2, windows = promoter)
 ```
 
-Annotating peaks
+Annotate:
 
 ```{r}
 annot.ckoR2 = annotatePeak(ckoR2, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
 ```
 
-Genomic annotation summary
+<details>
+    <summary>Annotation results</summary>
 
-```{r}
-annot.ckoR2
-```
 
-```{r, output}
 Annotated peaks generated by ChIPseeker
 83085/83089  peaks were annotated
 Genomic Annotation Summary:
@@ -149,74 +365,35 @@ Feature                     Frequency
 8	Other Intron	      24.45327075		
 6	Downstream (<=300)	   0.08064031
 5	Distal Intergenic	  26.82313294			
-```
-
-## Annotation visualization
-
-### UpsetR
-```{r}
-upsetplot(annot.ckoR2)
-```
-
-<p align="center">
-<img src="../img/Chipseq_upset2.png"  width="600">
-</p>
-
-### Distribution of loci with respect to TSS
-
-```{r}
-plotDistToTSS(annot.ckoR2)
-```
-
-<p align="center">
-<img src="../img/Chipseq_tss2.png"  width="600">
-</p>
 
 
-### Genomic annotation by barplot
-
-```{r}
-plotAnnoBar(annot.ckoR2)
-```
-
-<p align="center">
-<img src="../img/Chipseq_annotbar2.png"  width="600">
-</p>
+</details>
 
 
-### Heatmap of ChIP bindin to TSS regions
-
-```{r}
-promoter <- getPromoters(TxDb = txdb, upstream = 3000, downstream = 3000)
-tagMatrix_ckoR2 <- getTagMatrix(ckoR2, windows = promoter)
-tagHeatmap(tagMatrix_ckoR2)
-```
-
-<p align="center">
-<img src="../img/Chipseq_tagheatmap2.png"  width="600">
-</p>
-
-## CKO_Rep3
+#### Sample CKO_Rep3
 
 Importing peak sets
+
 ```{r}
 ckoR3 <- readPeakFile("data/macs2/narrowPeak/cKO_H3K27ac_ChIPseq_REP3_peaks.narrowPeak"
 
 ```
+Generate TagMatrix:
 
-Annotating peaks
+```{r}
+#promoter <- getPromoters(TxDb = txdb, upstream = 2000, downstream = 2000)
+tagMatrix_ckoR3 <- getTagMatrix(ckoR3, windows = promoter)
+```
+Annotate:
 
 ```{r}
 annot.ckoR3 = annotatePeak(ckoR3, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
 ```
 
-Genomic annotation summary
+<details>
+    <summary>Annotation results</summary>
 
-```{r}
-annot.ckoR3
-```
-
-```{r, output}
+ 
 Annotated peaks generated by ChIPseeker
 91046/91053  peaks were annotated
 Genomic Annotation Summary:
@@ -234,141 +411,12 @@ Feature                     Frequency
 8	Other Intron	      24.53594886		
 6	Downstream (<=300)	   0.08237594
 5	Distal Intergenic	  27.54871164			
-```
-
-## Annotation visualization
-
-### UpsetR
-```{r}
-upsetplot(annot.ckoR3)
-```
-
-<p align="center">
-<img src="../img/Chipseq_upset3.png"  width="600">
-</p>
-
-### Distribution of loci with respect to TSS
-
-```{r}
-plotDistToTSS(annot.ckoR3)
-```
-
-<p align="center">
-<img src="../img/Chipseq_tss3.png"  width="600">
-</p>
 
 
-### Genomic annotation by barplot
-
-```{r}
-plotAnnoBar(annot.ckoR3)
-```
-
-<p align="center">
-<img src="../img/Chipseq_annotbar3.png"  width="600">
-</p>
+</details>
 
 
-### Heatmap of ChIP bindin to TSS regions
-
-```{r}
-#promoter <- getPromoters(TxDb = txdb, upstream = 3000, downstream = 3000)
-tagMatrix_ckoR3 <- getTagMatrix(ckoR3, windows = promoter)
-tagHeatmap(tagMatrix_ckoR3)
-```
-
-<p align="center">
-<img src="../img/Chipseq_tagheatmap3.png"  width="600">
-</p>
-
-
-## WT_Rep1
-
-Importing peak sets
-```{r}
-wtR1 <- readPeakFile("data/macs2/narrowPeak/WT_H3K27ac_ChIPseq_REP1_peaks.narrowPeak"
-
-```
-
-Annotating peaks
-
-```{r}
-annot.wtR1 = annotatePeak(wtR1, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
-```
-
-Genomic annotation summary
-
-```{r}
-annot.wtR1
-```
-
-```{r, output}
-Annotated peaks generated by ChIPseeker
-100559/100570  peaks were annotated
-Genomic Annotation Summary:
- 
-Feature                     Frequency
-<fctr>                          <dbl>
-9	Promoter (<=1kb)	  20.81762945		
-10	Promoter (1-2kb)	   3.84749252		
-11	Promoter (2-3kb)	   3.17226703		
-4	5' UTR	               0.20883263		
-3	3' UTR	               1.83275490		
-1	1st Exon	           1.59806681		
-7	Other Exon	           2.97337881		
-2	1st Intron	          11.96909277		
-8	Other Intron	      25.65459084		
-6	Downstream (<=300)	   0.07856084
-5	Distal Intergenic	  27.84733341					
-```
-
-## Annotation visualization
-
-### UpsetR
-```{r}
-upsetplot(annot.wtR1)
-```
-
-<p align="center">
-<img src="../img/Chipseq_upset4.png"  width="600">
-</p>
-
-### Distribution of loci with respect to TSS
-
-```{r}
-plotDistToTSS(annot.wtR1)
-```
-
-<p align="center">
-<img src="../img/Chipseq_tss4.png"  width="600">
-</p>
-
-
-### Genomic annotation by barplot
-
-```{r}
-plotAnnoBar(annot.wtR1)
-```
-
-<p align="center">
-<img src="../img/Chipseq_annotbar4.png"  width="600">
-</p>
-
-
-### Heatmap of ChIP bindin to TSS regions
-
-```{r}
-#promoter <- getPromoters(TxDb = txdb, upstream = 3000, downstream = 3000)
-tagMatrix_wtR1 <- getTagMatrix(wtR1, windows = promoter)
-tagHeatmap(tagMatrix_wtR1)
-```
-
-<p align="center">
-<img src="../img/Chipseq_tagheatmap4.png"  width="600">
-</p>
-
-
-## WT_Rep2
+#### Sample WT_Rep2
 
 Importing peak sets
 ```{r}
@@ -376,19 +424,24 @@ wtR2 <- readPeakFile("data/macs2/narrowPeak/WT_H3K27ac_ChIPseq_REP2_peaks.narrow
 
 ```
 
-Annotating peaks
+Generate TagMatrix:
+
+```{r}
+#promoter <- getPromoters(TxDb = txdb, upstream = 2000, downstream = 2000)
+tagMatrix_wtR2 <- getTagMatrix(wtR2, windows = promoter)
+tagHeatmap(tagMatrix_wtR2)
+```
+
+Annotate:
 
 ```{r}
 annot.wtR2 = annotatePeak(wtR2, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
 ```
 
-Genomic annotation summary
+<details>
+    <summary>Annotation results</summary>
 
-```{r}
-annot.wtR2
-```
-
-```{r, output}
+ 
 Annotated peaks generated by ChIPseeker
 111961/111978  peaks were annotated
 Genomic Annotation Summary:
@@ -406,75 +459,35 @@ Feature                     Frequency
 8	Other Intron	      26.07425800		
 6	Downstream (<=300)	   0.09378266
 5	Distal Intergenic	  28.44204678
-```
-
-## Annotation visualization
-
-### UpsetR
-```{r}
-upsetplot(annot.wtR2)
-```
-
-<p align="center">
-<img src="../img/Chipseq_upset5.png"  width="600">
-</p>
-
-### Distribution of loci with respect to TSS
-
-```{r}
-plotDistToTSS(annot.wtR2)
-```
-
-<p align="center">
-<img src="../img/Chipseq_tss5.png"  width="600">
-</p>
 
 
-### Genomic annotation by barplot
-
-```{r}
-plotAnnoBar(annot.wtR2)
-```
-
-<p align="center">
-<img src="../img/Chipseq_annotbar5.png"  width="600">
-</p>
+</details>
 
 
-### Heatmap of ChIP bindin to TSS regions
 
-```{r}
-#promoter <- getPromoters(TxDb = txdb, upstream = 3000, downstream = 3000)
-tagMatrix_wtR2 <- getTagMatrix(wtR2, windows = promoter)
-tagHeatmap(tagMatrix_wtR2)
-```
-
-<p align="center">
-<img src="../img/Chipseq_tagheatmap5.png"  width="600">
-</p>
-
-
-## WT_Rep3
+#### Sample WT_Rep3
 
 Importing peak sets
 ```{r}
 wtR3 <- readPeakFile("data/macs2/narrowPeak/WT_H3K27ac_ChIPseq_REP3_peaks.narrowPeak"
-
 ```
 
-Annotating peaks
+Generate TagMatrix:
+```{r}
+#promoter <- getPromoters(TxDb = txdb, upstream = 2000, downstream = 2000)
+tagMatrix_wtR3 <- getTagMatrix(wtR3, windows = promoter)
+```
+
+Annotate:
 
 ```{r}
 annot.wtR3 = annotatePeak(wtR3, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
 ```
 
-Genomic annotation summary
+<details>
+    <summary>Annotation results</summary>
 
-```{r}
-annot.wtR3
-```
-
-```{r, output}
+ 
 Annotated peaks generated by ChIPseeker
 81024/81030  peaks were annotated
 Genomic Annotation Summary:
@@ -492,55 +505,15 @@ Feature                     Frequency
 8	Other Intron	      23.74234795		
 6	Downstream (<=300)	   0.09626777
 5	Distal Intergenic	  27.21662717
-```
-
-## Annotation visualization
-
-### UpsetR
-```{r}
-upsetplot(annot.wtR3)
-```
-
-<p align="center">
-<img src="../img/Chipseq_upset6.png"  width="600">
-</p>
-
-### Distribution of loci with respect to TSS
-
-```{r}
-plotDistToTSS(annot.wtR3)
-```
-
-<p align="center">
-<img src="../img/Chipseq_tss6.png"  width="600">
-</p>
 
 
-### Genomic annotation by barplot
+</details>
 
-```{r}
-plotAnnoBar(annot.wtR3)
-```
-
-<p align="center">
-<img src="../img/Chipseq_annotbar6.png"  width="600">
-</p>
-
-
-### Heatmap of ChIP bindin to TSS regions
-
-```{r}
-#promoter <- getPromoters(TxDb = txdb, upstream = 3000, downstream = 3000)
-tagMatrix_wtR3 <- getTagMatrix(wtR3, windows = promoter)
-tagHeatmap(tagMatrix_wtR3)
-```
-
-<p align="center">
-<img src="../img/Chipseq_tagheatmap6.png"  width="600">
-</p>
 
 
 ### Average profiles of all the samples
+
+We can plot average profile of all the samples together. For that we need to make a list of list of tagMatrix.
 
 ```{r, message=FALSE, warning=FALSE, results='hide'}
 tagMatrix_list <- list(
@@ -552,7 +525,7 @@ tagMatrix_list <- list(
   WT_Rep3 = tagMatrix_wtR3
 )
 
-plotAvgProf(tagMatrix_list, xlim = c(-1000, 1000), conf = 0.95, resample=500, facet = "column")
+plotAvgProf(tagMatrix_list, xlim = c(-2000, 2000), facet = "row")
 ```
 
 <p align="center">
@@ -561,6 +534,7 @@ plotAvgProf(tagMatrix_list, xlim = c(-1000, 1000), conf = 0.95, resample=500, fa
 
 
 ### Chip peak annotation Feature distribution all samples
+Annotation feature distribution of all the samples can also be plotted together, making a list of annotation.
 
 ```{r}
 annot_list <- list(
@@ -580,6 +554,9 @@ plotAnnoBar(annot_list)
 
 
 ### Chip peak annotation distrubution of loci with respect to TSS all samples
+Lets plot the peak annotation distribution of loci with respect to TSS for all the samples together.
+
+We can supply the same annotation list that we made above.
 
 ```{r}
 plotDistToTSS(annot_list)
@@ -589,13 +566,7 @@ plotDistToTSS(annot_list)
 </p>
 
 
-- Annotation for individual samples and for consensus peaks for each sample group.
-- Peak annotation of genomic features (not on target genes) [see](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/12_functional_analysis.html)
-    - Peak distance from TSS and other genomic feaures.
-    - Include genometricCorr or other statistical evaluation of proximity of peaks to genomic regions of interest.
-          Alternatively:use bedr to implement Jaccard statistics (for overlaps not proximity). [link](https://cran.r-project.org/web/packages/bedr/vignettes/Using-bedr.html#jaccard-and-reldist) [bedtools](https://bedtools.readthedocs.io/en/latest/content/tools/jaccard.html)
-    - ChiPSeeker plots [see](https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/OLD_ChipSeeker_analysis.md#visualization-with-chipseeker)
-    - Talk about Deeptools as an alternative using bam files. point to [chromatin biology workshop material](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/09_data_visualization.md)
+
 ***
 
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
