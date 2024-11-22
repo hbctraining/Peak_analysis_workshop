@@ -172,7 +172,7 @@ Next, we will look at the actual peak data to assess sample similarity. The narr
 
 One way to evaluate concordance of peaks between samples is a signal enrichment vs peak rank plot. This shows the rank of each peak vs the strength of each peak for each replicate. It will help us evaluate the number of peaks we would retain if thresholding by peak enrichment. 
 
-Let's first begin by loading in the data. We will use a for loop to go through and load the narrowPeak file for each sample and then we will save the columns we need into individual dataframes.
+Let's first begin by loading in the data. We will use a for loop to go through and load the narrowPeak file for each sample and then we will save the columns we need into individual dataframes. In your environment you should see that **six new dataframes have appeared**.
 
 ```
 # Get all narrowpeak file names and path
@@ -192,7 +192,7 @@ for(r in 1:length(sample_files)){
 
 ```
 
-In your environment you should now see that **six new dataframes have appeared**. Next, we will combine dataframes for the WT replicates and then plot signal versus rank, with each colored line representing a different replicate.
+Next, we will combine dataframes for the **WT replicates** and then **plot signal versus rank**, with each colored line representing a different replicate.
 
 
 ```
@@ -248,25 +248,46 @@ ggplot(cko, aes(peak_rank, peak_enrichment, color = reps)) +
 <img src="../img/cKO_signal_vs_rank.png" width="650">
 </p>
 
-
-Our data looks pretty consistent between samples until enrichment is low ####COMMENT ON MEANING BHIND THIS
+In this plot, we are looking at each individual replicates to evaluate what number of peaks we would retain if thresholding by peak enrichment. It is also valuable to see how this differs between replicates within a sample group. Our **data looks pretty consistent within each group**, with all replicates following a similar trend. Also, there are small differences in where the enrichment value drops off and it drops off at the very end of the curve. This suggests that thresholding peaks for our dataset is not necessary.
 
 ### Histogram of quality scores
-
-Here, we plot a histogram of peak signal values for each sample. This plot can be used to help determine a minimum value for peak enrichment that can be used for filtering. 
+Finally, we plot a histogram of peak signal values for each sample. This plot is complementary to the above plot, as it can also be used to help determine a minimum value for peak enrichment that can be used for filtering. Additionally, we combine the WT and cKO data into one plot which allows us to **compare signal enrichment between the two groups**.
 
 ```
-ggplot(peaks, aes(x = peak_enrichment, fill = .data[[params$factor_of_interest]])) + 
+# Combine data into one dataframe
+allreps <- rbind(wt, cko)
+
+# Add a column for genotype
+allreps$genotype <- str_split_fixed(allreps$reps, "_", 4)[,1]
+
+# PLot histogram
+ggplot(allreps, aes(peak_enrichment, fill = genotype)) + 
   geom_histogram(aes(peak_enrichment)) +
-  scale_fill_cb_friendly() +
+  ggtitle("Histogram of peak enrichment values") +
+  theme_bw() +
+  geom_vline(xintercept=median(df$peak_enrichment), linetype='dashed') +
+  geom_vline(xintercept=4, linetype='dashed', color="red") +
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.title = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()) +
   xlab("Peak enrichment")
+
 ```
 
-####INSERT IMAGE HERE
+<p align="center">
+<img src="../img/hist_peak_enrichment.png" width="650">
+</p>
 
-####WRITE NOTE ABOUT HOW OUR DATA LOOKS AND WHETHER WE SHOULD DO ANY FILTERING
+After plotting the data you will see that **enrichment** value are considerably **higher in the cKO samples**. This suggests that overall there is a difference between groups and later in the workshop we will use statistical appraoches to identify those differences. On the plot we have drawn two dashed lines: one at the median value and the other using the threshold of 4 from the previous plot. In this way we can assess whether we want to shift that threshold to allow more for more peaks.  
+
+### Summary
+Overall, our replicates seem to show considerable amount of similarity within group as they share trends at both the read density level across the entire genome and signal value within called peaks. It doesn't seem necessary to threshold on signal, but there does appear to be differences in signal levels between groups. Our next step is to look at how the actual regions (genomic coordinates) overlap between samples.
 
 
+[Back to Schedule](../schedule/README.md)
+
+[Next Lesson >>](02b_peak_concordance_replicates.md)
 
 ***
 
