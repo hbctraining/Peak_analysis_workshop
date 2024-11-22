@@ -6,7 +6,7 @@
 
 
 ### Learning Objectives 
- * Understand peak data and different file formats generated from peak calling algorithms 
+ * Describe peak data and different file formats generated from peak calling algorithms 
  * Assess various metrics used to assess the quality of peak calls
  * Compare peak calls across samples within a dataset
  * Create visualizations to evaluat peak annotations
