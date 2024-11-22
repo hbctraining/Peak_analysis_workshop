@@ -99,7 +99,7 @@ I. Please **study the contents** and **work through all the code** within the fo
 | 10:30 - 11:15 | [Motif analysis/discovery]() |  |
 | 11:15- 11:25 | Break|  |
 | 11:05 - 11:45 | Discussion Q&A |  |
-| 11:45 - 12:00 | [Wrap-up]() |  |
+| 11:45 - 12:00 | [Wrap-up](../lectures/Workshop_wrapup.pdf) |  |
 
 
 ## Answer keys
