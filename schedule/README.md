@@ -15,7 +15,7 @@
 
 | Time |  Topic  | Instructor |
 |:-----------:|:----------:|:--------:|
-| 09:30 - 09:45 | [Workshop Introduction]() | Meeta |
+| 09:30 - 09:45 | [Workshop Introduction](../lectures/workshop_intro_slides.pdf) | Meeta |
 | 09:45 - 10:15 | Pre-reading discussion | Meeta |
 | 10:15 - 11:00 | [Understanding peaks and peak file formats](../lessons/01_Introduction_to_peak_files.md)  | Meeta |
 | 11:00- 11:05 | Break|  |
