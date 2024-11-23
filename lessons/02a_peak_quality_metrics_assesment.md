@@ -232,6 +232,7 @@ In order extract the NSC value from the Rdata object that was created by <code>p
 load("SAMPLE_PHANTOMPEAKQUALTOOLS_OUTPUT.Rdata")
 crosscorr$phantom.coeff
 </pre>
+More detailed information on <code>phantompeakqualtools</code> can be found <a href="https://github.com/kundajelab/phantompeakqualtools">here</a>.
 <hr />
 </details>
 
@@ -272,24 +273,13 @@ In order extract the RSC value from the Rdata object that was created by <code>p
 load("SAMPLE_PHANTOMPEAKQUALTOOLS_OUTPUT.Rdata")
 crosscorr$rel.phantom.coeff
 </pre>
+More detailed information on <code>phantompeakqualtools</code> can be found <a href="https://github.com/kundajelab/phantompeakqualtools">here</a>.
 <hr />
 </details>
 
 ### Fraction of reads in peaks (FRiP)
 
 This represents the fraction of mapped reads which are mapped to peaks (as opposed to elsewhere in the genome). This is only calculated for antibody samples in our data set. The expected fraction of reads in peaks will vary by protein. Histone marks, which usually have broader peaks, often have higher FRiPs than transcription factors, which usually have much narrower peaks.
-
-<details>
-<summary><b>Click here for the code to compute FRiP for you own samples</b></summary>
-In order to determine the FRiP, we can run ... The command to run this is:</br></br>
-<pre>
-&#35;
- Add code here
-</pre></br>
-
-</details>
-
-This code exists: https://github.com/hbctraining/Peak_analysis_workshop/blob/main/scripts/calculate_frip.sh
 
 ```
 metrics %>% 
@@ -314,7 +304,19 @@ Our samples have FRiPs in line with what we might expect for narrow histone mark
 <img src="../img/frips_2.png"  width="800">
 </p>
 
-
+<details>
+<summary><b>Click here for the code to compute FRiP for you own samples</b></summary>
+In order to determine the fraction of reads in peaks (FRiP), we can run <a href="https://github.com/hbctraining/Peak_analysis_workshop/blob/main/scripts/calculate_frip.sh">a custom shell script</a>. The script requires <code>bedtools</code> in order to run and documentation for <code>bedtools</code> can be found <a href="https://bedtools.readthedocs.io/en/latest/">here</a>. The command to run this script to calculate the fraction of reads in peaks is:</br></br>
+<pre>
+&#35; Calculate the fraction of reads in peaks
+&#35; Requires bedtools to run
+sh calculate_frip.sh \
+ $DIRECTORY_WITH_BAM_FILES \
+ $DIRECTORY_WITH_PEAK_FILES \
+ $OUTPUT_FILE
+</pre>
+<hr />
+</details>
 
 ### Non-redundant fraction (NRF)
 
