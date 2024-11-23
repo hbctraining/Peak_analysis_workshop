@@ -74,7 +74,7 @@ We will discuss the importance of each step in the process, but for more detaile
 - bam files from the input sample's read mapping.
 - called peaks, output from peak caller.
 
-        Note: Peaks from replicates are used individually, not merged.
+> Note: Peaks from replicates are used individually, not merged.
 
 ## Setting up
 
@@ -93,7 +93,7 @@ library(tidyverse)
 ## Reading in the data
 The DiffBind pipeline starts with importing the required data (bam files and peaksets). Bam files are the alignment files of the samples to the reference and peaksets are derived from peak callers such as MACS. The easy way of importing these data is through a metadata file. We need to prepare a metadata file that includes one line for each peakset in a format compatible with DiffBind. 
 
-    Note: If multiple peak callers are used for comparison, each sample will have more than one line in the sample sheet. A merging function generates a consensus peakset for the experiment. 
+> Note: If multiple peak callers are used for comparison, each sample will have more than one line in the sample sheet. A merging function generates a consensus peakset for the experiment. 
 
 After reading in the peaksets, a merging function finds all overlapping peaks and derives a single set of unique genomic intervals, called the consensus peakset. A region is included in the consensus set if it appears in at least two samples. This consensus peakset represents the overall set of candidate binding sites further analysis.
 
@@ -103,7 +103,7 @@ Let's read in our metadata and inspect the column headers to understand the requ
 
 
 ```{r}
-samples <- read.csv("data/metadata.csv")
+samples <- read.csv("data/DiffBind/metadata.csv")
 names(samples)
 ```
 
@@ -122,7 +122,7 @@ An experiment will have multiple samples. Each sample needs a unique SampleID. A
   
 - **Treatment** - Specifies any treatments applied to the cells.
 
-        Note: Not all classes are required, but at leaset one is necessary for comparision. For example, in our datasheet, we have Tissue, Factor, and Condition.
+> Note: Not all classes are required, but at leaset one is necessary for comparision. For example, in our datasheet, we have Tissue, Factor, and Condition.
 
 Metadata should also comprise aligned sequencing reads (generally in bam format). Each sample needs an aligned sequencing library, but may include the following:
 
@@ -484,7 +484,7 @@ WT_enrich <- out %>%
 write.table(WT_enrich, file="WT_enriched.bed", sep="\t", quote=F, row.names=F, col.names=F)
 ```
 
-NOTE: BED files cannot contain headers and so we have added the col.names=F argument to address that. Additionally, we took only the first three columns from the results (genomic coordinates) to adhere to a minimal BED file format.
+> NOTE: BED files cannot contain headers and so we have added the col.names=F argument to address that. Additionally, we took only the first three columns from the results (genomic coordinates) to adhere to a minimal BED file format.
 
 
 
