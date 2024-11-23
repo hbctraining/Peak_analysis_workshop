@@ -91,10 +91,17 @@ You can visit the [Harvard's Biomedical Data Management Website](https://dataman
 
 _Image acquired from the [Harvard Biomedical Data Management Website](https://datamanagement.hms.harvard.edu/data-lifecycle)_
 
-Within this project we currently have 3 directories:
+#### Project Organization
+
+Before we analyze any data, let's orient ourselves with the project that we are working within first. Within this project we currently have 3 directories:
+
 - **data** - This directory contains data that we have pre-processed
 - **meta** - This directory is where we will be placing any metadata and also contains a summary file, *metrics.csv*
 - **results** - This directory is where we will be placing our figures 
+
+Directories such as these three are a great starting place for many types of analysis. As your data and analyses become more complex or get re-analyzed in different ways, don't be afraid to add new directories or subdirectories to these directories as needed. For example within the **data** directory, we can see there are subdirectories for each software tool used, rather than lumping all of the data together into a single **data** directory. 
+
+#### Documentation
 
 We will also need to add a header to the top of our R Script. This should let future you, as well as, collaboratos know key pieces of information about the script:
 
