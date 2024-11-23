@@ -84,7 +84,7 @@ This data set isn't perfect -- while most of our samples have close to or more t
 <br>There are a number of ways and programs to ascertain the total number of reads in a sample, but, for this example, we will use <code>picard</code>. <code>picard</code> is <a href="https://broadinstitute.github.io/picard/">a tool maintained by the Broad Institute</a> with a wide-variety of functions to assist in next-generation sequencing data analysis. <code>picard</code> has multiple functions that can return the total number of reads as part of their analysis, but we will use the <code>CollectAlignmentSummaryMetrics</code> function because we will also need the alignment metrics for the next section on assessing the mapping rate. The command to run <code>picard</code>'s <code>CollectAlignmentSummaryMetrics </code> function is:<br><br>
 <pre>
 &#35; Run picard CollectAlignmentSummaryMetrics for a sample
-java -jar $PICARD/picard.jar CollectAlignmentSummaryMetrics \
+java -jar picard.jar CollectAlignmentSummaryMetrics \
   --INPUT $INPUT_BAM \
   --REFERENCE_SEQUENCE $REFERENCE \
   --OUTPUT $OUTPUT_METRICS_FILE
@@ -126,7 +126,7 @@ Our samples all have a mapping rate well above the minimum, and the samples are 
 </br>In order to collect the mapping rate for a sample, we will use information from <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> output that we ran in previous dropdown, which helped us count the number of total reads. As a reminder, the code to run this would be:<br><br>
 <pre>
 &#35; Run picard CollectAlignmentSummaryMetrics for a sample
-java -jar $PICARD/picard.jar CollectAlignmentSummaryMetrics \
+java -jar picard.jar CollectAlignmentSummaryMetrics \
   --INPUT $INPUT_BAM \
   --REFERENCE_SEQUENCE $REFERENCE \
   --OUTPUT $OUTPUT_METRICS_FILE
