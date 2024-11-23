@@ -123,7 +123,7 @@ Our samples all have a mapping rate well above the minimum, and the samples are 
 
 <details>
 <summary><b>Click here for the code to compute mapping rate from your own data</b></summary>
-</br>In order to collect the mapping rate for a sample, we will use information from <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> output that we ran in previous dropdown, which helped us count the number of total reads. As a reminder, the code to run this would be:<br><br>
+<br>In order to collect the mapping rate for a sample, we will use information from <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> output that we ran in previous dropdown, which helped us count the number of total reads. As a reminder, the code to run this would be:<br><br>
 <pre>
 &#35; Run picard CollectAlignmentSummaryMetrics for a sample
 java -jar picard.jar CollectAlignmentSummaryMetrics \
