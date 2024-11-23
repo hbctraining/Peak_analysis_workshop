@@ -190,6 +190,29 @@ A broadPeak (.broadPeak) file is very similar to a narrowPeak file, but it is BE
 
 A gappedPeak (.gappedPeak) file is a BED12+3 file which contains broad peaks as well as narrow peaks within the broad peaks. You can learn more about this format (and the format of the other files) on the [Encode website](https://genome.ucsc.edu/FAQ/FAQformat.html#format14).
 
+## Workflow
+
+For this analysis, we are going to be analyzing the data through a pre-planned workflow. Below we have summarized this workflow with a schematic:
+
+<p align="center">
+<img src="../img/Workflow.png">
+</p>
+
+Each step of this workflow is summmarized below:
+
+- **Peak Calls** - Peak call data will be the input data for the analysis. More information on how this can be derived from raw sequence reads, can be found [here](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/).
+- **Peak QC** - Quality control that can be applied to the analysis:
+  - *QC Metrics Assessment* - Evaluating some important QC metrics to ensure we are using high-quality reads, the reads were aligned to the reference well and the peak metrics are within [ENCODE guidelines](https://www.encodeproject.org/chip-seq/histone/).
+  - *Replicate Concordance* - Evaluate concordance of peak calls across replicates
+  - *Qualitative Assessment* - **MEETA ADD SOMETHING HERE**
+- **Peak Annotation** - Identify transcript models near called peaks
+- **Differential Enrichment** - Quantify peak calls which show diffential binding across conditions
+- **Peak Visualization** - Inspect the peak calls and differentially called peaks within an [IGV browser](https://igv.org/) to ensure that they qualitatively appear accurate.
+- **Motif Discovery** - Identify enriched sequence motifs within peaks
+- **Functional Analysis** - Investigate whether certain biological pathways are enriched for peaks or differential binding across conditions
+
+***
+
 [Back to the Schedule](../schedule/README.md) 
 
 [Next lesson >>](02a_peak_quality_metrics_assesment.md)
