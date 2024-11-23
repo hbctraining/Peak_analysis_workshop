@@ -173,6 +173,29 @@ plotDistToTSS(annot.ckoR1)
 <img src="../img/chipseq_tss1.png"  width="600">
 </p>
 
+### Functional enrichment analysis
+
+As we have the nearest gene annotation for the peaks, we can perform functional enrichment analysis to investigate the predominant biological theme among the genes. Depending on the biological questions we can use, clusterProfiler for GO, KEGG enrichment analysis, DOSE to investigate Disease ontology (DO), or ReactomePA for reactome pathway.
+
+In this session, we are using Reactome database. 
+
+```{r}
+library(ReactomePA) #load the library if you have not already.
+reac_ckoR1 <- enrichPathway(as.data.frame(annot.ckoR1)$geneId, organism = "mouse")
+```
+
+**Dotplot**
+
+Dotplot is an easy way to visualize the enriched categories:
+
+```{r}
+dotplot(reac_ckoR1)
+```
+
+<p align="center">
+<img src="../img/reac_cko1.png"  width="600">
+</p>
+
 
 ## Exercise:
 
@@ -230,10 +253,6 @@ plotAvgProf(tagMatrix_wtR1, xlim=c(-2000, 2000),
 
 
 ### Peak annotation
-
-Annotation of the peaks to the nearest gene and for various genomic characteristics is performed by `annotatePeak()` function. By default TSS region is defined as -3kb to +3kb, however user can define their region. The result of the annotation comes in csAnno (a special format for ChIP-seq annotation). This can be converted to GRanges with `as.GRanges()` format and to data frame with `as.data.frame()` function.
-
-> Note: Bioconductor provides annotation database `TxDb` for commonly used genome version to use for annotation in ChIPseeker, e.g. `TxDb.Mmusculus.UCSC.mm10.knownGene`, `TxDb.Mmusculus.UCSC.mm9.knownGene`, `TxDb.Hsapiens.UCSC.hg38.knownGene`, `TxDb.Hsapiens.UCSC.hg19.knownGene`, User can also prepare prepare their own database object using UCSC Genome Bioinformatics and BioMart database in R with `makeTxDbFromBiomart()` and `makeTxDbFromUCSC.TxDb()`
 
 Annotate the peakset using `annotatePeak()` function
 
@@ -316,6 +335,28 @@ plotDistToTSS(annot.wtR1)
 
 <p align="center">
 <img src="../img/Chipseq_tss4.png"  width="600">
+</p>
+
+
+### Functional enrichment analysis
+
+
+Let's perform the enrichment analysis as before 
+
+```{r}
+reac_wtR1 <- enrichPathway(as.data.frame(annot.wtR1)$geneId, organism = "mouse")
+```
+
+**Dotplot**
+
+Dotplot is an easy way to visualize the enriched categories:
+
+```{r}
+dotplot(reac_ckoR1)
+```
+
+<p align="center">
+<img src="../img/reac_wt1.png"  width="600">
 </p>
 
 ---
@@ -573,7 +614,33 @@ plotDistToTSS(annot_list)
 <img src="../img/Chipseq_tss_all.png"  width="600">
 </p>
 
+### Functional profiles comparison
 
+The `clusterProfiler` package provides `compareCluster()` function for comparing functional annotations gene clusters and can be adopted to compare different ChIP peak experiments.
+
+```{r}
+genes <- lapply(annot_list, function(i) as.data.frame(i)$geneId)
+names(genes) <- sub("_", "\n", names(genes))
+
+compPathway <- compareCluster(geneCluster = gene, 
+                         fun = "enrichPathway",
+                         organism = "mouse",
+                         pvalueCutoff = 0.05, 
+                         pAdjustMethod = "BH")
+```
+
+**Dotplot**
+
+```{r}
+dotplot(compPathway, showCategory = 10, title = "Reactome Pathway Enrichment Analysis")
+```
+<p align="center">
+<img src="../img/reac_all.png"  width="600">
+</p>
+
+### Exercise:
+1. Carryout functional comparison using KEGG database.
+   
 
 ***
 
