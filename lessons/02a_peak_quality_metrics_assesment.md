@@ -57,14 +57,16 @@ One of the most basic quality evaluations we can make for any genomic (or transc
 
 <details>
 <summary><b>Click here for the code to compute total reads from your own data</b></summary>
-In order to determine the total number of reads, we can run ... The command to run this is:</br></br>
+</br>There are a number of ways and programs to ascertain the total number of reads in a sample, but, for this example, we will use <code>picard</code>. <code>picard</code> is <a href="https://broadinstitute.github.io/picard/">a tool maintained by the Broad Institute</a> with a wide-variety of functions to assist in next-generation sequencing data analysis. <code>picard</code> has multiple functions that can return the total number of reads as part of their analysis, but we will use the <code>CollectAlignmentSummaryMetrics</code> function because we will also need the alignment metrics for the next section on assessing the mapping rate. The command to run <code>picard</code>'s <code>CollectAlignmentSummaryMetrics </code> function is:</br></br>
 <pre>
-&#35;
- Add code here
+&#35; Run picard CollectAlignmentSummaryMetrics for a sample
+java -jar $PICARD/picard.jar CollectAlignmentSummaryMetrics \
+  --INPUT $INPUT_BAM \
+  --REFERENCE_SEQUENCE $REFERENCE \
+  --OUTPUT $OUTPUT_METRICS_FILE
 </pre></br>
-
-Note that samtools is a command-line tool and you will need to run this in an environment where the tool is installed.
- 
+More detailed information on how <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> can be found <a href="https://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">here</a>.
+<hr />
 </details>
 
 
