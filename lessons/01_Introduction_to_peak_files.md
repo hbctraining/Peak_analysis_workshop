@@ -73,12 +73,27 @@ Now your R Studio should look like:
 <img src="../img/R_studio_with_script.png" width="800">
 </p>
 
-### Data management best practices
-Discuss the files/folders present in the project and need for organization.
+### Data Management Best Practices
+
+When working with next-generation sequencing data, it can be very enticing to race to investigating your data soon after receiving it. However, it is considered best practice to take a few minutes to set-up an environment that will help keep you and your data organized *before* you start your analysis. The downloaded project already has this done, but we will discuss what we did to help organize ourselves in this section. 
+
+Importantly, data management practices should be applied *throughout* your analyses. Some other advantages to a commiting to strong data management practices are:
+
+- Helping yourself and others if the data needs to be re-analyzed because it is well-organized
+- Dessiminating data to collaborators and other researchers is easier
+- Getting credit for the data you generated
+
+You can visit the [Harvard's Biomedical Data Management Website](https://datamanagement.hms.harvard.edu/about/what-research-data-management) for more information on research data management suggestions and policies.
+
+<p align="center">
+<img src="../img/RDM_lifecycle.png"  width="800">
+</p>
+
+_Image acquired from the [Harvard Biomedical Data Management Website](https://datamanagement.hms.harvard.edu/data-lifecycle)_
 
 Within this project we currently have 3 directories:
-- **data** - This directory contains data that we have pre-processed and also contains a summary files *metrics.csv*
-- **meta** - This directory is where we will be placing any metadata
+- **data** - This directory contains data that we have pre-processed
+- **meta** - This directory is where we will be placing any metadata and also contains a summary file, *metrics.csv*
 - **results** - This directory is where we will be placing our figures 
 
 We will also need to add a header to the top of our R Script. This should let future you, as well as, collaboratos know key pieces of information about the script:
