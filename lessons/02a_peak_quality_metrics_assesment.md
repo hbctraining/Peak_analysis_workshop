@@ -65,7 +65,7 @@ java -jar $PICARD/picard.jar CollectAlignmentSummaryMetrics \
   --REFERENCE_SEQUENCE $REFERENCE \
   --OUTPUT $OUTPUT_METRICS_FILE
 </pre></br>
-More detailed information on how <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> can be found <a href="https://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">here</a>.
+The output from <code>picard</code> can sometimes be difficult to intepret on the command-line, because there are usually many columns in the output file. However, if you are able to import the data into a spreadsheet software package, like Microsoft Excel, it can be a bit easier to intepret. In order to count the number of total reads, we are interested in the column named <code>TOTAL_READS</code>. More detailed information on <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> can be found <a href="https://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">here</a>.
 <hr />
 </details>
 
@@ -100,12 +100,16 @@ Next, we will look at mapping rate, which is the number of reads that were able 
 
 <details>
 <summary><b>Click here for the code to compute mapping rate from your own data</b></summary>
-In order to determine the mapping rate, we can run ... The command to run this is:</br></br>
+</br>In order to collect the mapping rate for a sample, we will use information from <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> output that we ran in previous dropdown, which helped us count the number of total reads. As a reminder, the code to run this would be:</br></br>
 <pre>
-&#35;
- Add code here
+&#35; Run picard CollectAlignmentSummaryMetrics for a sample
+java -jar $PICARD/picard.jar CollectAlignmentSummaryMetrics \
+  --INPUT $INPUT_BAM \
+  --REFERENCE_SEQUENCE $REFERENCE \
+  --OUTPUT $OUTPUT_METRICS_FILE
 </pre></br>
-Add a note here about the resulting data?
+The output column that we are interested in is called <code>PCT_PF_READS_ALIGNED</code>. More detailed information on <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> can be found <a href="https://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">here</a>.
+<hr />
 </details>
 
 ```
