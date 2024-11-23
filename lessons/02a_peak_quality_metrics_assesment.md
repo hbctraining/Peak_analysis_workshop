@@ -302,7 +302,7 @@ java -jar picard.jar MarkDuplicates \
 </pre></br>
 From this we can derive our NRF:</br>
 <p align="center">
-<img src="https://latex.codecogs.com/svg.image?\frac{\left(TotalReads-UnmappedReads-DuplicateReads\right)}{TotalReads}" />
+<img src="https://latex.codecogs.com/svg.image?\frac{\left(TotalReads-UnmappedReads-DuplicateReads\right)}{TotalReads-UnmappedReads}" />
 </p>
 </details>
 
