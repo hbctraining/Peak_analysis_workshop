@@ -225,6 +225,16 @@ In our data, you can see that our antibody samples all have NSC values >1.
 <img src="../img/nsc_2.png"  width="800">
 </p>
 
+<details>
+<summary><b>Click here for the code to extract NSC from your phantompeakqualtools Rdata object</b></summary>
+In order extract the NSC value from the Rdata object that was created by <code>phantompeakqualtools</code>, you will need to load the <code>phantompeakqualtools</code> Rdata object into your R environment and call the variable <code>crosscorr$phantom.coeff</code>:
+<pre>
+load("SAMPLE_PHANTOMPEAKQUALTOOLS_OUTPUT.Rdata")
+crosscorr$phantom.coeff
+</pre>
+<hr />
+</details>
+
 ### Relative strand cross-correlation coefficient (RSC)
 
 _This is the ratio of the fragment-length correlation value minus the background (minimum) cross-correlation value, divided by the phantom-peak cross-correlation value minues the background cross-correlation value._
@@ -254,6 +264,16 @@ metrics %>%
 <p align="center">
 <img src="../img/rsc_2.png"  width="800">
 </p>
+
+<details>
+<summary><b>Click here for the code to extract RSC from your phantompeakqualtools Rdata object</b></summary>
+In order extract the RSC value from the Rdata object that was created by <code>phantompeakqualtools</code>, you will need to load the <code>phantompeakqualtools</code> Rdata object into your R environment and call the variable <code>crosscorr$rel.phantom.coeff</code>:
+<pre>
+load("SAMPLE_PHANTOMPEAKQUALTOOLS_OUTPUT.Rdata")
+crosscorr$rel.phantom.coeff
+</pre>
+<hr />
+</details>
 
 ### Fraction of reads in peaks (FRiP)
 
