@@ -81,7 +81,7 @@ This data set isn't perfect -- while most of our samples have close to or more t
 
 <details>
 <summary><b>Click here for the code to compute total reads from your own data</b></summary>
-<br>There are a number of ways and programs to ascertain the total number of reads in a sample, but, for this example, we will use <code>picard</code>. <code>picard</code> is <a href="https://broadinstitute.github.io/picard/">a tool maintained by the Broad Institute</a> with a wide-variety of functions to assist in next-generation sequencing data analysis. <code>picard</code> has multiple functions that can return the total number of reads as part of their analysis, but we will use the <code>CollectAlignmentSummaryMetrics</code> function because we will also need the alignment metrics for the next section on assessing the mapping rate. The command to run <code>picard</code>'s <code>CollectAlignmentSummaryMetrics </code> function is:</br></br>
+<br>There are a number of ways and programs to ascertain the total number of reads in a sample, but, for this example, we will use <code>picard</code>. <code>picard</code> is <a href="https://broadinstitute.github.io/picard/">a tool maintained by the Broad Institute</a> with a wide-variety of functions to assist in next-generation sequencing data analysis. <code>picard</code> has multiple functions that can return the total number of reads as part of their analysis, but we will use the <code>CollectAlignmentSummaryMetrics</code> function because we will also need the alignment metrics for the next section on assessing the mapping rate. The command to run <code>picard</code>'s <code>CollectAlignmentSummaryMetrics </code> function is:<br>
 <pre>
 &#35; Run picard CollectAlignmentSummaryMetrics for a sample
 java -jar $PICARD/picard.jar CollectAlignmentSummaryMetrics \
@@ -123,7 +123,7 @@ Our samples all have a mapping rate well above the minimum, and the samples are 
 
 <details>
 <summary><b>Click here for the code to compute mapping rate from your own data</b></summary>
-</br>In order to collect the mapping rate for a sample, we will use information from <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> output that we ran in previous dropdown, which helped us count the number of total reads. As a reminder, the code to run this would be:</br></br>
+</br>In order to collect the mapping rate for a sample, we will use information from <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> output that we ran in previous dropdown, which helped us count the number of total reads. As a reminder, the code to run this would be:<br>
 <pre>
 &#35; Run picard CollectAlignmentSummaryMetrics for a sample
 java -jar $PICARD/picard.jar CollectAlignmentSummaryMetrics \
@@ -172,7 +172,7 @@ There are **two metrics that are computed using the cross-correlation** describe
 
 <details>
 <summary><b>How do we compute strand cross-correlation metrics?</b></summary>
-<br>In order to compute strand cross-correlation metrics we will use an R package called <code>phantompeakqualtools</code>. We have also set the package up for use on HMS-RC's O2 cluster. The command to run this on O2 is:</br></br>
+<br>In order to compute strand cross-correlation metrics we will use an R package called <code>phantompeakqualtools</code>. We have also set the package up for use on HMS-RC's O2 cluster. The command to run this on O2 is:<br>
 <pre>
 &#35; Run phantompeakqualtools for a sample
 R_LIBS_USER=/n/groups/hbctraining/phantompeakqualtools/ \
@@ -226,7 +226,7 @@ In our data, you can see that our antibody samples all have NSC values >1.
 
 <details>
 <summary><b>Click here for the code to extract NSC from your phantompeakqualtools Rdata object</b></summary>
-<br>In order extract the NSC value from the Rdata object that was created by <code>phantompeakqualtools</code>, you will need to load the <code>phantompeakqualtools</code> Rdata object into your R environment and call the variable <code>crosscorr$phantom.coeff</code>:
+<br>In order extract the NSC value from the Rdata object that was created by <code>phantompeakqualtools</code>, you will need to load the <code>phantompeakqualtools</code> Rdata object into your R environment and call the variable <code>crosscorr$phantom.coeff</code>:<br>
 <pre>
 load("SAMPLE_PHANTOMPEAKQUALTOOLS_OUTPUT.Rdata")
 crosscorr$phantom.coeff
@@ -267,7 +267,7 @@ metrics %>%
 
 <details>
 <summary><b>Click here for the code to extract RSC from your phantompeakqualtools Rdata object</b></summary>
-<br>In order extract the RSC value from the Rdata object that was created by <code>phantompeakqualtools</code>, you will need to load the <code>phantompeakqualtools</code> Rdata object into your R environment and call the variable <code>crosscorr$rel.phantom.coeff</code>:
+<br>In order extract the RSC value from the Rdata object that was created by <code>phantompeakqualtools</code>, you will need to load the <code>phantompeakqualtools</code> Rdata object into your R environment and call the variable <code>crosscorr$rel.phantom.coeff</code>:<br>
 <pre>
 load("SAMPLE_PHANTOMPEAKQUALTOOLS_OUTPUT.Rdata")
 crosscorr$rel.phantom.coeff
@@ -305,7 +305,7 @@ Our samples have FRiPs in line with what we might expect for narrow histone mark
 
 <details>
 <summary><b>Click here for the code to compute FRiP for you own samples</b></summary>
-<br>In order to determine the fraction of reads in peaks (FRiP), we can run <a href="https://github.com/hbctraining/Peak_analysis_workshop/blob/main/scripts/calculate_frip.sh">a custom shell script</a>. The script requires <code>bedtools</code> in order to run and documentation for <code>bedtools</code> can be found <a href="https://bedtools.readthedocs.io/en/latest/">here</a>. The command to run this script to calculate the fraction of reads in peaks is:</br></br>
+<br>In order to determine the fraction of reads in peaks (FRiP), we can run <a href="https://github.com/hbctraining/Peak_analysis_workshop/blob/main/scripts/calculate_frip.sh">a custom shell script</a>. The script requires <code>bedtools</code> in order to run and documentation for <code>bedtools</code> can be found <a href="https://bedtools.readthedocs.io/en/latest/">here</a>. The command to run this script to calculate the fraction of reads in peaks is:<br>
 <pre>
 &#35; Calculate the fraction of reads in peaks
 &#35; Requires bedtools to run
