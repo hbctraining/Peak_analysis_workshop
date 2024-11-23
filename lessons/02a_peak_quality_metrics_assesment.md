@@ -173,13 +173,23 @@ There are **two metrics that are computed using the cross-correlation** describe
 
 <details>
 <summary><b>How do we compute strand cross-correlation metrics?</b></summary>
-This is computed using phantompeakqualtools R package. We have a setup for you if youare usin O2 ... The command to run this is:</br></br>
+In order to compute strand cross-correlation metrics we will use an R package called <code>phantompeakqualtools</code>. We have also set the package up for use on HMS-RC's O2 cluster. The command to run this on O2 is:</br></br>
 <pre>
-&#35;
- Add code here
+&#35; Run phantompeakqualtools for a sample
+R_LIBS_USER=/n/groups/hbctraining/phantompeakqualtools/ \
+ Rscript --no-environ /n/groups/hbctraining/phantompeakqualtools/run_spp.R \
+ -c="$COORDINATE_SORTED_BAM" \
+ -savp="$OUTPUT_PDF" \
+ -savd="$OUTPUT_RDATA" \
+ -out="$OUTPUT_FILE" \
+ -p=$CORES
 </pre></br>
-
-This code will generate the cross-correlation plot along with both NSC and RSC scores (described below).
+This code will generate the cross-correlation plot along with both NSC and RSC scores (described below). The output PDF will look like:
+<p align="center">
+<img src="../img/phantompeakqualtools_example_output.png" width ="400">
+</p>
+More detailed information on <code>phantompeakqualtools</code> can be found <a href="https://github.com/kundajelab/phantompeakqualtools">here</a>.
+<hr />
 </details>
 
 ### Normalized strand cross-correlation coefficient (NSC)
