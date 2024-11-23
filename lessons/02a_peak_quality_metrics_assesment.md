@@ -55,21 +55,6 @@ View(metrics)
 
 One of the most basic quality evaluations we can make for any genomic (or transcriptomic) data set is to look at the total number of reads in each sample. Ideally, we want to see consistency across samples, and especially across any treatment groups we might compare. We also want to see a minimum of about 20 million reads (represented by the black dashed line).
 
-<details>
-<summary><b>Click here for the code to compute total reads from your own data</b></summary>
-</br>There are a number of ways and programs to ascertain the total number of reads in a sample, but, for this example, we will use <code>picard</code>. <code>picard</code> is <a href="https://broadinstitute.github.io/picard/">a tool maintained by the Broad Institute</a> with a wide-variety of functions to assist in next-generation sequencing data analysis. <code>picard</code> has multiple functions that can return the total number of reads as part of their analysis, but we will use the <code>CollectAlignmentSummaryMetrics</code> function because we will also need the alignment metrics for the next section on assessing the mapping rate. The command to run <code>picard</code>'s <code>CollectAlignmentSummaryMetrics </code> function is:</br></br>
-<pre>
-&#35; Run picard CollectAlignmentSummaryMetrics for a sample
-java -jar $PICARD/picard.jar CollectAlignmentSummaryMetrics \
-  --INPUT $INPUT_BAM \
-  --REFERENCE_SEQUENCE $REFERENCE \
-  --OUTPUT $OUTPUT_METRICS_FILE
-</pre></br>
-The output from <code>picard</code> can sometimes be difficult to intepret on the command-line, because there are usually many columns in the output file. However, if you are able to import the data into a spreadsheet software package, like Microsoft Excel, it can be a bit easier to intepret. In order to count the number of total reads, we are interested in the column named <code>TOTAL_READS</code>. More detailed information on <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> can be found <a href="https://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">here</a>.
-<hr />
-</details>
-
-
 ```
 metrics %>%
   ggplot(aes(x = sample,
@@ -94,23 +79,23 @@ This data set isn't perfect -- while most of our samples have close to or more t
 <img src="../img/total_reads_2.png"  width="800">
 </p>
 
-### Mapping rate
-
-Next, we will look at mapping rate, which is the number of reads that were able to successfully be mapped to a unique region of the reference genome, out of the total number of reads (multi-mapped reads were excluded in our pipeline). We want to see consistent mapping rates between samples and over 70% mapping (the black dashed line).
-
 <details>
-<summary><b>Click here for the code to compute mapping rate from your own data</b></summary>
-</br>In order to collect the mapping rate for a sample, we will use information from <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> output that we ran in previous dropdown, which helped us count the number of total reads. As a reminder, the code to run this would be:</br></br>
+<summary><b>Click here for the code to compute total reads from your own data</b></summary>
+<br>There are a number of ways and programs to ascertain the total number of reads in a sample, but, for this example, we will use <code>picard</code>. <code>picard</code> is <a href="https://broadinstitute.github.io/picard/">a tool maintained by the Broad Institute</a> with a wide-variety of functions to assist in next-generation sequencing data analysis. <code>picard</code> has multiple functions that can return the total number of reads as part of their analysis, but we will use the <code>CollectAlignmentSummaryMetrics</code> function because we will also need the alignment metrics for the next section on assessing the mapping rate. The command to run <code>picard</code>'s <code>CollectAlignmentSummaryMetrics </code> function is:</br></br>
 <pre>
 &#35; Run picard CollectAlignmentSummaryMetrics for a sample
 java -jar $PICARD/picard.jar CollectAlignmentSummaryMetrics \
   --INPUT $INPUT_BAM \
   --REFERENCE_SEQUENCE $REFERENCE \
   --OUTPUT $OUTPUT_METRICS_FILE
-</pre></br>
-The output column that we are interested in is called <code>PCT_PF_READS_ALIGNED</code>. More detailed information on <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> can be found <a href="https://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">here</a>.
+</pre><br>
+The output from <code>picard</code> can sometimes be difficult to intepret on the command-line, because there are usually many columns in the output file. However, if you are able to import the data into a spreadsheet software package, like Microsoft Excel, it can be a bit easier to intepret. In order to count the number of total reads, we are interested in the column named <code>TOTAL_READS</code>. More detailed information on <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> can be found <a href="https://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">here</a>.
 <hr />
 </details>
+
+### Mapping rate
+
+Next, we will look at mapping rate, which is the number of reads that were able to successfully be mapped to a unique region of the reference genome, out of the total number of reads (multi-mapped reads were excluded in our pipeline). We want to see consistent mapping rates between samples and over 70% mapping (the black dashed line).
 
 ```
 metrics %>%
@@ -135,6 +120,20 @@ Our samples all have a mapping rate well above the minimum, and the samples are 
 <p align="center">
 <img src="../img/mapped_rate_2.png"  width="800">
 </p>
+
+<details>
+<summary><b>Click here for the code to compute mapping rate from your own data</b></summary>
+</br>In order to collect the mapping rate for a sample, we will use information from <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> output that we ran in previous dropdown, which helped us count the number of total reads. As a reminder, the code to run this would be:</br></br>
+<pre>
+&#35; Run picard CollectAlignmentSummaryMetrics for a sample
+java -jar $PICARD/picard.jar CollectAlignmentSummaryMetrics \
+  --INPUT $INPUT_BAM \
+  --REFERENCE_SEQUENCE $REFERENCE \
+  --OUTPUT $OUTPUT_METRICS_FILE
+</pre><br>
+The output column that we are interested in is called <code>PCT_PF_READS_ALIGNED</code>. More detailed information on <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> can be found <a href="https://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">here</a>.
+<hr />
+</details>
 
 ### Strand cross-correlation
 A high-quality ChIP-seq experiment will produce significant clustering of enriched DNA sequence tags/reads at locations bound by the protein of interest; the expectation is that we can observe a bimodal enrichment of reads (sequence tags) on both the forward and the reverse strands.
@@ -173,7 +172,7 @@ There are **two metrics that are computed using the cross-correlation** describe
 
 <details>
 <summary><b>How do we compute strand cross-correlation metrics?</b></summary>
-In order to compute strand cross-correlation metrics we will use an R package called <code>phantompeakqualtools</code>. We have also set the package up for use on HMS-RC's O2 cluster. The command to run this on O2 is:</br></br>
+<br>In order to compute strand cross-correlation metrics we will use an R package called <code>phantompeakqualtools</code>. We have also set the package up for use on HMS-RC's O2 cluster. The command to run this on O2 is:</br></br>
 <pre>
 &#35; Run phantompeakqualtools for a sample
 R_LIBS_USER=/n/groups/hbctraining/phantompeakqualtools/ \
@@ -183,7 +182,7 @@ R_LIBS_USER=/n/groups/hbctraining/phantompeakqualtools/ \
  -savd="$OUTPUT_RDATA" \
  -out="$OUTPUT_FILE" \
  -p=$CORES
-</pre></br>
+</pre><br>
 This code will generate the cross-correlation plot along with both NSC and RSC scores (described below). The output PDF will look like:
 <p align="center">
 <img src="../img/phantompeakqualtools_example_output.png" width ="400">
@@ -227,11 +226,11 @@ In our data, you can see that our antibody samples all have NSC values >1.
 
 <details>
 <summary><b>Click here for the code to extract NSC from your phantompeakqualtools Rdata object</b></summary>
-In order extract the NSC value from the Rdata object that was created by <code>phantompeakqualtools</code>, you will need to load the <code>phantompeakqualtools</code> Rdata object into your R environment and call the variable <code>crosscorr$phantom.coeff</code>:
+<br>In order extract the NSC value from the Rdata object that was created by <code>phantompeakqualtools</code>, you will need to load the <code>phantompeakqualtools</code> Rdata object into your R environment and call the variable <code>crosscorr$phantom.coeff</code>:
 <pre>
 load("SAMPLE_PHANTOMPEAKQUALTOOLS_OUTPUT.Rdata")
 crosscorr$phantom.coeff
-</pre>
+</pre><br>
 More detailed information on <code>phantompeakqualtools</code> can be found <a href="https://github.com/kundajelab/phantompeakqualtools">here</a>.
 <hr />
 </details>
@@ -268,11 +267,11 @@ metrics %>%
 
 <details>
 <summary><b>Click here for the code to extract RSC from your phantompeakqualtools Rdata object</b></summary>
-In order extract the RSC value from the Rdata object that was created by <code>phantompeakqualtools</code>, you will need to load the <code>phantompeakqualtools</code> Rdata object into your R environment and call the variable <code>crosscorr$rel.phantom.coeff</code>:
+<br>In order extract the RSC value from the Rdata object that was created by <code>phantompeakqualtools</code>, you will need to load the <code>phantompeakqualtools</code> Rdata object into your R environment and call the variable <code>crosscorr$rel.phantom.coeff</code>:
 <pre>
 load("SAMPLE_PHANTOMPEAKQUALTOOLS_OUTPUT.Rdata")
 crosscorr$rel.phantom.coeff
-</pre>
+</pre><br>
 More detailed information on <code>phantompeakqualtools</code> can be found <a href="https://github.com/kundajelab/phantompeakqualtools">here</a>.
 <hr />
 </details>
@@ -306,7 +305,7 @@ Our samples have FRiPs in line with what we might expect for narrow histone mark
 
 <details>
 <summary><b>Click here for the code to compute FRiP for you own samples</b></summary>
-In order to determine the fraction of reads in peaks (FRiP), we can run <a href="https://github.com/hbctraining/Peak_analysis_workshop/blob/main/scripts/calculate_frip.sh">a custom shell script</a>. The script requires <code>bedtools</code> in order to run and documentation for <code>bedtools</code> can be found <a href="https://bedtools.readthedocs.io/en/latest/">here</a>. The command to run this script to calculate the fraction of reads in peaks is:</br></br>
+<br>In order to determine the fraction of reads in peaks (FRiP), we can run <a href="https://github.com/hbctraining/Peak_analysis_workshop/blob/main/scripts/calculate_frip.sh">a custom shell script</a>. The script requires <code>bedtools</code> in order to run and documentation for <code>bedtools</code> can be found <a href="https://bedtools.readthedocs.io/en/latest/">here</a>. The command to run this script to calculate the fraction of reads in peaks is:</br></br>
 <pre>
 &#35; Calculate the fraction of reads in peaks
 &#35; Requires bedtools to run
@@ -314,7 +313,7 @@ sh calculate_frip.sh \
  $DIRECTORY_WITH_BAM_FILES \
  $DIRECTORY_WITH_PEAK_FILES \
  $OUTPUT_FILE
-</pre>
+</pre><br>
 <hr />
 </details>
 
