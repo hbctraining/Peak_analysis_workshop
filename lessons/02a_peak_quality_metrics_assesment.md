@@ -20,10 +20,8 @@ In this lesson, we will:
 In our peak files we have genomic coordinates identifying regions of the genome where there is a significant amount of enrichment in our samples. A good quality ChIP-seq experiment will have **high enrichment over background**, and so for each of our samples we will use quality metrics to assess this. In this lesson, we describe the differnt ways in which we can quantify the quality and we also present the tools (and associated commands) to compute them for your own dataset.
 
 <p align="center">
-<img src="../img/RDM_lifecycle.png"  width="800">
+<img src="../img/QC_metrics_worflow.png"  width="800">
 </p>
-
-**SUBSETTED QC STEP IMAGE**
 
 ### Load libraries
 
