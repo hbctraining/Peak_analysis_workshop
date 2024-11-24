@@ -81,47 +81,62 @@ GRanges object with 2 ranges and 0 metadata columns:
 You can see that one of the required inputs is an IRanges object, and so functionality in this package is very dependent on the basics of IRanges. For more detailed information on GenomicRanges, we enocurage you to browse through the [GRanges vignette](https://bioconductor.org/packages/devel/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesIntroduction.html).
 
 
-Once you have your genomic coordinate data stored in one of these data structures, there are many functions that allow you to easily manipulate the date. There are functions for basic interval operations like `shift()`, `reduce()`, `flank()`, `intersect()` and so much more. We have linked for you a [helpful cheatsheet](https://rpubs.com/Pazz/bioc_cheat_sheet) which describes commonly used functions and in some use cases. In this lesson we will first convert our peak files into GRanges and then we will use a package called [ChipPeakAnno](https://bioconductor.org/packages/release/bioc/html/ChIPpeakAnno.html) which will provides wrapper functions that allow us to easily operat on our peak data and pull out the infformation we need.
+Once you have your genomic coordinate data stored in one of these data structures, there are many functions that allow you to easily manipulate the data. There are **functions for basic interval operation** like `shift()`, `reduce()`, `flank()`, `intersect()` and so much more. We have linked for you a [helpful cheatsheet](https://rpubs.com/Pazz/bioc_cheat_sheet) which describes commonly used functions and in some use cases. In this lesson we will first convert our peak files into GRanges and then we will use a package called [ChipPeakAnno](https://bioconductor.org/packages/release/bioc/html/ChIPpeakAnno.html) which will provide wrapper functions that allow us to easily operate on our peak data and pull out the infformation we need.
 
-### Practicing with GRanges
+## Reading in narrowPeak files as Granges objects
+To create GRanges objects for our peak files, we are going to use the function `toRanges()` from the ChIPpeakAnno package. Note that there are other alternative packages that have functionality to do this. This function requires at minimum:
 
-####Have an example here of creating a couple of simple GRanges objects and using a findoverlappingpeaks on them?
-```
+* Genomic coordinate data (as a path to file, or a data frame)
+* Format (narrowPeak, broadPeak, BED)
 
-```
-####Include cheat sheet for additional GRanges functions? Such as nearest region, etc, if we think it would be useful
-
-https://rpubs.com/Pazz/bioc_cheat_sheet
-
-## Finding Consensus peaks
-
-### Reading in narroPeak files and converting into Granges objects
-
-First, we will need to load the appropriate libraries, inlcuding `IRanges`, `GRanges`, and either `consensusSeekeR` or `rtracklayer`, which lets us read our narrowPeak files in as GRanges objects.
-
-####If they've already had to read narrowpeak files in earlier in the previous lesson, then edit this section
-
-####This needs to be changed to read all the files in
+We will provide file paths that we had stored in the `sample_files` variable in the [previous lesson](02b_sample_similarity.md#signal-concordance-across-peaks), and we will **use a for loop to create a GRanges object for each sample**. Note that we are assigning the object to overwrite the variables which had the peak data stored as data frames.
 
 ```
-library(consensusSeekeR)
-library(GenomicRanges)
+# If you cannot find sample_files in your environment, uncomment the code below
+# Get all narrowpeak file names and path
+# sample_files <- list.files(path = "./data/macs2/narrowPeak/", full.names = T)
 
-file_narrowPeak <- system.file("extdata",
-    "PATH_TO_FILE")
 
-# Create genomic ranges for both the regions and the peaks
-result <- readNarrowPeakFile(file_narrowPeak, extractRegions = TRUE, extractPeaks = TRUE)
-
-# Take a look at the first 2 sequences
-head(result$narrowPeak, n = 2)
+# Reassign vars so that they are now GRanges instead of dataframes
+for(r in 1:length(sample_files)){
+  obj <- ChIPpeakAnno::toGRanges(sample_files[r], format="narrowPeak", header=FALSE)  
+  assign(vars[r], obj)
+}
 ```
 
-For more information about GenomicRanges, we recommend checking out their materials here: https://bioconductor.org/packages/release/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesHOWTOs.pdf and here: https://www.bioconductor.org/help/course-materials/2015/SeattleApr2015/B_GenomicRanges.html
+Now let's take a quick look at one of the samples:
 
-For more information on `consensusSeekeR`, read here: https://www.bioconductor.org/packages/release/bioc/vignettes/consensusSeekeR/inst/doc/consensusSeekeR.html
+```
+WT_H3K27ac_ChIPseq_REP1
+GRanges object with 100570 ranges and 5 metadata columns:
+                                                  seqnames          ranges
+                                                     <Rle>       <IRanges>
+       WT_H3K27ac_ChIPseq_REP1_peak_1                 chr1 3094273-3094445
+       WT_H3K27ac_ChIPseq_REP1_peak_2                 chr1 3095208-3095464
+       WT_H3K27ac_ChIPseq_REP1_peak_3                 chr1 3113322-3113761
+       WT_H3K27ac_ChIPseq_REP1_peak_4                 chr1 3119377-3120158
+       WT_H3K27ac_ChIPseq_REP1_peak_5                 chr1 3120430-3120942
 
-### Find overlapping peaks
+                                    strand |     score signalValue    pValue
+                                       <Rle> | <integer>   <numeric> <numeric>
+       WT_H3K27ac_ChIPseq_REP1_peak_1      * |        28     3.71719   4.55519
+       WT_H3K27ac_ChIPseq_REP1_peak_2      * |        89     6.27302  10.90470
+       WT_H3K27ac_ChIPseq_REP1_peak_3      * |        97     7.01319  11.73230
+       WT_H3K27ac_ChIPseq_REP1_peak_4      * |       277    13.74740  30.10350
+       WT_H3K27ac_ChIPseq_REP1_peak_5      * |       193    10.71350  21.52090
+
+                                     qValue      peak
+                                      <numeric> <integer>
+       WT_H3K27ac_ChIPseq_REP1_peak_1   2.87376       100
+       WT_H3K27ac_ChIPseq_REP1_peak_2   8.96056       111
+       WT_H3K27ac_ChIPseq_REP1_peak_3   9.76906        75
+       WT_H3K27ac_ChIPseq_REP1_peak_4  27.77500       291
+       WT_H3K27ac_ChIPseq_REP1_peak_5  19.34280       160
+```
+
+We see that each peak is stored with it's ranges and all associated infomration generated by MACS2.
+
+## Find overlapping peaks
 
 Once we have read in our peak files, we can look for overlapping genomic ranges using the `findOverlappingPeaks()` function:
 
@@ -129,7 +144,9 @@ Once we have read in our peak files, we can look for overlapping genomic ranges 
 Will need to take code from section below and make it work for this but not using the peaks object
 ```
 
-## Plotting consensus peaks with UpsetR
+### Venn Diagram
+
+### UpsetR plot
 
 ####THIS CODE USES PEAKS OBJECT BUT WE WILL NEED TO GET IT TO WORK ON OUR GRANGES OBJECTS
 
@@ -171,6 +188,9 @@ for (current_sample_group in unique(peaks$sample_group)){
 
 }
 ```
+
+## Finding Consensus peaks
+
 
 
 
