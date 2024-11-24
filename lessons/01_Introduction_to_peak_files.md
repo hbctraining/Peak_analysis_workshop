@@ -33,18 +33,17 @@ The goal of this study was to elucidate **how PRDM16 functions to regulate trans
 
 
 <p align="center">
-<img src="../img/graphical_abstract.png" width="450">
+<img src="../img/graphical_abstract.png" width="500">
 </p>
 
 
-To identify the subset of genes that are transcriptional targets of PRDM16 and to understand how these genes are directly regulated, the authors **first performed chromatin immunoprecipitation followed by sequencing (ChIP-seq) at E15.5**, when upper layer neurons are being generated. They obtained set of a putative PRDM16 binding sites called in both replicates.  To validate the specificity of these binding sites, ChIP-seq was then performed in two separate pools of E15.5 Prdm16 cKO cortices. The **majority of PRDM16 binding sites in WT cortex show a significantly higher read density than equivalent genomic regions in cKO cortex** (see figure below taken from Supplementray material).
+To identify the subset of genes that are transcriptional targets of PRDM16 and to understand how these genes are directly regulated, the authors **first performed chromatin immunoprecipitation followed by sequencing (ChIP-seq) at E15.5**, when upper layer neurons are being generated. They obtained set of a putative PRDM16 binding sites called in both replicates.  To validate the specificity of these binding sites, ChIP-seq was then performed in two separate pools of E15.5 Prdm16 cKO cortices. The **majority of PRDM16 binding sites in WT cortex show a significantly higher read density than equivalent genomic regions in cKO cortex** (see figure below taken from Supplementary material).
 
 <p align="center">
 <img src="../img/prdm16_supp_fig.png" width="700">
 </p>
 
 To better understand the transcriptional mechanisms, the authors assessed histone methylation patterns within PRDM16 binding regions using the ENCODE project datasets. **PRDM16 binding regions overlapped extensively with embryonic H3K27ac and showed much less H3K27ac enrichment in the adult cerebral cortex**. Given that PRDM16 was mostly associated with distal genomic regions relative to promoters, the enrichment of H3K27ac indicates that PRDM16 primarily binds to active enhancers. This led the authors to some final experiments. 
-
 
 **In this workshop** we will be using the the **ChIP-seq data** generated to determine genome-wide **differences in H3K27 acetylation between E15.5 WT and cKO cortex**. 
 
@@ -79,7 +78,7 @@ Our dataset consists of **three WT samples and three KO samples**. For each of t
 1) Once you have uncompressed the R Project, you can double-click "Peak_analysis.Rproj" wihtin the "Peak_analysis" directory to open the R Project. It should look like:
 
 <p align="center">
-<img src="../img/R_studio.png" width="800">
+<img src="../img/R_studio.png" width="700">
 </p>
 
 2) Open an R script by clicking **"File"**, then **"New File >"** and selecting **"R script"**.
@@ -89,7 +88,7 @@ Our dataset consists of **three WT samples and three KO samples**. For each of t
 Now your R Studio should look like:
 
 <p align="center">
-<img src="../img/R_studio_with_script.png" width="800">
+<img src="../img/R_studio_with_script.png" width="700">
 </p>
 
 ### Data Management Best Practices
@@ -105,7 +104,7 @@ Importantly, data management practices should be applied *throughout* your analy
 You can visit the [Harvard's Biomedical Data Management Website](https://datamanagement.hms.harvard.edu/about/what-research-data-management) for more information on research data management suggestions and policies.
 
 <p align="center">
-<img src="../img/RDM_lifecycle.png"  width="800">
+<img src="../img/RDM_lifecycle.png"  width="600">
 </p>
 
 _Image acquired from the [Harvard Biomedical Data Management Website](https://datamanagement.hms.harvard.edu/data-lifecycle)_
@@ -114,15 +113,15 @@ _Image acquired from the [Harvard Biomedical Data Management Website](https://da
 
 Before we analyze any data, let's orient ourselves with the project that we are working within first. Within this project we currently have 3 directories:
 
-- **data** - This directory contains data that we have pre-processed
-- **meta** - This directory is where we will be placing any metadata and also contains a summary file, *metrics.csv*
-- **results** - This directory is where we will be placing our figures 
+- **`data`** - This directory contains data that we have pre-processed
+- **`meta`** - This directory is where we will be placing any metadata and also contains a summary file, *metrics.csv*
+- **`results`** - This directory is where we will be placing our figures 
 
 Directories such as these three are a great starting place for many types of analysis. As your data and analyses become more complex or get re-analyzed in different ways, don't be afraid to add new directories or subdirectories to these directories as needed. For example within the **data** directory, we can see there are subdirectories for each software tool used, rather than lumping all of the data together into a single **data** directory. 
 
 #### Documentation
 
-We will also need to add a header to the top of our R Script. This should let future you, as well as, collaboratos know key pieces of information about the script:
+We will also need to add a header to the top of our R Script. This should let future you, as well as, collaborators know key pieces of information about the script:
 
 - **What** is the name of the script
 - **Who** wrote the script
@@ -192,7 +191,7 @@ BED files **require at least 3 fields** indicating the **genomic location of the
 A narrowPeak (.narrowPeak) file is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. The narrowPeak file is a BED6+4 format, which means the first 6 columns of a standard BED file  with **4 additional fields**:
 
 <p align="center">
-<img src="../img/narrowPeak.png"  width="800">
+<img src="../img/narrowPeak.png"  width="600">
 </p>
 
 Each row in the narrowPeak file represents a called peak. Below is an the example of a narrowPeak file, displaying the coordinate and statistical information for a handful of called peaks.
@@ -211,7 +210,7 @@ A gappedPeak (.gappedPeak) file is a BED12+3 file which contains broad peaks as 
 
 ## Workflow
 
-For this analysis, we are going to be analyzing the data through a pre-planned workflow. Below we have summarized this workflow with a schematic:
+For this analysis, we are going to take our peak calls and demonstrate the workflow that is used to evaluate peaks and gain further insight. Below we have summarized this workflow with a schematic:
 
 <p align="center">
 <img src="../img/Workflow.png">
@@ -220,15 +219,15 @@ For this analysis, we are going to be analyzing the data through a pre-planned w
 Each step of this workflow is summmarized below:
 
 - **Peak Calls** - Peak call data will be the input data for the analysis. More information on how this can be derived from raw sequence reads, can be found [here](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/).
-- **Peak QC** - Quality control that can be applied to the analysis:
-  - *QC Metrics Assessment* - Evaluating some important QC metrics to ensure we are using high-quality reads, the reads were aligned to the reference well and the peak metrics are within [ENCODE guidelines](https://www.encodeproject.org/chip-seq/histone/).
-  - *Replicate Concordance* - Evaluate concordance of peak calls across replicates
-  - *Qualitative Assessment* - **MEETA ADD SOMETHING HERE**
-- **Peak Annotation** - Identify transcript models near called peaks
-- **Differential Enrichment** - Quantify peak calls which show diffential binding across conditions
-- **Peak Visualization** - Inspect the peak calls and differentially called peaks within an [IGV browser](https://igv.org/) to ensure that they qualitatively appear accurate.
-- **Motif Discovery** - Identify enriched sequence motifs within peaks
-- **Functional Analysis** - Investigate whether certain biological pathways are enriched for peaks or differential binding across conditions
+- **Peak QC** - Quality control that can be applied to the data:
+  - *QC Metrics Assessment* - Evaluating some important QC metrics to evaluate signal and library complexity. We ensure that values are within [ENCODE guidelines](https://www.encodeproject.org/chip-seq/histone/).
+  - *Replicate Concordance* - Evaluate simailarity of samples using both read density data and peak signal enrichment. We also look for peak overlaps.
+  - *Qualitative Assessment* - Visualizing peak data using profile plots and heatmaps.
+- **Peak Annotation** - Identify transcript models near called peaks.
+- **Differential Enrichment** - Quantify peak calls which show diffential binding across conditions.
+- **Peak Visualization** - Inspect the peak calls and differentially called peaks within an [IGV browser](https://igv.org/) to ensure that read density (pileups) they qualitatively appear accurate.
+- **Motif Discovery** - Identify enriched sequence motifs within peaks.
+- **Functional Analysis** - Investigate whether certain biological pathways are enriched for peaks or differential binding across conditions.
 
 ***
 
