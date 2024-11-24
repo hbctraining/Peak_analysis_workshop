@@ -181,7 +181,11 @@ venstats <- makeVennDiagram(olaps_wt, connectedPeaks = "merge",
 <img src="../img/venn_wt_reps.png" width="500">
 </p>
 
-From this figure we can see that there are **about 55K peaks overlapping between the three replicates**. That is a fairly good sized set of consensus peaks and also indicates a **high concordance within the sample group**. The figure could definitely use some aesthetic tweaks. For example, the labels need to be shifted to sit in frame. Also, it would be great if the circles were scaled to the size of each peakaset, and the overlaps. For more flexibility with the venn diagram, we recommend the ggvenn package. We have some [materials on ggvenn](https://hbctraining.github.io/publication_perfect/lessons/08_figure_specific_packages.html), but you would need to extract the correct inputs from our `olaps_wt` object in order to get it to work.
+From this figure we can see that there are **about 55K peaks overlapping between the three replicates**. That is a fairly good sized set of consensus peaks and also indicates a **high concordance within the sample group**. 
+
+
+> #### A nicer Venn Diagram
+> The figure could definitely use some aesthetic tweaks. For example, the labels need to be shifted to sit in frame. Also, it would be great if the circles were scaled to the size of each peakaset, and the overlaps. This is possible by modifying parameters in the underlying function from [VennDiagram(https://cran.r-project.org/web/packages/VennDiagram/VennDiagram.pdf), to place labels in exact positions. Howvere, this can be be finicky and not worth the time. For more flexibility with the Venn diagrams, we recommend the ggvenn package. We also have some [materials on ggvenn](https://hbctraining.github.io/publication_perfect/lessons/08_figure_specific_packages.html), but you would need to extract the correct inputs from our `olaps_wt` object in order to get it to work.
 
 ### UpSet plot
 The UpSet plot provides an efficient way to visualize intersections of multiple sets compared to the traditional approaches, i.e. the Venn Diagram. It is implemented in the [UpSetR package](https://upset.app/) in R. UpSet visualizes set intersections in a matrix layout. The matrix layout enables a more clear and **effective representation of overlap and the collection of intersections**.
