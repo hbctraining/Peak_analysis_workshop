@@ -15,83 +15,53 @@ Approximate time:
 
 
 ## Peak annotation 
-Understanding the biological questions addressed by ChIP-seq experiments begins with annotating the genomic regions we have identifed as peaks with genomic context. Because many cis-regulatory elements are close to transcription start sites of their targets, it is common to associate each peak to its nearest gene, either upstream or downstream. [ChIPseeker](https://bioconductor.org/packages/release/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html) is an R Bioconductor package for annotating peaks. Additionally, it has various visualization functions to assess peak coverage over chromosomes and profiles of peaks binding to TSS regions. 
+Understanding the biological questions addressed by ChIP-seq experiments begins with annotating the genomic regions we have identifed as peaks with genomic context. In order to interpret these binding regions, a number of different peak annotation tools exist. Some examples include [Homer](http://homer.ucsd.edu/homer/motif/), [GREAT](https://pmc.ncbi.nlm.nih.gov/articles/PMC4840234/) (a web-based tool), [ChIPpeakAnno](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPpeakAnno/inst/doc/ChIPpeakAnno.html) and [ChIPseeker](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html). Because many cis-regulatory elements are close to transcription start sites of their targets, it is common to associate each peak to its nearest gene, either upstream or downstream. Annotation tools  **apply methods to calculate the nearest TSS to the given genomic coordinates and annotates the peak with that gene**. However, problems exist in regions where multiple genes are located in close proximity. Different tools address this complex issue using different approaches and this can result in varying results.
 
-Some features of ChIPseeker include:
+<p align="center">
+<img src="../img/nearest_gene_image.png"  width="800">
+</p>
+
+_Image source: Welch R.P. et al, Nucleic Acids Research, 2014 [doi: 10.1093/nar/gku463ChIP](https://www.researchgate.net/publication/262812725_ChIP-Enrich_Gene_set_enrichment_testing_for_ChIP-seq_data)_
+
+
+## Annotating peaks 
+In this workshop we will use and R Bioconductor package called **[ChIPseeker](https://bioconductor.org/packages/release/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html) to annotate peaks, visualize features, and compare profiles**. Some features of ChIPseeker include:
+
 * Comparing results in batch; across replicates or between experimental groups
 * Perform functional annotations, and infer cooperative regulation
-* Supports querying the GEO database to compare experimental datasets with publicly available ChIP-seq data and offers statistical testing for significant overlaps among datasets.
+* Support querying the GEO database to compare experimental datasets with publicly available ChIP-seq data and offers statistical testing for significant overlaps among datasets.
 
-In this lesson we **demonstrate how to use ChIPseeker to annotate peaks, visualize features, and compare profiles** to help us explore the biological context of our dataset.
-
-## Analyzing peaks in a single sample
-
-### cKO_Rep1
-
-We can use `readPeakFile()` function to load peaks from a BED file. It will convert the bed file into GRange object.
-
-```{r}
-ckoR1 <- readPeakFile("data/macs2/narrowPeak/cKO_H3K27ac_ChIPseq_REP1_peaks.narrowPeak")
+### Setting up
+Let's open up a new script file and call it `peak_annotation.R`. Add a title to the script and as usual we will begin with loading required libraries:
 
 ```
+## Peak Annotation using ChIPseeker
 
-### Peak coverage plot
-To look at the coverage of the peaks over the whole genome or a section of a genome, we can use `covplot()` function.
-
-```{r}
-covplot(ckoR1, weightCol = "V5", chrs = c("chr1", "chr2"))
+# Load libraries
+library(ChIPseeker)
+library(clusterProfiler)
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 ```
 
-<p align="center">
-<img src="../img/chipseq_covplot1.png"  width="600">
-</p>
+> **NOTE:** The `readPeakFile()` function allows us to load peaks from a BED file. It will convert the BED file into GRanges object. **However, we already have all of our peak data loaded in our environment as GRanges object from the previous lesson.**
 
-### Heatmap profile of ChIP binding to TSS regions
-To plot the profile of peaks binding to TSS region, we need to prepare the TSS regions. These are the flanking sequence of the TSS sites, here we are settting up the flanking regions of 2000bp upstream and 2000bp downstream. Then align the peaks that are mapping to these regions, and generate the tagMatrix. This tagMatrix can be visualized as a heatmap with the function `tagHeatmap()`.
+Annotation of the peaks to the nearest gene and for various genomic characteristics is performed by `annotatePeak()` function. By default TSS region is defined as -3kb to +3kb, however users can define this region. The result of the annotation comes in csAnno (a special format for ChIP-seq annotation). This can be converted to GRanges with `as.GRanges()` format and to data frame with `as.data.frame()` function.
 
-```{r}
-txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
-promoter <- getPromoters(TxDb = txdb, upstream = 2000, downstream = 2000)
-tagMatrix_ckoR1 <- getTagMatrix(ckoR1, windows = promoter)
-tagHeatmap(tagMatrix_ckoR1)
-```
-
-<p align="center">
-<img src="../img/Chipseq_tagheatmap1.png"  width="600">
-</p>
-
-
-> Note: Tag matrices can also be created for other genomic regions and visualized as heatmaps.
-
-### Average profile of ChIP peaks binding to TSS region
-
-```{r}
-plotAvgProf(tagMatrix_ckoR1, xlim=c(-2000, 2000), 
-            xlab="Genomic Region (5'->3')", ylab = "Read Count Frequency")
-```
-
-<p align="center">
-<img src="../img/Chipseq_avg.profile1.png"  width="600">
-</p>
-
-> Note: Confidence intervals, estimated using bootstrap methods, are supported for characterizing binding profiles.
-
-### Peak annotation
-
-Annotation of the peaks to the nearest gene and for various genomic characteristics is performed by `annotatePeak()` function. By default TSS region is defined as -3kb to +3kb, however user can define their region. The result of the annotation comes in csAnno (a special format for ChIP-seq annotation). This can be converted to GRanges with `as.GRanges()` format and to data frame with `as.data.frame()` function.
-
-> Note: Bioconductor provides annotation database `TxDb` for commonly used genome version to use for annotation in ChIPseeker, e.g. `TxDb.Mmusculus.UCSC.mm10.knownGene`, `TxDb.Mmusculus.UCSC.mm9.knownGene`, `TxDb.Hsapiens.UCSC.hg38.knownGene`, `TxDb.Hsapiens.UCSC.hg19.knownGene`, User can also prepare prepare their own database object using UCSC Genome Bioinformatics and BioMart database in R with `makeTxDbFromBiomart()` and `makeTxDbFromUCSC.TxDb()`
+Bioconductor provides the annotation database `TxDb` for commonly used genome versions to use for annotation in ChIPseeker, e.g. `TxDb.Mmusculus.UCSC.mm10.knownGene`, `TxDb.Hsapiens.UCSC.hg38.knownGene`, but users can also prepare prepare their own database object using UCSC Genome Bioinformatics and BioMart database in R with `makeTxDbFromBiomart()` and `makeTxDbFromUCSC.TxDb()` functions.
 
 Lets annotate our peakset:
 
 ```{r}
+# Set the annotation database
 txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
-annot.ckoR1 = annotatePeak(ckoR1, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
+
+# Annotate Peaks 
+annot_wt1 <- annotatePeak(WT_H3K27ac_ChIPseq_REP1, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
 ```
 
->Note: The parameter `annoDb` is optional, if provided extra information about the annotation including gene symbol, genename, ensembl/entrezid will be added in extra columns.
+> Note: The parameter `annoDb` is optional, if provided extra information about the annotation including gene symbol, genename, ensembl/entrezid will be added in extra columns.
 
-The annotation output file retains all the information from the peak file and also reports the annotation information. The nearest genes, their position and strand information along with the distance from peak to the tSS of its nearest gene is also reported.
+The annotation output file retains all the information from the peak file and also reports the annotation information. The nearest genes, their position and strand information along with the distance from peak to the tSS of its nearest gene is also reported.  For annotating genomic regions, annotatePeak will not only give the gene information but also reports detailed information when genomic region is Exon or Intron. For example, ‘Exon (uc002sbe.3/9736, exon 69 of 80)’, means that the peak overlaps with the 69th exon of the 80 exons that transcript uc002sbe.3 possess and the corresponding Entrez gene ID is 9736.
 
 Genomic annotation summary
 
@@ -170,6 +140,50 @@ plotDistToTSS(annot.ckoR1)
 <p align="center">
 <img src="../img/chipseq_tss1.png"  width="600">
 </p>
+
+
+### Peak coverage plot
+To look at the coverage of the peaks over the whole genome or a section of a genome, we can use `covplot()` function.
+
+```{r}
+covplot(ckoR1, weightCol = "V5", chrs = c("chr1", "chr2"))
+```
+
+<p align="center">
+<img src="../img/chipseq_covplot1.png"  width="600">
+</p>
+
+### Heatmap profile of ChIP binding to TSS regions
+To plot the profile of peaks binding to TSS region, we need to prepare the TSS regions. These are the flanking sequence of the TSS sites, here we are settting up the flanking regions of 2000bp upstream and 2000bp downstream. Then align the peaks that are mapping to these regions, and generate the tagMatrix. This tagMatrix can be visualized as a heatmap with the function `tagHeatmap()`.
+
+```{r}
+txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
+promoter <- getPromoters(TxDb = txdb, upstream = 2000, downstream = 2000)
+tagMatrix_ckoR1 <- getTagMatrix(ckoR1, windows = promoter)
+tagHeatmap(tagMatrix_ckoR1)
+```
+
+<p align="center">
+<img src="../img/Chipseq_tagheatmap1.png"  width="600">
+</p>
+
+
+> Note: Tag matrices can also be created for other genomic regions and visualized as heatmaps.
+
+### Average profile of ChIP peaks binding to TSS region
+
+```{r}
+plotAvgProf(tagMatrix_ckoR1, xlim=c(-2000, 2000), 
+            xlab="Genomic Region (5'->3')", ylab = "Read Count Frequency")
+```
+
+<p align="center">
+<img src="../img/Chipseq_avg.profile1.png"  width="600">
+</p>
+
+> Note: Confidence intervals, estimated using bootstrap methods, are supported for characterizing binding profiles.
+
+
 
 ### Functional enrichment analysis
 
