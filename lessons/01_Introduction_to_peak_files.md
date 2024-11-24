@@ -215,8 +215,8 @@ Each step of this workflow is summmarized below:
 - **Peak Calls** - Peak call data will be the input data for the analysis. More information on how this can be derived from raw sequence reads, can be found [here](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/).
 - **Peak QC** - Quality control that can be applied to the data:
   - *QC Metrics Assessment* - Evaluating some important QC metrics to evaluate signal and library complexity. We ensure that values are within [ENCODE guidelines](https://www.encodeproject.org/chip-seq/histone/).
-  - *Replicate Concordance* - Evaluate simailarity of samples using both read density data and peak signal enrichment. We also look for peak overlaps.
-  - *Qualitative Assessment* - Visualizing peak data using profile plots and heatmaps.
+  - *Qualitative Assessment* - Evaluate similarity of samples using both read density data and peak signal enrichment to generate various plots.
+  - *Replicate Concordance* -  Computing genomic region overlaps across replicates.
 - **Peak Annotation** - Identify transcript models near called peaks.
 - **Differential Enrichment** - Quantify peak calls which show diffential binding across conditions.
 - **Peak Visualization** - Inspect the peak calls and differentially called peaks within an [IGV browser](https://igv.org/) to ensure that read density (pileups) they qualitatively appear accurate.
