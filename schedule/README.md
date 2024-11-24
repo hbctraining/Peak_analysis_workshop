@@ -38,9 +38,9 @@ I. Please **study the contents** and **work through all the code** within the fo
    2. [Concordance across replicates using peak overlaps](../lessons/03_peak_overlaps.md)
       <details>
        <summary><i>Click here for a preview of this lesson</i></summary>
-         <br>A two sentence summary of the lesson.... <br><br>In this lesson, we will:<br>
-             - Point 1<br>
-             - Point 2<br><br>
+         <br>A quantitative way of evaluating how similar replicates are is to identify how many of the same peaks were called in each replicate. Biological replicates will inevitably exhibit some amount of variability, but the hope is that the majority of our peaks are identified in each sample. By looking at peak overlaps we can identify and remove a weaker replicate and/or use the overlap to create a consensus set of peaks. <br><br>In this lesson, we will:<br>
+             - Discuss IRange and GRanges data structures in R<br>
+             - Compute peak overlaps and creat visualizations for the results<br><br>
         </details>
         
 
