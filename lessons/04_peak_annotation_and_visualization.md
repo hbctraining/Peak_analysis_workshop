@@ -1,6 +1,6 @@
 ---
 title: "Peak annotation and visualization"
-author: "Heather Wick, Upendra Bhattarai, Meeta Mistry"
+author: "Upendra Bhattarai, Meeta Mistry"
 date: "Aug 16th, 2024"
 ---
 
@@ -10,21 +10,19 @@ Approximate time:
 
 ## Learning Objectives
 
-* Annotate peaks with genomic features using Chipseeker.
-* Visualize annotations and compare peak coverage between experimental groups.
-* Explore biological content using functional enrichment analysis.
+* Annotate peaks with genomic features using Chipseeker
+* Visualize annotations and compare peak coverage between experimental groups
 
 
+## Peak annotation 
+Understanding the biological questions addressed by ChIP-seq experiments begins with annotating the genomic regions we have identifed as peaks with genomic context. Because many cis-regulatory elements are close to transcription start sites of their targets, it is common to associate each peak to its nearest gene, either upstream or downstream. [ChIPseeker](https://bioconductor.org/packages/release/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html) is an R Bioconductor package for annotating peaks. Additionally, it has various visualization functions to assess peak coverage over chromosomes and profiles of peaks binding to TSS regions. 
 
-## Overview
+Some features of ChIPseeker include:
+* Comparing results in batch; across replicates or between experimental groups
+* Perform functional annotations, and infer cooperative regulation
+* Supports querying the GEO database to compare experimental datasets with publicly available ChIP-seq data and offers statistical testing for significant overlaps among datasets.
 
-Understanding the biological questions addressed by ChIP-seq experiments begins with annotating peaks and comparing differences between experimental groups. ChIPseeker, a Bioconductor package in R, facilitates the annotation of genomic features and nearest genes to peaks. It provides tools for visualization, peak profile comparisons, and coverage analyses between experimental conditions.
-
-Additionally, ChIPseeker can assess sample concordance, perform functional annotations, and infer cooperative regulation. For instance, overlapping data from two binding proteins may indicate interaction in regulating gene expression or chromosomal remodeling.
-
-ChIPseeker also supports querying the GEO database to compare experimental datasets with publicly available ChIP-seq data and offers statistical testing for significant overlaps among datasets.
-
-This tutorial demonstrates how to use ChIPseeker to annotate peaks, visualize features, compare profiles, and perform functional analyses to explore the biological context of a dataset.
+In this lesson we **demonstrate how to use ChIPseeker to annotate peaks, visualize features, and compare profiles** to help us explore the biological context of our dataset.
 
 ## Analyzing peaks in a single sample
 
