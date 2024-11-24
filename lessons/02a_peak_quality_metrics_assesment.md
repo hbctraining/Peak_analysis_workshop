@@ -10,8 +10,6 @@ Approximate time: 45 minutes
 
 ## Learning Objectives
 
-In this lesson, we will:
-
 * Interpret various metrics for peak quality
 * Evaluate metrics for assessing the quality of peaks called
 
