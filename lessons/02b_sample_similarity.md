@@ -6,7 +6,7 @@ date: "Aug 13th, 2024"
 
 Contributors: Will Gammerdinger, Meeta Mistry
 
-Approximate time: 
+Approximate time: 45 minutes
 
 ## Learning Objectives
 
