@@ -30,7 +30,7 @@ I. Please **study the contents** and **work through all the code** within the fo
        <summary><i>Click here for a preview of this lesson</i></summary>
          <br>One step in the QC of samples is to see how samples compare to one another. Generally, we expect replicates from each sample group to be more similar to each other and dissimilar to replicates from a different sample group. Here, we use read density (counts across the genome) and peak signal data to check if it meets our expectations.<br><br>In this lesson you will:<br>
              - Create PCA plots and inter-sample correlation heatmaps<br>
-             - Evaluat plots to identify potential outliers and other effects<br>
+             - Evaluate plots to identify potential outliers and other effects<br>
              - Create visualiations using signal data from peaks to identify proposed thresholds for downstream analysis<br><br>
         </details>
    
@@ -40,7 +40,7 @@ I. Please **study the contents** and **work through all the code** within the fo
        <summary><i>Click here for a preview of this lesson</i></summary>
          <br>A quantitative way of evaluating how similar replicates are is to identify how many of the same peaks were called in each replicate. Biological replicates will inevitably exhibit some amount of variability, but the hope is that the majority of our peaks are identified in each sample. By looking at peak overlaps we can identify and remove a weaker replicate and/or use the overlap to create a consensus set of peaks. <br><br>In this lesson, we will:<br>
              - Discuss IRange and GRanges data structures in R<br>
-             - Compute peak overlaps and creat visualizations for the results<br><br>
+             - Compute peak overlaps and create visualizations for the results<br><br>
         </details>
         
 
