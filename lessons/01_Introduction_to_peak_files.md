@@ -10,8 +10,6 @@ Approximate time: 40 minutes
 
 ## Learning Objectives
 
-In this lesson, we will:
-
 * Explain the dataset and the biological context
 * Define peaks as genomic coordinate data
 * Describe file formats for peak data
@@ -22,38 +20,59 @@ For this workshop we will be working with ChIP-seq data from a publication in Ne
 
 > Please note that even though we are utilizing a ChIP-seq dataset for histone mark in this workshop, some of these steps in the workflow can very similarly be used for other peak data such as ATAC-seq or CUT&RUN.
 
-*Baizabal et al.,* sought to understand how chromatin-modifying enzymes function in neural stem cells to establish the epigenetic landscape that determines cell type and stage-specific gene expression. Chromatin-modifying enzymes are transcriptional regulators that control gene expression through covalent modification of DNA or histones. In this workshop, we will be evaluating ***H3K27Ac*** (Histone 3 Lysine 27 Acetylation) modifications, which are post-translational modifications associated with increased transcriptional activation.
+*Baizabal et al.,* sought to understand how chromatin-modifying enzymes function in neural stem cells to establish the epigenetic landscape that determines cell type and stage-specific gene expression. Chromatin-modifying enzymes are transcriptional regulators that control gene expression through covalent modification of DNA or histones. In particular they were interested in the role of a proeting called PRDM16.
 
-<p align="center">
-<img src="../img/05Epigenetics06-edit.png" width="400">
-</p>
-
-_Image adapted from: [American Society of Hematology](https://www.hematology.org/research/ash-agenda-for-hematology-research/epigenetic-mechanisms)_
-
-### PRDM16
-
-The transcriptional regulator **PRDM16 is a chromatin-modifying enzyme** that belongs to the larger PRDM (Positive Regulatory Domain) protein family, that is structurally defined by the **presence of a conserved N-terminal histone methyltransferase PR domain** ([Hohenauer and Moore, 2012](https://journals.biologists.com/dev/article/139/13/2267/45169/The-Prdm-family-expanding-roles-in-stem-cells-and)). 
+**PRDM16 is a chromatin-modifying enzyme** that belongs to the larger PRDM (Positive Regulatory Domain) protein family, that is structurally defined by the **presence of a conserved N-terminal histone methyltransferase PR domain** ([Hohenauer and Moore, 2012](https://journals.biologists.com/dev/article/139/13/2267/45169/The-Prdm-family-expanding-roles-in-stem-cells-and)). At the time of the study, the following was known:
 
 * PRDM16 has been shown to function *in vitro* as a histone 3 lysine 9 (H3K9) and histone 3 lysine 4 (H3K4) mono-methyltransferase ([Pinheiro et al., 2012](https://www.sciencedirect.com/science/article/pii/S0092867412009385), [Zhou et al., 2016](https://www.sciencedirect.com/science/article/pii/S109727651600188X)). 
-* PRDM16 also regulates gene expression by forming complexes with transcriptional co-factors and other histone-modifying proteins ([Chi and Cohen, 2016](https://www.sciencedirect.com/science/article/pii/S104327601500226X?casa_token=VOBAb4QhyXgAAAAA:c69XzQwZ86M4BcPt02cNKjn163X5pBZMTQHJX4D2HdMvgO3hrQE7N6L0YmFSWwucs2GhXPhBtw)). 
+* PRDM16 also **regulates gene expression by forming complexes with transcriptional co-factors and other histone-modifying proteins** ([Chi and Cohen, 2016](https://www.sciencedirect.com/science/article/pii/S104327601500226X?casa_token=VOBAb4QhyXgAAAAA:c69XzQwZ86M4BcPt02cNKjn163X5pBZMTQHJX4D2HdMvgO3hrQE7N6L0YmFSWwucs2GhXPhBtw)). 
 * PRDM16 was previously shown to control embryonic and post-natal neural stem cell maintenance and differentiation in the brain ([Chuikov et al., 2010](https://www.nature.com/articles/ncb2101), [Inoue et al., 2017](https://journals.biologists.com/dev/article/144/3/385/48274/Prdm16-is-crucial-for-progression-of-the), [Shimada et al., 2017](http://genesdev.cshlp.org/content/31/11/1134.short)). 
 
-
-**How PRDM16 functions to regulate transcriptional programs in the developing cerebral cortex remains largely unknown.**
-
 In this paper, the authors use various techniques to identify and validate the targets and activities of PRDM16, including ChIP-seq, bulk RNA-seq, FACS, in-situ hybridization and immunofluorescent microscopy on brain samples from embryonic mice and a generation of PRDM16 conditional knockout mice. 
+The goal of this study was to elucidate **how PRDM16 functions to regulate transcriptional programs in the developing cerebral cortex.**
+
 
 <p align="center">
-<img src="../img/graphical_abstract.png" width="500">
+<img src="../img/graphical_abstract.png" width="450">
 </p>
 
 
-From the RNA-seq data, they found that the absence of PRDM16 in cortical neurons resulted in the misregulation of over a thousand genes during neurogenesis. To identify the subset of genes that are transcriptional targets of PRDM16 and to understand how these genes are directly regulated, they performed chromatin immunoprecipitation followed by sequencing (ChIP-seq).
+To identify the subset of genes that are transcriptional targets of PRDM16 and to understand how these genes are directly regulated, the authors **first performed chromatin immunoprecipitation followed by sequencing (ChIP-seq) at E15.5**, when upper layer neurons are being generated. They obtained set of a putative PRDM16 binding sites called in both replicates.  To validate the specificity of these binding sites, ChIP-seq was then performed in two separate pools of E15.5 Prdm16 cKO cortices. The **majority of PRDM16 binding sites in WT cortex show a significantly higher read density than equivalent genomic regions in cKO cortex** (see figure below taken from Supplementray material).
+
+<p align="center">
+<img src="../img/prdm16_supp_fig.png" width="700">
+</p>
+
+To better understand the transcriptional mechanisms, the authors assessed histone methylation patterns within PRDM16 binding regions using the ENCODE project datasets. **PRDM16 binding regions overlapped extensively with embryonic H3K27ac and showed much less H3K27ac enrichment in the adult cerebral cortex**. Given that PRDM16 was mostly associated with distal genomic regions relative to promoters, the enrichment of H3K27ac indicates that PRDM16 primarily binds to active enhancers. This led the authors to some final experiments. 
 
 
-**Hypothesis:** How does the histone methyltransferase PRDM16 work with other chromatin machinery to either silence or activate expression of sets of genes that impact the organization of the cerebral cortex?
+**In this workshop** we will be using the the **ChIP-seq data** generated to determine genome-wide **differences in H3K27 acetylation between E15.5 WT and cKO cortex**. 
 
-### Setting up 
+### Raw data
+
+For this study, we use the ChIP-seq data [available in GEO](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE111658). It is also publicly available in the [Sequence Read Archive (SRA)](https://www.ncbi.nlm.nih.gov/sra?term=SRP134735).
+
+> **NOTE:** If you are interested in how to obtain publicly available sequence data from the SRA, we have training materials on this [topic](https://hbctraining.github.io/Accessing_public_genomic_data/lessons/downloading_from_SRA.html).
+
+### Metadata
+In addition to the raw sequence data, we also need to collect **information about the data**, also known as **metadata**. Some relevant metadata for our dataset is provided below:
+
+* Whole brain lysates were obtained from **mice at E15.5** (when upper layer neurons are being generated)
+* Approximately **20-40 million cortical cells** were isolated for each sample
+* Before proceeding to library preparation, immunoprecipitation of H3K27ac was confirmed by ChlP-qPCR using primers designed to amplify genomic regions with high H3K27ac or H3K4me enrichment, according to the ENCODE datasets.
+    * Additional sets of primers were designed to amplify genomic regions with low H3K27ac or H3K4me enrichment and used as negative controls. 
+* Library **fragments in the range of 100-800 bp** were size-selected using agarose gel electrophoresis followed by DNA gel extraction
+* Libraries were sequenced in an **Illumina HiSeq 2500** sequencer to a sequencing depth of **30-40 million reads per sample**.
+
+> All of the above pertains to both WT and Prdm16 conditional knock-out mouse (Emx1Ires-Cre; Prdm16flox/flox). *For the rest of the workshop we will be referring to the conditional knockout samples as cKO*.
+
+Our dataset consists of **three WT samples and three KO samples**. For each of the IP samples, we have a corresponding input sample as illustrated in the schematic below. 
+
+**INSERT IMAGE -Can we create an image like this for our dataset?** https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/img/expt_design_prdm16.png
+
+> **NOTE:** We have taken the raw data from GEO and processed it through the workflow outlined in the [pre-reading lesson](00a_peak_calling_workflow_review.md). In this workshop, we begin with peak data generated for each of the samples, but sometimes will refer to statistics that depend on the alignment files (BAM files) as input. 
+
+## Setting up 
 
 > Prior to the workshop, we asked that you download and uncompress the R Project that we will be using during this workshop. If you haven't had a chance to do this, please right click [this link](https://www.dropbox.com/scl/fi/q65yhy60q41p0zpv7ffat/Peak_analysis.zip?rlkey=mfzg1bnbjkabox1zwxb7gn9od&st=4xxsrmkd&dl=1) and select **"Save Link As..."** in order to download the compressed R Project to your desired location. Next, double-click on the compressed ZIP file in order to uncompress it. 
 
