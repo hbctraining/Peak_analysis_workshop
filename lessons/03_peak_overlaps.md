@@ -6,7 +6,7 @@ date: "Aug 13th, 2024"
 
 Contributors: Heather Wick, Upendra Bhattarai, Meeta Mistry
 
-Approximate time: 
+Approximate time: 30 minutes
 
 ## Learning Objectives
 
