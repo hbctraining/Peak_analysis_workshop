@@ -12,7 +12,6 @@ Approximate time:
 
 * Describe IRanges and GRanges in R along with some basic functions
 * Identify overlaps between replicates and visualize with VennDiagrams and upSetR
-* Extract consensus regions across replicates for a sample group
   
 ## Peak Overlaps
 
@@ -225,10 +224,9 @@ To create and UpSet plot, we first need to extract the data we need from `olaps_
 
 ***
 
+[Back to Schedule](../schedule/README.md)
 
-## Finding Consensus peaks
-
-
+[Next Lesson >>](04_peak_annotation_and_visualization.md)
 
 
 ***
