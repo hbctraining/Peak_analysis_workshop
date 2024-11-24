@@ -15,7 +15,7 @@ Approximate time: 45 minutes
 
 ## Quality Control
 
-In our peak files we have genomic coordinates identifying regions of the genome where there is a significant amount of enrichment in our samples. A good quality ChIP-seq experiment will have **high enrichment over background**, and so for each of our samples we will use quality metrics to assess this. In this lesson, we describe the differnt ways in which we can quantify the quality and we also present the tools (and associated commands) to compute them for your own dataset.
+In our peak files we have genomic coordinates identifying regions of the genome where there is a significant amount of enrichment in our samples. A good quality ChIP-seq experiment will have **high enrichment over background**, and so for each of our samples we will use quality metrics to assess this. In this lesson, we describe the different ways in which we can quantify the quality and we also present the tools (and associated commands) to compute them for your own dataset.
 
 <p align="center">
 <img src="../img/QC_metrics_worflow.png"  width="800">
@@ -71,7 +71,7 @@ metrics %>%
   geom_hline(yintercept=20, color = "black", linetype = "dashed", linewidth=.5)
 ```
 
-This data set isn't perfect -- while most of our samples have close to or more than 20 million reads, we have some variation between samples. In particular, some of our our input samples, especially two of the WT samples, have many more reads than the other samples. Sometimes, if input reads have many more reads in peaks than their antibody counterparts, this can skew or reduce the number of peaks identified in those samples. However if these reads are scattered throughout the genome, they may just be background noise and the sample was simply sequenced more deeply. By looking at other quality control metrics, we can determine how this might affect the data set and, if necessary, take steps to reduce the impact of this kind of variability, such as through down-sampling.
+This data set isn't perfect -- while most of our samples have close to or more than 20 million reads, we have some **variation between samples**. In particular, some of our our input samples, especially two of the WT samples, have many more reads than the other samples. If input reads have many more reads in peaks than their antibody counterparts, this can skew or reduce the number of peaks identified in those samples. However if these reads are scattered throughout the genome, they may just be background noise and the sample was simply sequenced more deeply. By looking at other quality control metrics, we can determine how this might affect the data set and, if necessary, take steps to reduce the impact of this kind of variability, such as through down-sampling.
 
 <p align="center">
 <img src="../img/total_reads_2.png"  width="800">
@@ -79,7 +79,7 @@ This data set isn't perfect -- while most of our samples have close to or more t
 
 <details>
 <summary><b>Click here for the code to compute total reads from your own data</b></summary>
-<br>There are a number of ways and programs to ascertain the total number of reads in a sample, but, for this example, we will use <code>picard</code>. <code>picard</code> is <a href="https://broadinstitute.github.io/picard/">a tool maintained by the Broad Institute</a> with a wide-variety of functions to assist in next-generation sequencing data analysis. <code>picard</code> has multiple functions that can return the total number of reads as part of their analysis, but we will use the <code>CollectAlignmentSummaryMetrics</code> function because we will also need the alignment metrics for the next section on assessing the mapping rate. The command to run <code>picard</code>'s <code>CollectAlignmentSummaryMetrics </code> function is:<br><br>
+<br>There are a number of ways and programs to ascertain the total number of reads in a sample, but, for this example, we will use Picard. <code>picard</code> is <a href="https://broadinstitute.github.io/picard/">a tool maintained by the Broad Institute</a> with a wide-variety of functions to assist in next-generation sequencing data analysis. <code>picard</code> has multiple functions that can return the total number of reads as part of their analysis, but we will use the <code>CollectAlignmentSummaryMetrics</code> function because we will also need the alignment metrics for the next section on assessing the mapping rate. The command to run <code>picard</code>'s <code>CollectAlignmentSummaryMetrics </code> function is:<br><br>
 <pre>
 &#35; Run picard CollectAlignmentSummaryMetrics for a sample
 java -jar picard.jar CollectAlignmentSummaryMetrics \
@@ -219,7 +219,7 @@ metrics %>%
 In our data, you can see that our antibody samples all have NSC values >1. 
 
 <p align="center">
-<img src="../img/nsc_2.png"  width="800">
+<img src="../img/nsc_2.png"  width="600">
 </p>
 
 <details>
@@ -260,7 +260,7 @@ metrics %>%
 
 
 <p align="center">
-<img src="../img/rsc_2.png"  width="800">
+<img src="../img/rsc_2.png"  width="600">
 </p>
 
 <details>
@@ -298,7 +298,7 @@ metrics %>%
 Our samples have FRiPs in line with what we might expect for narrow histone marks, and they are fairly consistent.
 
 <p align="center">
-<img src="../img/frips_2.png"  width="800">
+<img src="../img/frips_2.png"  width="600">
 </p>
 
 <details>
@@ -389,7 +389,7 @@ metrics %>%
 ```
 
 <p align="center">
-<img src="../img/num_peaks_2.png" width="800">
+<img src="../img/num_peaks_2.png" width="600">
 </p>
 
 ### Summary
