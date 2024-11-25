@@ -170,8 +170,8 @@ As expected given what we saw in the PCA plots, our samples cluster nicely by ge
 
 1. Read in the file `data/multiBAMsummary.tab` and save it to a variable. This matrix contains counts for input samples as well.
 2. Transform the data using `vst()`.
-   	_Hint: You will need to follow a similar process as above to first clean the count matrix and create a `dds` object._
-   	_Hint: You may find it useful to include input/ChIPseq as a metadata factor._
+	- _Hint: You will need to follow a similar process as above to first clean the count matrix and create a `dds` object._
+	- _Hint: You may find it useful to include input/ChIPseq as a metadata factor._
 3. Use the vst data to draw a PCA plot. How do samples separate on the plot? How much variance is explained by PC1 and PC2?
 4. Use the vst data to draw a correlation heatmap. How does this result compare to the PCA plot? Do we see defined block structure in the heatmap?
 
