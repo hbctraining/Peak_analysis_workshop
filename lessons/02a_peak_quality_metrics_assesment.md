@@ -54,6 +54,7 @@ View(metrics)
 One of the most basic quality evaluations we can make for any genomic (or transcriptomic) data set is to look at the total number of reads in each sample. Ideally, we want to see consistency across samples, and especially across any treatment groups we might compare. We also want to see a minimum of about 20 million reads (represented by the black dashed line).
 
 ```
+# Plot total reads
 metrics %>%
   ggplot(aes(x = sample,
              y = total_reads/1e6, 
@@ -96,6 +97,7 @@ The output from <code>picard</code> can sometimes be difficult to intepret on th
 Next, we will look at mapping rate, which is the number of reads that were able to successfully be mapped to a unique region of the reference genome, out of the total number of reads (multi-mapped reads were excluded in our pipeline). We want to see consistent mapping rates between samples and over 70% mapping (the black dashed line).
 
 ```
+# Plot mapping rate
 metrics %>%
   ggplot(aes(x = sample,
              y = mapped_reads_pct, 
@@ -200,6 +202,7 @@ More detailed information on <code>phantompeakqualtools</code> can be found <a h
 > NOTE: This metric is sensitive to technical effects (e.g., high quality antibodies will generate higher scores) and biological effects (e.g., narrow peaks typically score higer than broad peaks).
 
 ```
+# Plot NSC
 metrics %>%
   filter(antibody != "input") %>% 
   ggplot(aes(x = sample,
@@ -242,6 +245,7 @@ _This is the ratio of the fragment-length correlation value minus the background
 * Minimum possible RSC value: 0 (no enrichment)
 
 ```
+# Plot RSC
 metrics %>%
   filter(antibody != "input") %>% 
   ggplot(aes(x = sample,
@@ -257,7 +261,6 @@ metrics %>%
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(legend.position = "none")
 ```
-
 
 <p align="center">
 <img src="../img/rsc_2.png"  width="600">
@@ -279,6 +282,7 @@ More detailed information on <code>phantompeakqualtools</code> can be found <a h
 This represents the fraction of mapped reads that are mapped to peaks (as opposed to elsewhere in the genome). This is only calculated for antibody samples in our data set. The expected fraction of reads in peaks will vary by protein. Histone marks, which usually have broader peaks, often have higher FRiPs than transcription factors, which usually have much narrower peaks.
 
 ```
+# Plot FRiP
 metrics %>% 
   filter(antibody != "input") %>% 
   ggplot(aes(x = sample,
@@ -342,6 +346,7 @@ Below are the ENCODE guidelines for NRF:
 </p>
 
 ```
+# Plot NRF
 metrics %>% 
   ggplot(aes(x = sample,
              y = nrf, 
@@ -372,6 +377,7 @@ All of our samples are at least acceptable, and hover around or surpass the comp
 Finally, we want to see a consistent number of peaks between our samples (we only have this metric for our antibody samples). This is computed by taking the narrowPeak files for each sample and counting the total number of lines in it (as each corresponds to a new peak that was called). We can do this on the command-line using `wc -l` or simply opening each file manually.
 
 ```
+# Plot number of peaks
 metrics %>% 
   filter(antibody != "input") %>% 
   ggplot(aes(x = sample,
