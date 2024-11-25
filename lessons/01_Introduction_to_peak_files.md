@@ -20,7 +20,7 @@ For this workshop we will be working with ChIP-seq data from a publication in Ne
 
 > Please note that even though we are utilizing a ChIP-seq dataset for histone mark in this workshop, some of these steps in the workflow can very similarly be used for other peak data such as ATAC-seq or CUT&RUN.
 
-[*Baizabal et al.,*](https://pmc.ncbi.nlm.nih.gov/articles/PMC6667181/) sought to understand how chromatin-modifying enzymes function in neural stem cells to establish the epigenetic landscape that determines cell type and stage-specific gene expression. Chromatin-modifying enzymes are transcriptional regulators that control gene expression through covalent modification of DNA or histones. In particular, they were interested in the role of a protein called PRDM16.
+[Baizabal et al.](https://pmc.ncbi.nlm.nih.gov/articles/PMC6667181/) sought to understand how chromatin-modifying enzymes function in neural stem cells to establish the epigenetic landscape that determines cell type and stage-specific gene expression. Chromatin-modifying enzymes are transcriptional regulators that control gene expression through covalent modification of DNA or histones. In particular, they were interested in the role of a protein called PRDM16.
 
 **PRDM16 is a chromatin-modifying enzyme** that belongs to the larger PRDM (Positive Regulatory Domain) protein family, which is structurally defined by the **presence of a conserved N-terminal histone methyltransferase PR domain** ([Hohenauer and Moore, 2012](https://journals.biologists.com/dev/article/139/13/2267/45169/The-Prdm-family-expanding-roles-in-stem-cells-and)).
 
