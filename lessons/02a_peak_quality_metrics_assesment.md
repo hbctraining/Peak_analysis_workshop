@@ -37,7 +37,7 @@ library(RColorBrewer)
 Locate the metrics summary file called `metrics.csv`, which is located in the `meta` folder of your working directory. It is a CSV file in which each row corresponds to a sample, and each column contains information for a quality metric. 
 
 ```
-## Load file
+# Load QC metrics file
 metrics <- read.csv("data/metrics.csv")
 View(metrics)
 ```
