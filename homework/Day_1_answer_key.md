@@ -57,6 +57,10 @@ ggplot(plot_pca_input, aes(PC1, PC2, color = genotype, shape = sample,
         axis.text = element_text(size = rel(1.25)))
 ```
 
+<p align="center">
+<img src="../img/pca_plot_homework.png" width="550">
+</p>
+
 Samples separate by input/ChIPseq on PC1 (84% of variance). PC2 explains only 3% of variance.
 
 **4. Use the vst data to draw a correlation heatmap. How does this result compare to the PCA plot? Do we see defined block structure in the heatmap?**
@@ -69,6 +73,10 @@ heat.colors <- brewer.pal(6, "YlOrRd")
 # Plot ICA heatmap
 pheatmap(cor(vst_input_counts), color = heat.colors, annotation = annotation)
 ```
+
+<p align="center">
+<img src="../img/corr_heatmap_homework.png" width="550">
+</p>
 
 As seen in the PCA, samples separate cleanly by input/ChIPseq. Within each group, there is no clear separation by genotype.
 
