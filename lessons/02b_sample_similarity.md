@@ -27,6 +27,7 @@ Let's begin by creating a new script for this and the following lesson, and let'
 
 # Load libraries
 library(DESeq2)
+library(ggrepel)
 library(ChIPpeakAnno)
 library(UpSetR)
 ```
