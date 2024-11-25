@@ -16,22 +16,22 @@ Approximate time: 40 minutes
 
 ## Introduction to the dataset
 
-For this workshop we will be working with ChIP-seq data from a publication in Neuron by *Baizabal et al., 2018* [1](https://pmc.ncbi.nlm.nih.gov/articles/PMC6667181/).
+For this workshop we will be working with ChIP-seq data from a publication in Neuron by *Baizabal et al., 2018* ([1](https://pmc.ncbi.nlm.nih.gov/articles/PMC6667181/)).
 
 > Please note that even though we are utilizing a ChIP-seq dataset for histone mark in this workshop, some of these steps in the workflow can very similarly be used for other peak data such as ATAC-seq or CUT&RUN.
 
-[*Baizabal et al.,*](https://pmc.ncbi.nlm.nih.gov/articles/PMC6667181/) sought to understand how chromatin-modifying enzymes function in neural stem cells to establish the epigenetic landscape that determines cell type and stage-specific gene expression. Chromatin-modifying enzymes are transcriptional regulators that control gene expression through covalent modification of DNA or histones. In particular they were interested in the role of a protain called PRDM16.
+[*Baizabal et al.,*](https://pmc.ncbi.nlm.nih.gov/articles/PMC6667181/) sought to understand how chromatin-modifying enzymes function in neural stem cells to establish the epigenetic landscape that determines cell type and stage-specific gene expression. Chromatin-modifying enzymes are transcriptional regulators that control gene expression through covalent modification of DNA or histones. In particular, they were interested in the role of a protein called PRDM16.
 
-**PRDM16 is a chromatin-modifying enzyme** that belongs to the larger PRDM (Positive Regulatory Domain) protein family, that is structurally defined by the **presence of a conserved N-terminal histone methyltransferase PR domain** ([Hohenauer and Moore, 2012](https://journals.biologists.com/dev/article/139/13/2267/45169/The-Prdm-family-expanding-roles-in-stem-cells-and)).
+**PRDM16 is a chromatin-modifying enzyme** that belongs to the larger PRDM (Positive Regulatory Domain) protein family, which is structurally defined by the **presence of a conserved N-terminal histone methyltransferase PR domain** ([Hohenauer and Moore, 2012](https://journals.biologists.com/dev/article/139/13/2267/45169/The-Prdm-family-expanding-roles-in-stem-cells-and)).
 
-In this paper, the authors use various techniques to identify and validate the targets and activities of PRDM16, including ChIP-seq, bulk RNA-seq, FACS, in-situ hybridization and immunofluorescent microscopy on brain samples from embryonic mice and a generation of PRDM16 conditional knockout mice. 
+In this paper, the authors use various techniques, including ChIP-seq, bulk RNA-seq, FACS, in-situ hybridization, and immunofluorescent microscopy, to identify and validate the targets and activities of PRDM16 on brain samples from embryonic mice and a generation of PRDM16 conditional knockout mice. 
 The goal of this study was to elucidate **how PRDM16 functions to regulate transcriptional programs in the developing cerebral cortex.**
 
 <p align="center">
 <img src="../img/graphical_abstract.png" width="500">
 </p>
 
-To identify the subset of genes that are transcriptional targets of PRDM16 and to understand how these genes are directly regulated, the authors **first performed chromatin immunoprecipitation followed by sequencing (ChIP-seq) at E15.5**, when upper layer neurons are being generated. They obtained set of a putative PRDM16 binding sites called in both replicates. To validate the specificity of these binding sites, ChIP-seq was then performed in two separate pools of E15.5 Prdm16 cKO cortices. The **majority of PRDM16 binding sites in WT cortex show a significantly higher read density than equivalent genomic regions in cKO cortex** (see figure below).
+To identify the subset of genes that are transcriptional targets of PRDM16 and to understand how these genes are directly regulated, the authors **first performed chromatin immunoprecipitation followed by sequencing (ChIP-seq) at E15.5**, when upper layer neurons are being generated. They obtained a set of putative PRDM16 binding sites called in both replicates. To validate the specificity of these binding sites, ChIP-seq was then performed in two separate pools of E15.5 Prdm16 cKO cortices. The **majority of PRDM16 binding sites in WT cortex show a significantly higher read density than equivalent genomic regions in cKO cortex** (see figure below).
 
 <p align="center">
 <img src="../img/prdm16_supp_fig.png" width="700">
@@ -50,16 +50,16 @@ For this study, we use the ChIP-seq data [available in GEO](https://www.ncbi.nlm
 ### Metadata
 In addition to the raw sequence data, we also need to collect **information about the data**, also known as **metadata**. Some relevant metadata for our dataset is provided below:
 
-* Whole brain lysates were obtained from **mice at E15.5** (when upper layer neurons are being generated)
-* Approximately **20-40 million cortical cells** were isolated for each sample
+* Whole brain lysates were obtained from **mice at E15.5** (when upper layer neurons are being generated).
+* Approximately **20-40 million cortical cells** were isolated for each sample.
 * Before proceeding to library preparation, immunoprecipitation of H3K27ac was confirmed by ChlP-qPCR using primers designed to amplify genomic regions with high H3K27ac or H3K4me enrichment, according to the ENCODE datasets.
     * Additional sets of primers were designed to amplify genomic regions with low H3K27ac or H3K4me enrichment and used as negative controls. 
-* Library **fragments in the range of 100-800 bp** were size-selected using agarose gel electrophoresis followed by DNA gel extraction
+* Library **fragments in the range of 100-800 bp** were size-selected using agarose gel electrophoresis followed by DNA gel extraction.
 * Libraries were sequenced in an **Illumina HiSeq 2500** sequencer to a sequencing depth of **30-40 million reads per sample**.
 
 > All of the above pertains to both WT and Prdm16 conditional knock-out mouse (Emx1Ires-Cre; Prdm16flox/flox). *For the rest of the workshop we will be referring to the conditional knockout samples as cKO*.
 
-Our dataset consists of **three WT samples and three KO samples**. For each of the IP samples, we have a corresponding input sample as illustrated in the schematic below. 
+Our dataset consists of **three WT samples and three cKO samples**. For each of the IP samples, we have a corresponding input sample as illustrated in the schematic below. 
 
 **INSERT IMAGE -Can we create an image like this for our dataset?** https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/img/expt_design_prdm16.png
 
@@ -87,7 +87,7 @@ Now your R Studio should look like:
 
 ### Data Management Best Practices
 
-When working with next-generation sequencing data, it can be very enticing to race to investigating your data soon after receiving it. However, it is considered best practice to take a few minutes to set-up an environment that will help keep you and your data organized *before* you start your analysis. The downloaded project already has this done, but we will discuss what we did to help organize ourselves in this section. 
+When working with next-generation sequencing data, it can be very enticing to race to investigating your data soon after receiving it. However, it is considered best practice to take a few minutes to set up an environment that will help keep you and your data organized *before* you start your analysis. The downloaded project already has this done, but we will discuss what we did to help organize ourselves in this section. 
 
 Importantly, data management practices should be applied *throughout* your analyses. Some other advantages to a commiting to strong data management practices are:
 
@@ -115,7 +115,7 @@ Directories such as these three are a great starting place for many types of ana
 
 #### Documentation
 
-We will also need to add a header to the top of our R Script. This should let future you, as well as, collaborators know key pieces of information about the script:
+We will also need to add a header to the top of our R Script. This should let future you, as well as collaborators, know key pieces of information about the script:
 
 - **What** is the name of the script
 - **Who** wrote the script
@@ -133,7 +133,7 @@ Let's create this and add it to the top of our script:
 ```
 
 ## What is a peak?
-A peak represents a region of the genome which was found to be bound to the protein or histone modification of choice. Chromatin Immunoprecipitation followed by sequencing (ChIP-seq) is a central method in epigenomic research which allows us to query peaks. A typical ChIP-seq workflow is outlined in the image below. 
+A peak represents a region of the genome that was found to be bound to the protein or histone modification of choice. Chromatin immunoprecipitation followed by sequencing (ChIP-seq) is a central method in epigenomic research that allows us to query peaks. A typical ChIP-seq workflow is outlined in the image below. 
 
 In ChIP-seq experiments, a transcription factor, cofactor, histone modification, or other chromatin protein of interest is enriched by immunoprecipitation from cross-linked cells, along with its associated DNA. The immunoprecipitated DNA fragments are then sequenced, followed by identification of enriched regions of DNA or peaks using peak-calling software, such as MACS2. These peak calls can then be used to make biological inferences by determining the associated genomic features and/or over-represented sequence motifs.
 
@@ -147,7 +147,7 @@ For more detailed information on the process of going from sequenced reads to pe
 
 
 ## Peak file formats
-In this lesson, we will introduce you to several important file formats that you will encounter when working with peak calls, which follow the **BED format** (**B**rowser **E**xtensible **D**ata). We will also describe the contents of the **narrowPeak** files (output from MACS2) and how it relates to BED. 
+In this lesson, we will introduce you to several important file formats that you will encounter when working with peak calls, which follow the **BED format** (**B**rowser **E**xtensible **D**ata). We will also describe the contents of the **narrowPeak** files (output from MACS2) and how they relate to the BED. 
 
 
 ### BED
@@ -182,7 +182,7 @@ BED files **require at least 3 fields** indicating the **genomic location of the
 
 ### narrowPeak
 
-A narrowPeak (.narrowPeak) file is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. The narrowPeak file is a BED6+4 format, which means the first 6 columns of a standard BED file  with **4 additional fields**:
+A narrowPeak (.narrowPeak) file is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. The narrowPeak file is a BED6+4 format, which means it includes the first 6 columns of a standard BED file with **4 additional fields**:
 
 <p align="center">
 <img src="../img/narrowPeak.png"  width="600">
@@ -212,13 +212,13 @@ For this analysis, we are going to take our peak calls and demonstrate the workf
 
 Each step of this workflow is summmarized below:
 
-- **Peak Calls** - Peak call data will be the input data for the analysis. More information on how this can be derived from raw sequence reads, can be found [here](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/).
+- **Peak Calls** - Peak call data will be the input data for the analysis. More information on how peaks can be derived from raw sequence reads can be found [here](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/).
 - **Peak QC** - Quality control that can be applied to the data:
   - *QC Metrics Assessment* - Evaluating some important QC metrics to evaluate signal and library complexity. We ensure that values are within [ENCODE guidelines](https://www.encodeproject.org/chip-seq/histone/).
   - *Qualitative Assessment* - Evaluate similarity of samples using both read density data and peak signal enrichment to generate various plots.
   - *Replicate Concordance* -  Computing genomic region overlaps across replicates.
 - **Peak Annotation** - Identify transcript models near called peaks.
-- **Differential Enrichment** - Quantify peak calls which show diffential binding across conditions.
+- **Differential Enrichment** - Quantify peak calls that show diffential binding across conditions.
 - **Peak Visualization** - Inspect the peak calls and differentially called peaks within an [IGV browser](https://igv.org/) to ensure that read density (pileups) they qualitatively appear accurate.
 - **Motif Discovery** - Identify enriched sequence motifs within peaks.
 - **Functional Analysis** - Investigate whether certain biological pathways are enriched for peaks or differential binding across conditions.
