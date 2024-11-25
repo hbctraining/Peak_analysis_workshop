@@ -104,14 +104,11 @@ I. Please **study the contents** and **work through all the code** within the fo
 
 ## Answer keys
 
-* Day 1 exercises 
-  * 
+* [Day 1 exercises](../homework/Day_1_answer_key.md)
 
 * Day 2 exercises 
-  * [
 
-* Day 3 In-class 
-  * 
+* Day 3 In-class
 
 ***
 
