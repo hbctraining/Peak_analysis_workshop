@@ -45,7 +45,7 @@ View(metrics)
 > #### How was `metrics.csv` generated?
 > As discussed in the [pre-reading lesson](00b_peak_calling_with_nfcore.md), this dataset was run through the nf-core/chipseq pipeline. All of the outputs from the pipeline are used as input to various parts of this workshop. **The `metrics.csv` was compiled using an R package called [`bcbioR`](https://github.com/bcbio/bcbioR/tree/main).** This package takes the output folder from an nf-core run and compiles data and code into a .Rmd template that can be used to look at the same QC metrics that we discuss in this workshop.
 >
-> _We acknowledge that most participants if this workshop will not be using nf-core._ As such, for each metric, we will describe what it represents and how it is computed. We **provide code for you such that you may use it to compute similar metrics** for your own dataset and create your own CSV.
+> _We acknowledge that most participants of this workshop will not be using nf-core._ As such, for each metric, we will describe what it represents and how it is computed. We **provide code for you such that you may use it to compute similar metrics** for your own dataset and create your own CSV.
 
  **Note that the majority of the code we provide is for command-line tools, not R.** If you are attempting to run this on your own data, it may be beneficial to run this on your local high performance computing cluster where these tools are commonly pre-installed for you.
  
