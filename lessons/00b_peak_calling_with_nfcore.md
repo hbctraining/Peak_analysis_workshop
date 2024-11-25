@@ -15,7 +15,7 @@ Approximate time: 20 minutes
 
 
 ## Workflow management for bioinformatics analysis 
-In the previous lesson we described the steps involved in going from raw sequence reads (FASTQ) to peak calls. Each step involves a different tool and typically is followed by some level of quality checks that follow. In this workshop, we provide lessons describing the workflow downstream of peak calls. It is **important to thoroughly understand individual steps**, the nuances of each tool and the inputs and outputs. Therefore, when starting out on your analysis running each command in the workflow is advanatageous. However, as you start to scale up and you are running analyses on large datasets with many samples, using a workflow manager is something to consider.
+In the previous lesson we described the steps involved in going from raw sequence reads (FASTQ) to peak calls. Each step involves a different tool and typically is followed by some level of quality checks that follow. In this workshop, we provide lessons describing the workflow downstream of peak calls. It is **important to thoroughly understand individual steps**, the nuances of each tool, and the inputs and outputs. Therefore, when starting out on your analysis, running each command in the workflow is advantageous. However, as you start to scale up and you are running analyses on large datasets with many samples, using a workflow manager is something to consider.
 
 
 ### Why use a workflow management system?
@@ -23,19 +23,19 @@ In the previous lesson we described the steps involved in going from raw sequenc
  A **workflow manager**, in simple terms, is a tool or software that **helps you organize and execute a series of tasks in a specific order**. Below we outline some features of using a workflow manager:
 
 * **Modularity**:
-    * The different steps in workflow are broken down into modular components (ie. FASTQC, genome alignment)
-    * The workflow tasks segregated from each other, each with its own specific inputs and outputs
+    * The different steps in workflow are broken down into modular components (e.g., FASTQC, genome alignment)
+    * The workflow tasks are segregated from each other, each with its own specific inputs and outputs
     * Modules can be reused in different analyses or modified to run the same analysis but tweaking certain parameters         
 * **Automation**:
     * Once you have the complete workflow assembled, the process can easily be repeated on multiple samples and/or datasets
     * Automating reduces the likelihood of human error and saves time 
 * **Scalability**:
-    * Workflow managers can efficiently handle large datasets and computationally intensive tasks, by distributing them across multiple processors or nodes.
+    * Workflow managers can efficiently handle large datasets and computationally intensive tasks, by distributing them across multiple processors or nodes
     * Tasks are scheduled based on available resources, dependencies, and priorities
     * Troubleshooting is more manageable because error-handling capabilities help in identifying failed processes and understanding the reasons behind failures
 *  **Reproducibility**:
-    *  There is typically documentation including metadata and provenenance tracking providing clarity on what was done
-    *  Transparency on software, parameter usage and versions
+    *  There is typically documentation, including metadata and provenenance tracking, providing clarity on what was done
+    *  Transparency on software, parameter usage, and versions
 
 
 ## Nextflow
@@ -47,9 +47,9 @@ Nextflow is an example of a commonly used workflow management system. It was ori
 
 
 ## nf-core 
-In early 2017, a parallel community effort called [nf-core](https://nf-co.re/) was established. The nf-core project resulted in multiple groups and **research institutes collaborating to develop and share high-quality, curated pipelines** written in Nextflow. The nf-core ensures the reproducibility and portability of pipelines across different environments (e.g. local, HPC, Cloud), operating systems (e.g. Mac, Linux, Windows), and software versions.
+In early 2017, a parallel community effort called [nf-core](https://nf-co.re/) was established. The nf-core project resulted in multiple groups and **research institutes collaborating to develop and share high-quality, curated pipelines** written in Nextflow. The nf-core ensures the reproducibility and portability of pipelines across different environments (e.g., local, HPC, Cloud), operating systems (e.g., Mac, Linux, Windows), and software versions.
 
-For this workshop, the dataset was run through the [nf-core/chip-seq](https://nf-co.re/chipseq/2.0.0/) workflow. In the metro map below you can see which modules are available to use at the different steps. We chose modules that align with our best practices (e.g. Bowtie2 for alignment, MACS2 for peak calling) and as such the some of the **outputs from this pipeline are being used as inputs to the workshop**. 
+For this workshop, the dataset was run through the [nf-core/chip-seq](https://nf-co.re/chipseq/2.0.0/) workflow. In the metro map below you can see which modules are available to use at the different steps. We chose modules that align with our best practices (e.g., Bowtie2 for alignment, MACS2 for peak calling) and as such the some of the **outputs from this pipeline are being used as inputs to the workshop**. 
 
 <p align="center">
 <img src="../img/nf-core-chipseq_metro_map_grey.png" width="600">
