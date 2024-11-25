@@ -95,7 +95,6 @@ dds <- DESeqDataSetFromMatrix(plot_counts, meta, design = ~genotype)
 # Run vst and extract transformed counts
 vst <- vst(dds)
 vst_counts <- assay(vst)
-
 ```
 
 ### Principal Component Analysis (PCA)
@@ -155,6 +154,7 @@ We can also add metadata to this plot to aid in identifying any factors explain 
 annotation <- meta
 heat.colors <- brewer.pal(6, "YlOrRd")
 
+# Plot ICA
 pheatmap(cor(vst_counts), color=heat.colors, annotation=annotation)
 ```
 
