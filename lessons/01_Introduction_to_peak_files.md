@@ -92,7 +92,7 @@ When working with next-generation sequencing data, it can be very enticing to ra
 Importantly, data management practices should be applied *throughout* your analyses. Some other advantages to a commiting to strong data management practices are:
 
 - Helping yourself and others if the data needs to be re-analyzed because it is well-organized
-- Dessiminating data to collaborators and other researchers is easier
+- Disseminating data to collaborators and other researchers is easier
 - Getting credit for the data you generated
 
 You can visit the [Harvard's Biomedical Data Management Website](https://datamanagement.hms.harvard.edu/about/what-research-data-management) for more information on research data management suggestions and policies.
