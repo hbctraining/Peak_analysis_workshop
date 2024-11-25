@@ -129,4 +129,4 @@ upset(fromExpression(set_counts_upset), order.by = "freq", text.scale = 1.5)
 <img src="../img/upsetR_cko_reps.png" width="800">
 </p>
 
-Replicate 1 has 12,000 unique peaks; replicate 2 has 10,815, and replicate 3 has 13,046.
+Replicate 1 has 12,200 unique peaks; replicate 2 has 10,815, and replicate 3 has 13,046.
