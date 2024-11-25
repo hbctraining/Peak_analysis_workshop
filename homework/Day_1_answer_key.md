@@ -99,6 +99,10 @@ venstats <- makeVennDiagram(olaps_cko, connectedPeaks = "merge",
                             cat.col = c("#D55E00", "#0072B2", "#E69F00")) # category name color
 ```
 
+<p align="center">
+<img src="../img/venn_cko_reps.png" width="500">
+</p>
+
 There are ~53k peaks in all 3 replicates.
 
 **3. Extract the required data from olaps_cko to create an UpSet plot. Draw the Upset plot. How many peaks are unique to each replicate?**
@@ -120,5 +124,9 @@ names(set_counts_upset) <- set_counts$group
 # Plot the UpSet plot
 upset(fromExpression(set_counts_upset), order.by = "freq", text.scale = 1.5)
 ```
+
+<p align="center">
+<img src="../img/upsetR_cko_reps.png" width="800">
+</p>
 
 Replicate 1 has 12,000 unique peaks; replicate 2 has 10,815, and replicate 3 has 13,046.
