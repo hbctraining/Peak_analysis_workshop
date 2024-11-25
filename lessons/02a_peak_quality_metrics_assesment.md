@@ -23,7 +23,7 @@ In our peak files we have genomic coordinates identifying regions of the genome 
 
 ### Load libraries
 
-First we need to set up our environment by loading required libraries to help us process our data. In this lesson we are mostly creating figures using data contained in `metrics.csv`. These figures will created using `ggplot2` and so we load the tidyverse suite, which provides additional functionality for data wrangling shoudl we need it.
+First we need to set up our environment by loading required libraries to help us process our data. In this lesson we are mostly creating figures using data contained in `metrics.csv`. These figures will be created using `ggplot2` and so we load the tidyverse suite, which provides additional functionality for data wrangling should we need it.
 
 ```
 # Load libraries
@@ -34,7 +34,7 @@ library(RColorBrewer)
 
 ### Load data
 
-Locate the metrics summary file called `metrics.csv` which is located in the `meta` folder of your working directory. It is a CSV file in which each row corresponds to a sample, and each column contains information for a quality metric. 
+Locate the metrics summary file called `metrics.csv`, which is located in the `meta` folder of your working directory. It is a CSV file in which each row corresponds to a sample, and each column contains information for a quality metric. 
 
 ```
 ## Load file
@@ -45,9 +45,9 @@ View(metrics)
 > #### How was `metrics.csv` generated?
 > As discussed in the [pre-reading lesson](00b_peak_calling_with_nfcore.md), this dataset was run through the nf-core/chipseq pipeline. All of the outputs from the pipeline are used as input to various parts of this workshop. **The `metrics.csv` was compiled using an R package called [`bcbioR`](https://github.com/bcbio/bcbioR/tree/main).** This package takes the output folder from an nf-core run and compiles data and code into a .Rmd template that can be used to look at the same QC metrics that we discuss in this workshop.
 >
-> _We acknowledge that most participants if this workshop will not be using nf-core._ As such for each metric, we will describe what it represents and how it is computed. We **provide code for you such that you may use it compute similar metrics** for your own dataset and create your own CSV.
+> _We acknowledge that most participants if this workshop will not be using nf-core._ As such, for each metric, we will describe what it represents and how it is computed. We **provide code for you such that you may use it to compute similar metrics** for your own dataset and create your own CSV.
 
- **Note that the majority of the code we provide is for command-line tools, not R.** If you are attempting to run this on your own data it may be beneficial to run this on your local high performac compute cluster where these tools are commonly pre-installed for you.
+ **Note that the majority of the code we provide is for command-line tools, not R.** If you are attempting to run this on your own data, it may be beneficial to run this on your local high performance computing cluster where these tools are commonly pre-installed for you.
  
 ### Total reads
 
@@ -71,7 +71,7 @@ metrics %>%
   geom_hline(yintercept=20, color = "black", linetype = "dashed", linewidth=.5)
 ```
 
-This data set isn't perfect -- while most of our samples have close to or more than 20 million reads, we have some **variation between samples**. In particular, some of our our input samples, especially two of the WT samples, have many more reads than the other samples. If input reads have many more reads in peaks than their antibody counterparts, this can skew or reduce the number of peaks identified in those samples. However if these reads are scattered throughout the genome, they may just be background noise and the sample was simply sequenced more deeply. By looking at other quality control metrics, we can determine how this might affect the data set and, if necessary, take steps to reduce the impact of this kind of variability, such as through down-sampling.
+This data set isn't perfect -- while most of our samples have close to or more than 20 million reads, we have some **variation between samples**. In particular, some of our our input samples, especially two of the WT samples, have many more reads than the other samples. If input reads have many more reads in peaks than their antibody counterparts, this can skew or reduce the number of peaks identified in those samples. However, if these reads are scattered throughout the genome, they may just be background noise and the sample was simply sequenced more deeply. By looking at other quality control metrics, we can determine how this might affect the data set and, if necessary, take steps to reduce the impact of this kind of variability, such as through down-sampling.
 
 <p align="center">
 <img src="../img/total_reads_2.png"  width="800">
@@ -79,7 +79,7 @@ This data set isn't perfect -- while most of our samples have close to or more t
 
 <details>
 <summary><b>Click here for the code to compute total reads from your own data</b></summary>
-<br>There are a number of ways and programs to ascertain the total number of reads in a sample, but, for this example, we will use Picard. <code>picard</code> is <a href="https://broadinstitute.github.io/picard/">a tool maintained by the Broad Institute</a> with a wide-variety of functions to assist in next-generation sequencing data analysis. <code>picard</code> has multiple functions that can return the total number of reads as part of their analysis, but we will use the <code>CollectAlignmentSummaryMetrics</code> function because we will also need the alignment metrics for the next section on assessing the mapping rate. The command to run <code>picard</code>'s <code>CollectAlignmentSummaryMetrics </code> function is:<br><br>
+<br>There are a number of ways and programs to ascertain the total number of reads in a sample but, for this example, we will use Picard. <code>picard</code> is <a href="https://broadinstitute.github.io/picard/">a tool maintained by the Broad Institute</a> with a wide variety of functions to assist in next-generation sequencing data analysis. <code>picard</code> has multiple functions that can return the total number of reads as part of their analysis, but we will use the <code>CollectAlignmentSummaryMetrics</code> function because we will also need the alignment metrics for the next section on assessing the mapping rate. The command to run <code>picard</code>'s <code>CollectAlignmentSummaryMetrics </code> function is:<br><br>
 <pre>
 &#35; Run picard CollectAlignmentSummaryMetrics for a sample
 java -jar picard.jar CollectAlignmentSummaryMetrics \
@@ -87,7 +87,7 @@ java -jar picard.jar CollectAlignmentSummaryMetrics \
   --REFERENCE_SEQUENCE $REFERENCE \
   --OUTPUT $OUTPUT_METRICS_FILE
 </pre><br>
-The output from <code>picard</code> can sometimes be difficult to intepret on the command-line, because there are usually many columns in the output file. However, if you are able to import the data into a spreadsheet software package, like Microsoft Excel, it can be a bit easier to intepret. In order to count the number of total reads, we are interested in the column named <code>TOTAL_READS</code>. More detailed information on <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> can be found <a href="https://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">here</a>.
+The output from <code>picard</code> can sometimes be difficult to intepret on the command-line, because there are usually many columns in the output file. However, if you are able to import the data into a spreadsheet software package, like Microsoft Excel, it can be a bit easier to intepret. In order to count the number of total reads, we are interested in the column named <code>TOTAL_READS</code>. More detailed information on <code>picard</code>'s <code>CollectAlignmentSummaryMetrics</code> can be found <a href="https://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">here</a>.
 <hr />
 </details>
 
@@ -121,7 +121,7 @@ Our samples all have a mapping rate well above the minimum, and the samples are 
 
 <details>
 <summary><b>Click here for the code to compute mapping rate from your own data</b></summary>
-<br>In order to collect the mapping rate for a sample, we will use information from <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> output that we ran in previous dropdown, which helped us count the number of total reads. As a reminder, the code to run this would be:<br><br>
+<br>In order to collect the mapping rate for a sample, we will use information from <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> output that we ran in the previous dropdown, which helped us count the number of total reads. As a reminder, the code to run this would be:<br><br>
 <pre>
 &#35; Run picard CollectAlignmentSummaryMetrics for a sample
 java -jar picard.jar CollectAlignmentSummaryMetrics \
@@ -129,7 +129,7 @@ java -jar picard.jar CollectAlignmentSummaryMetrics \
   --REFERENCE_SEQUENCE $REFERENCE \
   --OUTPUT $OUTPUT_METRICS_FILE
 </pre><br>
-The output column that we are interested in is called <code>PCT_PF_READS_ALIGNED</code>. More detailed information on <code>picard</code>'s  <code>CollectAlignmentSummaryMetrics</code> can be found <a href="https://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">here</a>.
+The output column that we are interested in is called <code>PCT_PF_READS_ALIGNED</code>. More detailed information on <code>picard</code>'s <code>CollectAlignmentSummaryMetrics</code> can be found <a href="https://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">here</a>.
 <hr />
 </details>
 
@@ -138,7 +138,7 @@ A high-quality ChIP-seq experiment will produce significant clustering of enrich
 
 ***How are the Cross-Correlation scores calculated?***
 
-Using a small genomic window as an example, let's walk through the details of the cross-correlation below. It is important to note that the cross-correlation metric is computed as the **Pearson's linear correlation between coverage for each complementary base** (i.e. on the minus strand and the plus strands), by systematically shifting minus strand by k base pairs at a time. This shift is performed over and over again to obtain the correlations for a given area of the genome.
+Using a small genomic window as an example, let's walk through the details of the cross-correlation below. It is important to note that the cross-correlation metric is computed as the **Pearson's linear correlation between coverage for each complementary base** (i.e., on the minus strand and the plus strand), by systematically shifting minus strand by k base pairs at a time. This shift is performed over and over again to obtain the correlations for a given area of the genome.
 
 ***Plot 1:** At strand shift of zero, the Pearson correlation between the two vectors is 0.*
 
@@ -197,7 +197,7 @@ More detailed information on <code>phantompeakqualtools</code> can be found <a h
 * Low signal-to-noise: NSC values < 1.1
 * Minimum possible NSC value: 1 (no enrichment)
 
-> NOTE: This metric is sensitive to technical effects (i.e. high quality antibodies will generate higher scores) and and biological effects (i.e. narrow peaks typically score higer than broad peaks).
+> NOTE: This metric is sensitive to technical effects (e.g., high quality antibodies will generate higher scores) and biological effects (e.g., narrow peaks typically score higer than broad peaks).
 
 ```
 metrics %>%
@@ -276,7 +276,7 @@ More detailed information on <code>phantompeakqualtools</code> can be found <a h
 
 ### Fraction of reads in peaks (FRiP)
 
-This represents the fraction of mapped reads which are mapped to peaks (as opposed to elsewhere in the genome). This is only calculated for antibody samples in our data set. The expected fraction of reads in peaks will vary by protein. Histone marks, which usually have broader peaks, often have higher FRiPs than transcription factors, which usually have much narrower peaks.
+This represents the fraction of mapped reads that are mapped to peaks (as opposed to elsewhere in the genome). This is only calculated for antibody samples in our data set. The expected fraction of reads in peaks will vary by protein. Histone marks, which usually have broader peaks, often have higher FRiPs than transcription factors, which usually have much narrower peaks.
 
 ```
 metrics %>% 
@@ -302,7 +302,7 @@ Our samples have FRiPs in line with what we might expect for narrow histone mark
 </p>
 
 <details>
-<summary><b>Click here for the code to compute FRiP for you own samples</b></summary>
+<summary><b>Click here for the code to compute FRiP for your own samples</b></summary>
 <br>In order to determine the fraction of reads in peaks (FRiP), we can run <a href="https://github.com/hbctraining/Peak_analysis_workshop/blob/main/scripts/calculate_frip.sh">a custom shell script</a>. The script requires <code>bedtools</code> in order to run and documentation for <code>bedtools</code> can be found <a href="https://bedtools.readthedocs.io/en/latest/">here</a>. The command to run this script to calculate the fraction of reads in peaks is:<br><br>
 <pre>
 &#35; Calculate the fraction of reads in peaks
@@ -317,7 +317,7 @@ sh calculate_frip.sh \
 
 ### Non-redundant fraction (NRF)
 
-The non-redundant fraction of reads is the number of distinct uniquely mapping reads (i.e. after removing duplicates and unmapped) divided by the total number of reads. It is a measure of library complexity. This value is 0-1, and ideally, we would want to see values close to 1. Generally, an NRF of 0.8 and higher indicates acceptable data. The ENCODE website also sets out standardized thresholds for this as well and those are summarized in the table below. In our plot, we use a green, orange, and red dashed line to represent Ideal, Compliant, and Acceptable NRF cutoffs, respectively.
+The non-redundant fraction of reads is the number of distinct uniquely mapping reads (i.e., after removing duplicates and unmapped) divided by the total number of reads. It is a measure of library complexity. This value is 0-1 and, ideally, we would want to see values close to 1. Generally, an NRF of 0.8 and higher indicates acceptable data. The ENCODE website also sets out standardized thresholds for this and those are summarized in the table below. In our plot, we use a green, orange, and red dashed line to represent Ideal, Compliant, and Acceptable NRF cutoffs, respectively.
 
 <details>
 <summary><b>Click here for the code to compute NRF values from your own data</b></summary>
