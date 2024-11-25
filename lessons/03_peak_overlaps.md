@@ -17,19 +17,8 @@ Approximate time: 30 minutes
 
 So far we have looked at quality control metrics for individual samples, as well as statistical concordance between samples. An additional way to look at sample similarity is to look at peak overlap between samples; that is to ask, what peaks are in common between replicate samples within our treatment groups? Looking at peak overlaps serves two purposes: 
 
-1) It is another way of **measuring consistency** between our samples
+1) It is another way of **measuring consistency** between our samples.
 2) We can create a set of **consensus peaks** (peaks in common between samples within a treatment group), in which we are more confident, as these are less likely to be miscalls due to background noise or other technical variation. These consensus peaks can be used in downstream visualization and analysis.
-
-### Setup 
-Let's begin by creating a new script for this lesson, and let's call it `peak_overlaps_analyis.R`. We can add a header to our script and start with a section to load the required libraries:
-
-```
-## Finding overlapping peaks
-
-# Load libraries
-library(ChIPpeakAnno)
-library(UpSetR)
-```
 
 ## Essential tools: IRanges and GenomicRanges
 
