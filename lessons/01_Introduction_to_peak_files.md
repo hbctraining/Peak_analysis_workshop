@@ -129,7 +129,7 @@ Let's create this and add it to the top of our script:
 # peak_analysis.R
 # Written by the Harvard Chan Bioinformatics Core on November 15th, 2024
 # This script was written as a demo for the Peak Analysis Workshop
-# In order to use this script, the user will need to have downloaded and uncompress the R project from https://www.dropbox.com/scl/fi/q65yhy60q41p0zpv7ffat/Peak_analysis.zip?rlkey=mfzg1bnbjkabox1zwxb7gn9od&st=4xxsrmkd&dl=1
+# In order to use this script, the user will need to have downloaded and uncompressed the R project from https://www.dropbox.com/scl/fi/q65yhy60q41p0zpv7ffat/Peak_analysis.zip?rlkey=mfzg1bnbjkabox1zwxb7gn9od&st=4xxsrmkd&dl=1
 ```
 
 ## What is a peak?
