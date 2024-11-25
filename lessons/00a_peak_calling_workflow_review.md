@@ -48,31 +48,31 @@ At this stage we are flagging samples with values deviating from expected ranges
 **More specific details on what we assess from the FastQC report can be found [here](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/03_QC_FASTQC.html).**
 
 ## Alignment to genome 
-Next, we take our reads and map them to genome. There are a variety of tools used to align reads to a reference genome. For our workflow we use [Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for this task. The output from the alignment step will be a SAM/BAM file. If you are aligning to a high-quality reference genome (human/mouse/*Drosophila*), you should **expect to see an alignment rate above 90%**. If your alignment dips too far below this threshold, it could be the result of contamination. 
+Next, we take our reads and map them to the genome. There are a variety of tools used to align reads to a reference genome. For our workflow we use [Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for this task. The output from the alignment step will be a SAM/BAM file. If you are aligning to a high-quality reference genome (human/mouse/*Drosophila*), you should **expect to see an alignment rate above 90%**. If your alignment dips too far below this threshold, it could be the result of contamination. 
 
 
 <p align="center">
 <img src="../img/Alignment_errors.png" width="600">
 </p>
 
-**More details on this alignnment procedure for ChIP-seq can be found [here](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/04_alignment_using_bowtie2.html).**
+**More details on this alignment procedure for ChIP-seq can be found [here](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/04_alignment_using_bowtie2.html).**
 
 ## Filtering BAM files
 The raw alignment output from Bowtie2 has a few issues that we will need to filter out for our analysis. These include:
 
-- **Duplicate Reads** - Duplicate reads are reads that map to the exact same location in the genome. Oftentimes, this is the result of overamplification of the input material when the input material is low. This can cause problems downstream by artificially enriching areas of protein binding. Alternatively, it could be the result of high sequencing depth or if your protein on has limited binding sites. However, it is difficult to differentiate between then cases, so as a result we will remove duplicate reads.
+- **Duplicate Reads** - Duplicate reads are reads that map to the exact same location in the genome. Oftentimes, this is the result of overamplification of the input material when the input material is low. This can cause problems downstream by artificially enriching areas of protein binding. Alternatively, it could be the result of high sequencing depth or if your protein has limited binding sites. However, it is difficult to differentiate between these cases, so as a result we will remove duplicate reads.
 
 <p align="center">
 <img src="../img/Duplicate_reads.png" width="600">
 </p>
 
-- **Multimapping Reads** - Reads can also map to multiple locations in the genome and we will want to remove these as well. If a read is matching to several different genomic regions, it creates ambiguity about their exact origin. Since peak calling algorithms typically rely on identifying regions with a high concentration of reads, multimapping reads can introduce noise and potentially lead to false positive peaks.
+- **Multimapping Reads** - Reads can also map to multiple locations in the genome and we will want to remove these as well. If a read is matching to several different genomic regions, it creates ambiguity about the exact origin. Since peak calling algorithms typically rely on identifying regions with a high concentration of reads, multimapping reads can introduce noise and potentially lead to false positive peaks.
 
 <p align="center">
 <img src="../img/Multimapping_reads.png" width="600">
 </p>
 
-- **Blacklisted Regions** - Blacklisted regions represent artifact regions that tend to show artificially high signal (excessive unstructured anomalous reads mapping). These regions are often found at specific types of repeats such as centromeres, telomeres and satellite repeats and typically appear uniquely mappable so simple mappability filters applied above do not remove them. The ENCODE and modENCODE consortia have compiled blacklists for various species and genome versions including human, mouse, worm and fly. These blacklisted regions (coordinate files) can be filtered out from our alignment files before proceeding to peak calling. Alternatively, you can filter out peaks within blacklisted regions after you call your peaks. Either way, blacklisted regions should be removed from the dataset.
+- **Blacklisted Regions** - Blacklisted regions represent artifact regions that tend to show artificially high signal (excessive unstructured anomalous reads mapping). These regions are often found at specific types of repeats such as centromeres, telomeres, and satellite repeats and typically appear uniquely mappable so simple mappability filters applied above do not remove them. The ENCODE and modENCODE consortia have compiled blacklists for various species and genome versions including human, mouse, worm, and fly. These blacklisted regions (coordinate files) can be filtered out from our alignment files before proceeding to peak calling. Alternatively, you can filter out peaks within blacklisted regions after you call your peaks. Either way, blacklisted regions should be removed from the dataset.
 
 **More details on this alignnment filtering procedure for ChIP-seq can be found [here](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/05_filtering_BAM_files.html).**
 
