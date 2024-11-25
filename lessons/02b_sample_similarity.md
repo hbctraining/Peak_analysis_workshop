@@ -18,6 +18,19 @@ Approximate time: 45 minutes
 
 In the previous lesson, we evaluated quality metrics concerning peaks and reads in peaks in individual samples. But these aren't the only ways to measure quality in our data set. We did look for consistency of these metrics across all of our samples, but now it's **time for a closer look at our samples to see how they compare for samples within treatment groups and between groups**. To do this we will be visualizing our data using two different types of data: 1) read count distribution across the genome and 2) signal enrichment within regions called as peaks.
 
+## Setup
+
+Let's begin by creating a new script for this and the following lesson, and let's call it `peak_similarity.R`. We can add a header to our script and start with a section to load the required libraries:
+
+```
+# Assess concordance between samples and find overlapping peaks
+
+# Load libraries
+library(DESeq2)
+library(ChIPpeakAnno)
+library(UpSetR)
+```
+
 ## Read count density 
 Two commonly used methods for evaluating sample similarity are Principal Components Analysis (PCA) and hierarchical clustering. In order to implement both of these, we need the **appropriate inputs**. The requirement is a data matrix. In the case of ChIP-seq or related data, this **matrix would have samples in the columns and genomic regions in the rows**. This matrix can be created using a command-line tool called [`multiBamSummary`](https://deeptools.readthedocs.io/en/develop/content/tools/multiBamSummary.html) from the [deepTools suite](https://deeptools.readthedocs.io/en/develop/index.html) for exploring deep sequencing data. Since this is an R-based workshop, **we have created the matrix for you**, but have provided the code in the drop-down below if you wanted to create it for your own data.
 
