@@ -101,7 +101,7 @@ vst_counts <- assay(vst)
 
 Principal Component Analysis (PCA) is a technique used to emphasize variation and bring out strong patterns in a dataset (dimensionality reduction). This is a very important technique used in the QC and analysis of ChIPseq.
 
-If you've done any RNA-seq or single cell analysis, you're likely familiar with the concept of PCA, as this technique is commonly used to evaluate sample similarity. If you'd like to refamiliarize yourself on the details of how PCA is calculated, we recommend you read our materials [[here]](https://hbctraining.github.io/DGE_workshop_salmon_online/lessons/principal_component_analysis.html) or [[watch this useful video from StatQuest]](https://www.youtube.com/watch?v=_UVHneBUBW0&ab_channel=StatQuestwithJoshStarmer).
+If you've done any RNA-seq or single cell analysis, you're likely familiar with the concept of PCA, as this technique is commonly used to evaluate sample similarity. If you'd like to refamiliarize yourself on the details of how PCA is calculated, we recommend you read our materials [here](https://hbctraining.github.io/DGE_workshop_salmon_online/lessons/principal_component_analysis.html) or [watch this useful video from StatQuest](https://www.youtube.com/watch?v=_UVHneBUBW0&ab_channel=StatQuestwithJoshStarmer).
 
 To perform PCA, we first need to compute the principal components from our read density data. Once we have that, we can plot PC1 and PC2, which explain the most amount of variation in our data.
 
