@@ -81,3 +81,44 @@ pheatmap(cor(vst_input_counts), color = heat.colors, annotation = annotation)
 As seen in the PCA, samples separate cleanly by input/ChIPseq. Within each group, there is no clear separation by genotype.
 
 ## Concordance across replicates using peak overlaps
+
+**1. Find the overlapping peaks across the cKO samples. Store the result to a variable called olaps_cko.**
+
+```r
+olaps_cko <- findOverlapsOfPeaks(cKO_H3K27ac_ChIPseq_REP1,
+                                 cKO_H3K27ac_ChIPseq_REP2,
+                                 cKO_H3K27ac_ChIPseq_REP3, connectedPeaks = "merge")
+```
+
+**2. Use the results from olaps_cko to draw a Venn Diagram. What number of peaks occur in all three replicates?**
+
+```r
+venstats <- makeVennDiagram(olaps_cko, connectedPeaks = "merge",
+                            fill    = c("#CC79A7", "#56B4E9", "#F0E442"), # circle fill color
+                            col     = c("#D55E00", "#0072B2", "#E69F00"), # circle border color
+                            cat.col = c("#D55E00", "#0072B2", "#E69F00")) # category name color
+```
+
+There are ~53k peaks in all 3 replicates.
+
+**3. Extract the required data from olaps_cko to create an UpSet plot. Draw the Upset plot. How many peaks are unique to each replicate?**
+
+```r
+# Prepare data for UpSetR
+set_counts <- olaps_cko$venn_cnt[, colnames(olaps_cko$venn_cnt)] %>% 
+  as.data.frame() %>% 
+  mutate(group_number = row_number()) %>%
+  pivot_longer(!Counts & !group_number, names_to = 'sample', values_to = 'member') %>%
+  filter(member > 0) %>%
+  group_by(Counts, group_number) %>% 
+  summarize(group = paste(sample, collapse = '&'))
+
+# Set required variables 
+set_counts_upset <- set_counts$Counts
+names(set_counts_upset) <- set_counts$group
+
+# Plot the UpSet plot
+upset(fromExpression(set_counts_upset), order.by = "freq", text.scale = 1.5)
+```
+
+Replicate 1 has 12,000 unique peaks; replicate 2 has 10,815, and replicate 3 has 13,046.
