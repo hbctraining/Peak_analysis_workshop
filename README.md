@@ -1,4 +1,4 @@
-# Peak Analysis Worksop
+# Peak Analysis Workshop
 
 | Audience | Computational Skills | Prerequisites | Duration |
 :----------|:----------|:----------|:----------|
