@@ -38,7 +38,7 @@ Locate the metrics summary file called `metrics.csv`, which is located in the `m
 
 ```
 # Load QC metrics file
-metrics <- read.csv("data/metrics.csv")
+metrics <- read.csv("meta/metrics.csv")
 View(metrics)
 ```
 
