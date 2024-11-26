@@ -20,6 +20,10 @@ So far we have looked at quality control metrics for individual samples, as well
 1) It is another way of **measuring consistency** between our samples.
 2) We can create a set of **consensus peaks** (peaks in common between samples within a treatment group), in which we are more confident, as these are less likely to be miscalls due to background noise or other technical variation. These consensus peaks can be used in downstream visualization and analysis.
 
+<p align="center">
+<img src="../img/Replicate_concordance_workflow.png"  width="800">
+</p>
+
 ## Essential tools: IRanges and GenomicRanges
 
 You may be familiar with **bedtools** as a useful command line too for manipulating bed files, including finding overlap of genomic regions. Whenever we are doing anything involving overlap of genomic ranges in R, two additional essential tools are of great help: **IRanges** and **GenomicRanges**. These packages allow us to convert bed files and other, more complex and/or binary genomic coordinate files, such as bam files, narrowPeak files, and bigWigs, into objects in R, and come with a number of different functions that allow us to find overlaps, exclusions, or nearest genomic features, among other things.
