@@ -22,7 +22,7 @@ In the previous lesson, we evaluated quality metrics concerning peaks and reads 
 2. Signal enrichment within regions called as peaks
 
 <p align="center">
-<img src="../img/Qualitative_assessment_worflow.png"  width="800">
+<img src="../img/Qualitative_assessment_workflow.png"  width="800">
 </p>
 
 ## Setup
