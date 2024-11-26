@@ -6,7 +6,7 @@ date: "Aug 16th, 2024"
 
 Contributors: Heather Wick, Upendra Bhattarai, Meeta Mistry
 
-Approximate time: 
+Approximate time: 45 minutes
 
 ## Learning Objectives
 
@@ -57,10 +57,10 @@ Lets annotate our peakset:
 txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
 
 # Annotate Peaks 
-annot_wt1 <- annotatePeak(WT_H3K27ac_ChIPseq_REP1, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
+annot_WT1 <- annotatePeak(WT_H3K27ac_ChIPseq_REP1, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
 
 # View the result
-annot_wt1@anno %>% 
+annot_WT1@anno %>% 
   data.frame() %>% View()
 ```
 
@@ -74,10 +74,10 @@ annot_wt1@anno %>%
 
 The annotation output file retains all the information from the peak file and also reports the annotation information. The nearest genes, their position and strand information along with the distance from peak to the TSS of its nearest gene is also reported.  For annotating genomic regions, `annotatePeak()` will not only give the gene information but also reports detailed information when genomic region is Exon or Intron. For example, ‘Exon (ENSMUST00000144339.1/ENSMUST00000144339.1, exon 1 of 3’, means that the peak overlaps with the 1st of 3 exons that transcript possesses.
 
-To view a genomic annotation summary, we can just type out the variable name
+To view a genomic annotation summary, we can just type out the variable name. We see that a fairly large proportion of our peaks for WT replicate 1 are in promotor regions, but there are also equallly high percentages in intronic and distal intergenic regions. 
 
 ```{r}
-annot_wt1
+annot_WT1
 ```
 
 ```{r, output}
@@ -98,65 +98,96 @@ Genomic Annotation Summary:
 5   Distal Intergenic 27.84733341
 ```
 
-### Annotation visualization
+## Annotation visualization
 There are several functions for visualization provided by ChIPseeker package to effectively visualize annotation of various genomic features. We will go through some of these options below.
 
-#### Piechart
+### Piechart
+This function provides a visualization of the suammry we generated earlier, in the form of a pie chart.
 
 ```{r}
 # Piechart
-plotAnnoPie(annot.ckoR1)
+plotAnnoPie(annot_WT1)
 ```
 
 <p align="center">
-<img src="../img/annot.pie1.png"  width="600">
+<img src="../img/annot.pie1.png"  width="500">
 </p>
 
-#### Barplot
+### Barplot
+We can plot the exact same data, but using a stacked barplot instead.
 
 ```{r}
-plotAnnoBar(annot.ckoR1)
+# Barplot
+plotAnnoBar(annot_WT1)
 ```
 
 <p align="center">
-<img src="../img/chipseq_annotbar1.png"  width="600">
+<img src="../img/barplot_annot_wt1.png"  width="550">
 </p>
 
 
-#### UpsetR
+### UpsetR
 
-Annotation overlaps can be visualized by upsetR plot.
+Annotation overlaps can be visualized by upsetR plot. Here, we use a function from ChIPseeker that grabs the required data and formats it to be compatible with UpSetR and draws the plot. With this plot we can see that there are many peaks that contain more than one annotation. We can observe the counts for various combinations of annotations.
+
 ```{r}
-upsetplot(annot.ckoR1)
+upsetplot(annot_WT1)
 ```
 
 <p align="center">
-<img src="../img/Chipseq_upset1.png"  width="600">
+<img src="../img/upset_anno_wt1.png"  width="600">
 </p>
+
 
 ### Distribution of TF-binding loci with respect to TSS
 
-The distance between peak and the TSS of the nearest gene is reported in the annotation output and can be visualzed with barplot.
+The distance between the peak and the TSS of the nearest gene is also reported in the annotation output and can be visualzed with a barplot.
 
 ```{r}
-plotDistToTSS(annot.ckoR1)
+plotDistToTSS(annot_WT1)
 ```
 
 <p align="center">
-<img src="../img/chipseq_tss1.png"  width="600">
+<img src="../img/dist_tss_annot_wt1.png"  width="550">
 </p>
 
 
-### Peak coverage plot
-To look at the coverage of the peaks over the whole genome or a section of a genome, we can use `covplot()` function.
+## Visualizing multiple samples
+These are all great ways to visualize the information from our annotation table, however so far we have only done this for a single sample. It would be very helpful to create similar plots after collating annotations across all samples in our dataset. In this way, we can **assess consistencies across replicates within a group and compare samples between groups.**
+
+In order to do this, we will first combine the GRanges objects for each samples into a list and then annotate each sample using a for loop:
 
 ```{r}
-covplot(ckoR1, weightCol = "V5", chrs = c("chr1", "chr2"))
+
+# Create a list of GRanges objects
+samples_list <- list(
+  WT1 = WT_H3K27ac_ChIPseq_REP1,
+  WT2 = WT_H3K27ac_ChIPseq_REP2,
+  WT3 = WT_H3K27ac_ChIPseq_REP3,
+  cKO1 = cKO_H3K27ac_ChIPseq_REP1,
+  cKO2 = cKO_H3K27ac_ChIPseq_REP2,
+  cKO3 = cKO_H3K27ac_ChIPseq_REP3)
+
+# Annotate each sample
+for(s in names(samples_list)){
+  annot <- annotatePeak(samples_list[[s]], tssRegion=c(-3000, 3000),
+                        TxDb=txdb, annoDb="org.Mm.eg.db")
+  assign(paste0("annot_", s), annot)
+}
+
 ```
 
+
+### Chip peak annotation Feature distribution all samples
+Annotation feature distribution of all the samples can also be plotted together, making a list of annotation.
+
+
+plotAnnoBar(annot_list)
+```
 <p align="center">
-<img src="../img/chipseq_covplot1.png"  width="600">
+<img src="../img/Chipseq_annot_all.png"  width="600">
 </p>
+
 
 ### Heatmap profile of ChIP binding to TSS regions
 To plot the profile of peaks binding to TSS region, we need to prepare the TSS regions. These are the flanking sequence of the TSS sites, here we are settting up the flanking regions of 2000bp upstream and 2000bp downstream. Then align the peaks that are mapping to these regions, and generate the tagMatrix. This tagMatrix can be visualized as a heatmap with the function `tagHeatmap()`.
@@ -599,24 +630,7 @@ plotAvgProf(tagMatrix_list, xlim = c(-2000, 2000), facet = "row")
 </p>
 
 
-### Chip peak annotation Feature distribution all samples
-Annotation feature distribution of all the samples can also be plotted together, making a list of annotation.
 
-```{r}
-annot_list <- list(
-  cKO_Rep1 = annot.ckoR1,
-  cKO_Rep2 = annot.ckoR2,
-  cKO_Rep3 = annot.ckoR3,
-  WT_Rep1 = annot.wtR1,
-  WT_Rep2 = annot.wtR2,
-  WT_Rep3 = annot.wtR3
-)
-
-plotAnnoBar(annot_list)
-```
-<p align="center">
-<img src="../img/Chipseq_annot_all.png"  width="600">
-</p>
 
 
 ### Chip peak annotation distrubution of loci with respect to TSS all samples
