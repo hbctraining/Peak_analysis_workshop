@@ -1,4 +1,4 @@
-# Peak Analysis Workshop
+# Introduction to Peak Analysis Workshop
 
 | Audience | Computational Skills | Prerequisites | Duration |
 :----------|:----------|:----------|:----------|
@@ -20,7 +20,7 @@
 * [Self-learning]()
 
 ### Description
-This repository has teaching materials for a hands-on **Peak Analysis** workshop. This workshop will use the R statistical programming environment to evaluate files generated from peak calling of ChIP-seq (and related approaches i.e. CUT&RUN and ATAC-seq) data. We will provide participants with a suite of tools and a basic workflow beginning with quality metrics through to annotation and visualization. This workshop will introduce participants to:
+This repository has teaching materials for a hands-on **Introduction to Peak Analysis** workshop. This workshop will use the R statistical programming environment to evaluate files generated from peak calling of ChIP-seq (and related approaches i.e. CUT&RUN and ATAC-seq) data. We will provide participants with a suite of tools and a basic workflow beginning with quality metrics through to annotation and visualization. This workshop will introduce participants to:
 
 * File formats for peak data
 * Approaches to check peak quality and reproducibility across replicates
@@ -72,6 +72,7 @@ Note that these package names are case sensitive!
 
 ```r
 BiocManager::install("ChIPseeker")
+BiocManager::install("ChIPpeakAnno")
 BiocManager::install("DiffBind")
 BiocManager::install("clusterProfiler")
 BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
@@ -89,6 +90,7 @@ library(tidyverse)
 library(pheatmap)
 library(UpSetR)
 library(ChIPseeker)
+library(ChIPpeakAnno)
 library(DiffBind)
 library(clusterProfiler)
 library(TxDb.Mmusculus.UCSC.mm10.knownGene)
