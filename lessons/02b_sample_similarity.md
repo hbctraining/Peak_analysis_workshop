@@ -16,14 +16,17 @@ Approximate time: 45 minutes
   
 ## Assessing sample similarity
 
-In the previous lesson, we evaluated quality metrics concerning peaks and reads in peaks in individual samples. But these aren't the only ways to measure quality in our data set. We did look for consistency of these metrics across all of our samples, but now it's **time for a closer look at our samples to see how they compare for samples within treatment groups and between groups**. To do this we will be visualizing our data using two different types of data: 1) read count distribution across the genome and 2) signal enrichment within regions called as peaks.
+In the previous lesson, we evaluated quality metrics concerning peaks and reads in peaks in individual samples. But these aren't the only ways to measure quality in our data set. We did look for consistency of these metrics across all of our samples, but now it's **time for a closer look at our samples to see how they compare for samples within treatment groups and between groups**. To do this we will be visualizing our data using two different types of data:
+
+1. Read count distribution across the genome and
+2. Signal enrichment within regions called as peaks
 
 ## Setup
 
 Let's begin by creating a new script for this and the following lesson, and let's call it `peak_similarity.R`. We can add a header to our script and start with a section to load the required libraries:
 
 ```
-# Assess concordance between samples and find overlapping peaks
+## Assess concordance between samples and find overlapping peaks
 
 # Load libraries
 library(DESeq2)
