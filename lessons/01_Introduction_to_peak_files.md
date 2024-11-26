@@ -61,7 +61,9 @@ In addition to the raw sequence data, we also need to collect **information abou
 
 Our dataset consists of **three WT samples and three cKO samples**. For each of the IP samples, we have a corresponding input sample as illustrated in the schematic below. 
 
-**INSERT IMAGE -Can we create an image like this for our dataset?** https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/img/expt_design_prdm16.png
+<p align="center">
+<img src="../img/Experimental_design.png" width="1000">
+</p>
 
 > **NOTE:** We have taken the raw data from GEO and processed it through the workflow outlined in the [pre-reading lesson](00a_peak_calling_workflow_review.md). In this workshop, we begin with peak data generated for each of the samples, but sometimes will refer to statistics that depend on the alignment files (BAM files) as input. 
 
