@@ -52,6 +52,7 @@ IRanges object with 5 ranges and 0 metadata columns:
 A GRanges object is a little more complex. It lets us store IRanges in multiple spaces (i.e., multiple chromosomes). In addition to chromosome, a GRanges object also indicates the strand for each region. These objects can also hold additional metadata. GRanges provide a way to store and manipulate sets of genomic regions. In our example, we will be using it to store the peak calls from each of our samples. Let's start with simple example to create a GRanges object using the `GRanges()` constructor:
 
 ```
+# Example GRanges
 gr <- GRanges(ranges=IRanges(start=c(100, 200), end=c(199, 299)), 
               seqnames=c("chr2L", "chr3R"),
               strand=c("+", "-"))
@@ -169,7 +170,7 @@ venstats <- makeVennDiagram(olaps_wt, connectedPeaks = "merge",
 From this figure we can see that there are **about 55K peaks overlapping between the three replicates**. That is a fairly good sized set of consensus peaks and also indicates a **high concordance within the sample group**. 
 
 > #### A nicer Venn Diagram
-> The figure could definitely use some aesthetic tweaks. For example, the labels need to be shifted to sit in frame. Also, it would be great if the circles were scaled to the size of each peakset and the overlaps. This is possible by modifying parameters in the underlying function from [VennDiagram(https://cran.r-project.org/web/packages/VennDiagram/VennDiagram.pdf) to place labels in exact positions. However, these tweaks can be be finicky and not worth the time. For more flexibility with the Venn diagrams, we recommend the ggvenn package. We also have some [materials on ggvenn](https://hbctraining.github.io/publication_perfect/lessons/08_figure_specific_packages.html), but you would need to extract the correct inputs from our `olaps_wt` object in order to get it to work.
+> The figure could definitely use some aesthetic tweaks. For example, the labels need to be shifted to sit in frame. Also, it would be great if the circles were scaled to the size of each peakset and the overlaps. This is possible by modifying parameters in the underlying function from [VennDiagram](https://cran.r-project.org/web/packages/VennDiagram/VennDiagram.pdf) to place labels in exact positions. However, these tweaks can be be finicky and not worth the time. For more flexibility with the Venn diagrams, we recommend the ggvenn package. We also have some [materials on ggvenn](https://hbctraining.github.io/publication_perfect/lessons/08_figure_specific_packages.html), but you would need to extract the correct inputs from our `olaps_wt` object in order to get it to work.
 
 ### UpSet plot
 The UpSet plot provides an efficient way to visualize intersections of multiple sets compared to the traditional approaches, i.e. the Venn Diagram. It is implemented in the [UpSetR package](https://upset.app/) in R. UpSet visualizes set intersections in a matrix layout. The matrix layout enables a more clear and **effective representation of overlap and the collection of intersections**.
