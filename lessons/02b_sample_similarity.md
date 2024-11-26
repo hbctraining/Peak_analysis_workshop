@@ -21,6 +21,10 @@ In the previous lesson, we evaluated quality metrics concerning peaks and reads 
 1. Read count distribution across the genome and
 2. Signal enrichment within regions called as peaks
 
+<p align="center">
+<img src="../img/Qualitative_assessment_worflow.png"  width="800">
+</p>
+
 ## Setup
 
 Let's begin by creating a new script for this and the following lesson, and let's call it `peak_similarity.R`. We can add a header to our script and start with a section to load the required libraries:
