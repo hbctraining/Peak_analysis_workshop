@@ -252,19 +252,26 @@ plotAvgProf(tagMatrix_wt1, xlim=c(-2000, 2000),
 
 
 ### Heatmaps
-The heatmap is another method of visualizing the read count frequency relative to the TSS. **This function requires a lot of memory to run.** If you are trying it we recommend increasing your maximum memory and also adding the `nbin` argument to speed things ups. 
+The heatmap is another method of visualizing the read count frequency relative to the TSS. **This function requires a lot of memory to run.** If you are trying it we recommend increasing your maximum memory using `memory.limit(size=memory_on_your_laptop)`. 
 
 ```
-# Plot heatmap - this takes too much memory!
-tagHeatmap(tagMatrix_wt1, nbin=800)
+# Plot heatmap - this may not plot it requires alot o memory!
+tagHeatmap(tagMatrix_wt1)
 ```
 
 <p align="center">
 <img src="../img/Chipseq_tagheatmap4.png"  width="500">
 </p>
 
-> Note: Tag matrices can also be created for other genomic regions and visualized as heatmaps.
+> **NOTE:** Heatmaps can also be created for other genomic regions using the `peakHeatmap()` function. This fucntion reads directly from BED file and has parameters to specify `by` and `type`, and example would be to look at read denisty across gene bodies. for more information take a look at the [ChIPseeker vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html#profile-of-chip-peaks-binding-to-body-regions).
 
+### Profle plots and heatmaps across multiple samples
+As we showed previously with some of the annotation visualizations, we can also plot samples together in a single plot. This provides ease in direct comparisons.
+
+
+<p align="center">
+<img src="../img/Chipseq_av.profiles_all.png"  width="600">
+</p>
 
 
 
