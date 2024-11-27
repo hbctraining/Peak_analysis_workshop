@@ -404,7 +404,7 @@ Overall, our data looks pretty good. We do have a large number of reads in some 
 
 [Back to Schedule](../schedule/README.md)
 
-[Next Lesson >>](02b_peak_concordance_replicates.md)
+[Next Lesson >>](02b_sample_similarity.md)
 
 ***
 
