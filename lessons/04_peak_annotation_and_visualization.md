@@ -199,20 +199,45 @@ plotDistToTSS(peakAnnoList)
 By plotting all samples together, we can easily identify trends. Overall, there are **not dramatic differences** between the WT and cKO groups. This is not surprising since we are comparing enrichment from the same histone mark with slightly different conditions. We do see a **small shift in the promoter regions**, that is less enrichment is observed around the TSS in WT compared to cKO. There may be subtle differences that will be more clearly visible when we drill down to individual regions.
 
 ## Visualizing enrichment around the TSS
-To plot the binding around the TSS region, we need to first prepare the TSS regions using `getPromoters()`. To identify TSS regions we set up the flanking regions of 2000bp upstream and 2000bp downstream. Then we align the peaks that are mapping to these regions, and generate the tagMatrix. This tagMatrix will be used as input for various visualizations described below.
+To plot the binding around the TSS region, we need to first prepare the TSS regions using `getPromoters()`. To identify TSS regions we set up the flanking regions of 2000bp upstream and 2000bp downstream. Take a look at `promoter` after running the code below. You should see that we have created a GRanges object that contains **the start and end location for all TSSs in the mouse genome**. 
 
-Let's begin with WT replciate 1 as an example:
 
 ```{r}
 # Get promoters
 promoter <- getPromoters(TxDb = txdb, upstream = 2000, downstream = 2000)
+promoter
 
+GRanges object with 24514 ranges and 0 metadata columns:
+          seqnames              ranges strand
+             <Rle>           <IRanges>  <Rle>
+      [1]     chr9   21071096-21075096      -
+      [2]     chr7   84962115-84966115      -
+      [3]    chr10   77709457-77713457      +
+      [4]    chr11   45806087-45810087      +
+      [5]     chr4 144160663-144164663      -
+      ...      ...                 ...    ...
+  [24510]     chr3   85885516-85889516      -
+  [24511]     chr3 110248998-110252998      -
+  [24512]     chr3 151747960-151751960      -
+  [24513]     chr3   65526410-65530410      +
+  [24514]     chr4 136600723-136604723      -
+  -------
+  seqinfo: 66 sequences from an unspecified genome; no seqlengths
+```
+
+Next, we align the peaks that are mapping to these regions, and generate the tagMatrix. For each of the promoter regions, this function will evaluate the peak overlaps and create an estimate of read count frequency. This tagMatrix will be used as input for various visualizations described below. Let's begin with WT replicate 1 as an example:
+
+```{r}
 # Create tag matrix
 tagMatrix_wt1 <- getTagMatrix(WT_H3K27ac_ChIPseq_REP1, windows = promoter)
 ```
 
+> **NOTE:** This tag matrix is an estimate of read count frequency because it is based on peak overlaps. You can create a similar matrix using the actual read pileup data from BAM files using the [deepTools suite](https://deeptools.readthedocs.io/en/develop/content/tools/computeMatrix.html). The software also had commands for creating the profile plots and heatmaps described below. _This is computationaly expensive and so you will want to use an HPC to run this ._ For more information see [our materials linked here](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/09_data_visualization.html#evaluating-signal-in-prdm16-binding-sites).
+
 ### Profile plots
-Now, that we have a tagMatrix we can use this to create a profile plot.
+Now, that we have a tagMatrix we can use this to create a profile plot. On the x-axis we have the genomic region where the limits will depend on what you set as your flanking regions. On that y-axis we have the read count for each base within that window, scaled across all promoter regions. 
+
+With these plots the **confidence interval is estimated by bootstrap method (1000 iterations) and is shown in the grey shading** that follows the curve. The WT1 peaks exhibit a nice narrow peak at the TSS with small confidence intervals.
 
 ```
 # Draw a profile plot for WT rep1
@@ -221,15 +246,13 @@ plotAvgProf(tagMatrix_wt1, xlim=c(-2000, 2000),
             conf = 0.95, resample = 1000)
 ```
 
-> Note: Confidence intervals, estimated using bootstrap methods, are supported for characterizing binding profiles.
-
-
 <p align="center">
-<img src="../img/"  width="600">
+<img src="../img/Chipseq_avg.profile1.png"  width="500">
 </p>
 
+
 ### Heatmaps
-Now, that we have a tagMatrix we can use this to create a profile plot.
+The heatmap is another method of visualizing the read count frequency relative to the TSS. **This function requires a lot of memory to run.** If you are trying it we recommend increasing your maximum memory and also adding the `nbin` argument to speed things ups. 
 
 ```
 # Plot heatmap - this takes too much memory!
@@ -237,7 +260,7 @@ tagHeatmap(tagMatrix_wt1, nbin=800)
 ```
 
 <p align="center">
-<img src="../img/"  width="600">
+<img src="../img/Chipseq_tagheatmap4.png"  width="500">
 </p>
 
 > Note: Tag matrices can also be created for other genomic regions and visualized as heatmaps.
