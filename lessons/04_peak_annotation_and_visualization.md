@@ -155,7 +155,7 @@ plotDistToTSS(annot_WT1)
 ## Visualizing multiple samples
 These are all great ways to visualize the information from our annotation table, however so far we have only done this for a single sample. It would be very helpful to create similar plots after collating annotations across all samples in our dataset. In this way, we can **assess consistencies across replicates within a group and compare samples between groups.**
 
-In order to do this, we will first combine the GRanges objects for each samples into a list and then annotate each sample using a for loop:
+In order to do this, we will first combine the GRanges objects for each samples into a list and then annotate each sample using `lapply()`.
 
 ```{r}
 
@@ -169,25 +169,34 @@ samples_list <- list(
   cKO3 = cKO_H3K27ac_ChIPseq_REP3)
 
 # Annotate each sample
-for(s in names(samples_list)){
-  annot <- annotatePeak(samples_list[[s]], tssRegion=c(-3000, 3000),
-                        TxDb=txdb, annoDb="org.Mm.eg.db")
-  assign(paste0("annot_", s), annot)
-}
+peakAnnoList <- lapply(samples_list, annotatePeak, TxDb=txdb,
+                       tssRegion=c(-3000, 3000), annoDb="org.Mm.eg.db", verbose=FALSE)
 
 ```
 
+Now, the annotation feature distribution of all the samples can also be plotted together:
 
-### Chip peak annotation Feature distribution all samples
-Annotation feature distribution of all the samples can also be plotted together, making a list of annotation.
-
-
-plotAnnoBar(annot_list)
 ```
+# Plot barplot for all samples
+plotAnnoBar(peakAnnoList)
+```
+
 <p align="center">
 <img src="../img/Chipseq_annot_all.png"  width="600">
 </p>
 
+Similarly, we can plot the distance to TSS for all samples in one plot:
+
+```
+# Plot distance to TSS for all samples
+plotDistToTSS(peakAnnoList)
+```
+
+<p align="center">
+<img src="../img/dist_TSS_allsamples.png"  width="600">
+</p>
+
+By plotting all samples together, we can easily identify trends. Overall, there are **not dramatic differences** between the WT and cKO groups. This is not surprising since we are comparing enrichment from the same histone mark with slightly different conditions. We do see a **small shift in the promoter regions**, that is less enrichment is observed around the TSS in WT compared to cKO. There may be subtle differences that will be more clearly visible when we drill down to individual regions.
 
 ### Heatmap profile of ChIP binding to TSS regions
 To plot the profile of peaks binding to TSS region, we need to prepare the TSS regions. These are the flanking sequence of the TSS sites, here we are settting up the flanking regions of 2000bp upstream and 2000bp downstream. Then align the peaks that are mapping to these regions, and generate the tagMatrix. This tagMatrix can be visualized as a heatmap with the function `tagHeatmap()`.
