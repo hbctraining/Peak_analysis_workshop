@@ -298,7 +298,7 @@ Overall, our replicates seem to show considerable amount of similarity within gr
 
 [Back to Schedule](../schedule/README.md)
 
-[Next Lesson >>](02b_peak_concordance_replicates.md)
+[Next Lesson >>](03_peak_overlaps.md)
 
 ***
 
