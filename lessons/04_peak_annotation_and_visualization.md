@@ -272,7 +272,7 @@ As we showed previously with some of the annotation visualizations, we can also 
 
 ```r
 # Create a tagMatrix for each sample
-tagMatrixList <- lapply(sample_files, getTagMatrix, windows=promoter)
+tagMatrixList <- lapply(samples_list, getTagMatrix, windows=promoter)
 ```
 
 Once we have that, we can create a single plot with each sample line with a different color. Alternatively, we can create each profile  plot separately and facet by row as displayed below.
