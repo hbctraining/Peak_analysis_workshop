@@ -266,67 +266,43 @@ tagHeatmap(tagMatrix_wt1)
 > **NOTE:** Heatmaps can also be created for other genomic regions using the `peakHeatmap()` function. This fucntion reads directly from BED file and has parameters to specify `by` and `type`, and example would be to look at read denisty across gene bodies. for more information take a look at the [ChIPseeker vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html#profile-of-chip-peaks-binding-to-body-regions).
 
 ### Profle plots and heatmaps across multiple samples
-As we showed previously with some of the annotation visualizations, we can also plot samples together in a single plot. This provides ease in direct comparisons.
+As we showed previously with some of the annotation visualizations, we can also plot samples together in a single plot. This provides ease in direct comparisons. In order to do this, we first need to create a list of tagMatrices for ech of our samples.
 
+**We suggest not running the code below if you are using your local laptop.** It may crash your RStudio session  as it requires alot of memory!
+
+```r
+# Create a tagMatrix for each sample
+tagMatrixList <- lapply(sample_files, getTagMatrix, windows=promoter)
+```
+
+Once we have that, we can create a single plot with each sample line with a different color. Alternatively, we can create each profile  plot separately and facet by row as displayed below.
+
+```r
+# Plot profile plots, faceted by row
+plotAvgProf(tagMatrixList, xlim=c(-2000, 2000), conf=0.95,resample=500, facet="row")
+```
 
 <p align="center">
 <img src="../img/Chipseq_av.profiles_all.png"  width="600">
 </p>
 
+We can also plot multiple heatmaps drawn side by side:
 
-
-### Functional enrichment analysis
-
-As we have the nearest gene annotation for the peaks, we can perform functional enrichment analysis to investigate the predominant biological theme among the genes. Depending on the biological questions we can use, clusterProfiler for GO, KEGG enrichment analysis, DOSE to investigate Disease ontology (DO), or ReactomePA for reactome pathway.
-
-In this session, we are using Reactome database. 
-
-```{r}
-library(ReactomePA) #load the library if you have not already.
-reac_ckoR1 <- enrichPathway(as.data.frame(annot.ckoR1)$geneId, organism = "mouse")
+```r
+# Plot multiple heatmaps
+tagHeatmap(tagMatrixList)
 ```
 
-**Dotplot**
+**ADD FIGURE HERE**
 
-Dotplot is an easy way to visualize the enriched categories:
+## Summary
+Overall, the annotation and visualizations are in line with our expectations for an H3K27Ac binding profile. H3K27ac is associated with the higher activation of transcription and is therefore defined as an active enhancer mark. H3K27ac is found at both proximal and distal regions of transcription start site (TSS), and we saw high percentages of peaks annotated at both regions. The ChIPseeker package has additional functionality that we did not explore due to limits in computational resources. We encourage you to peruse [the vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html) for more information and explore other tools for visualization.
 
-```{r}
-dotplot(reac_ckoR1)
-```
+[Back to the Schedule](../schedule/README.md) 
 
-<p align="center">
-<img src="../img/reac_cko1.png"  width="600">
-</p>
+[Next lesson >>](06_diffbind_analysis.md)
 
-
-
-### Functional profiles comparison
-
-The `clusterProfiler` package provides `compareCluster()` function for comparing functional annotations gene clusters and can be adopted to compare different ChIP peak experiments.
-
-```{r}
-genes <- lapply(annot_list, function(i) as.data.frame(i)$geneId)
-names(genes) <- sub("_", "\n", names(genes))
-
-compPathway <- compareCluster(geneCluster = gene, 
-                         fun = "enrichPathway",
-                         organism = "mouse",
-                         pvalueCutoff = 0.05, 
-                         pAdjustMethod = "BH")
-```
-
-**Dotplot**
-
-```{r}
-dotplot(compPathway, showCategory = 10, title = "Reactome Pathway Enrichment Analysis")
-```
-<p align="center">
-<img src="../img/reac_all.png"  width="600">
-</p>
-
-### Exercise:
-1. Carryout functional comparison using KEGG database.
-   
+ 
 
 ***
 
