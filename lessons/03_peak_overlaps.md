@@ -17,8 +17,9 @@ Approximate time: 30 minutes
 
 So far we have looked at quality control metrics for individual samples, as well as statistical concordance between samples. An additional way to look at sample similarity is to look at peak overlap between samples; that is, to ask what peaks are in common between replicate samples within our treatment groups? Looking at peak overlaps serves two purposes: 
 
-1) It is another way of **measuring consistency** between our samples.
-2) We can create a set of **consensus peaks** (peaks in common between samples within a treatment group), in which we are more confident, as these are less likely to be miscalls due to background noise or other technical variation. These consensus peaks can be used in downstream visualization and analysis.
+1. It is another way of **measuring consistency** between our samples.
+
+2. We can create a set of **consensus peaks** (peaks in common between samples within a treatment group), in which we are more confident, as these are less likely to be miscalls due to background noise or other technical variation. These consensus peaks can be used in downstream visualization and analysis.
 
 <p align="center">
 <img src="../img/Replicate_concordance_workflow.png"  width="800">
@@ -26,7 +27,7 @@ So far we have looked at quality control metrics for individual samples, as well
 
 ## Essential tools: IRanges and GenomicRanges
 
-You may be familiar with **bedtools** as a useful command line too for manipulating bed files, including finding overlap of genomic regions. Whenever we are doing anything involving overlap of genomic ranges in R, two additional essential tools are of great help: **IRanges** and **GenomicRanges**. These packages allow us to convert bed files and other, more complex and/or binary genomic coordinate files, such as bam files, narrowPeak files, and bigWigs, into objects in R, and come with a number of different functions that allow us to find overlaps, exclusions, or nearest genomic features, among other things.
+You may be familiar with **bedtools** as a useful command line tool for manipulating BED files, including finding overlap of genomic regions. Whenever we are doing anything involving overlap of genomic ranges in R, two additional tools are essential: **IRanges** and **GenomicRanges**. These packages allow us to convert BED files and other, more complex and/or binary genomic coordinate files, such as BAM files, narrowPeak files, and bigWigs, into objects in R, and come with a number of different functions that allow us to find overlaps, exclusions, or nearest genomic features, among other things.
 
 IRanges and GRanges are data structures that can be used to solve a variety of problems, typically related to annotating and visualizing the genome. These data structures are very fast and efficient. Both packages contain very extensive and useful vignettes which we have linked below. If you find yourself stuck with these data structures at any point, we encourage you to review them!
 
@@ -53,7 +54,7 @@ IRanges object with 5 ranges and 0 metadata columns:
 
 ### GenomicRanges, or GRanges: ranges in multiple spaces
 
-A GRanges object is a little more complex. It lets us store IRanges in multiple spaces (i.e., multiple chromosomes). In addition to chromosome, a GRanges object also indicates the strand for each region. These objects can also hold additional metadata. GRanges provide a way to store and manipulate sets of genomic regions. In our example, we will be using it to store the peak calls from each of our samples. Let's start with simple example to create a GRanges object using the `GRanges()` constructor:
+A GRanges object is a little more complex. It lets us store IRanges in multiple spaces (i.e., multiple chromosomes). In addition to chromosome, a GRanges object also indicates the strand for each region. These objects can also hold additional metadata. GRanges provides a way to store and manipulate sets of genomic regions. In our example, we will be using it to store the peak calls from each of our samples. Let's start with simple example to create a GRanges object using the `GRanges()` constructor:
 
 ```
 # Example GRanges
@@ -73,7 +74,7 @@ GRanges object with 2 ranges and 0 metadata columns:
 
 You can see that one of the required inputs is an IRanges object, and so functionality in this package is very dependent on the basics of IRanges. For more detailed information on GenomicRanges, we enocurage you to browse through the [GRanges vignette](https://bioconductor.org/packages/devel/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesIntroduction.html).
 
-Once you have your genomic coordinate data stored in one of these data structures, there are many functions that allow you to easily manipulate the data. There are **functions for basic interval operation** like `shift()`, `reduce()`, `flank()`, `intersect()`, and so much more. We have linked for you a [helpful cheatsheet](https://rpubs.com/Pazz/bioc_cheat_sheet) that describes commonly used functions and some use cases. In this lesson we will first convert our peak files into GRanges and then we will use a package called [ChipPeakAnno](https://bioconductor.org/packages/release/bioc/html/ChIPpeakAnno.html), which will provide wrapper functions that allow us to easily operate on our peak data and pull out the infformation we need.
+Once you have your genomic coordinate data stored in one of these data structures, there are many functions that allow you to easily manipulate the data. There are **functions for basic interval operation** like `shift()`, `reduce()`, `flank()`, `intersect()`, and so much more. We have linked for you a [helpful cheatsheet](https://rpubs.com/Pazz/bioc_cheat_sheet) that describes commonly used functions and some use cases. In this lesson we will first convert our peak files into GRanges and then we will use a package called [ChipPeakAnno](https://bioconductor.org/packages/release/bioc/html/ChIPpeakAnno.html), which will provide wrapper functions that allow us to easily operate on our peak data and pull out the information we need.
 
 ## Reading in narrowPeak files as Granges objects
 To create GRanges objects for our peak files, we are going to use the function `toRanges()` from the ChIPpeakAnno package. Note that there are other alternative packages that have functionality to do this. This function requires at minimum:
