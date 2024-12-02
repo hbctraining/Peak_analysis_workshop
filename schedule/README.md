@@ -15,11 +15,11 @@
 
 | Time |  Topic  | Instructor |
 |:-----------:|:----------:|:--------:|
-| 09:30 - 09:45 | [Workshop Introduction](../lectures/workshop_intro_slides.pdf) | Meeta |
+| 09:30 - 09:45 | [Workshop Introduction](../lectures/workshop_intro_slides.pdf) | Will |
 | 09:45 - 10:15 | Pre-reading discussion | Meeta |
-| 10:15 - 11:00 | [Understanding peaks and peak file formats](../lessons/01_Introduction_to_peak_files.md)  | Meeta |
+| 10:15 - 11:00 | [Understanding peaks and peak file formats](../lessons/01_Introduction_to_peak_files.md)  | Will |
 | 11:00- 11:05 | Break|  |
-| 11:05 - 12:00 | [Assessing peak quality metrics](../lessons/02a_peak_quality_metrics_assesment.md) | Will |
+| 11:05 - 12:00 | [Assessing peak quality metrics](../lessons/02a_peak_quality_metrics_assesment.md) | Meeta |
 
 
 ### Before the next class:
