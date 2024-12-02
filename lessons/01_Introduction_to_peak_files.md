@@ -69,16 +69,18 @@ Our dataset consists of **three WT samples and three cKO samples**. For each of 
 
 ## Setting up 
 
-> Prior to the workshop, we asked that you download and uncompress the R Project that we will be using during this workshop. If you haven't had a chance to do this, please right click [this link](https://www.dropbox.com/scl/fi/q65yhy60q41p0zpv7ffat/Peak_analysis.zip?rlkey=mfzg1bnbjkabox1zwxb7gn9od&st=4xxsrmkd&dl=1) and select **"Save Link As..."** in order to download the compressed R Project to your desired location. Next, double-click on the compressed ZIP file in order to uncompress it. 
+> Prior to the workshop, we asked that you download and uncompress the R Project that we will be using during this workshop. If you haven't had a chance to do this, please right click [this link](https://www.dropbox.com/scl/fi/s9mxwd7ttqgjt040m6bm2/Peak_analysis.zip?rlkey=ceqbv4pyx59jxsoa0xoh9l6kb&st=q7rlclil&dl=1) and select **"Save Link As..."** in order to download the compressed R Project to your desired location. Next, double-click on the compressed ZIP file in order to uncompress it. 
 
-1) Once you have uncompressed the R Project, you can double-click "Peak_analysis.Rproj" wihtin the "Peak_analysis" directory to open the R Project. It should look like:
+1) Once you have uncompressed the R Project, you can double-click "Peak_analysis.Rproj" within the "Peak_analysis" directory to open the R Project. It should look like:
 
 <p align="center">
 <img src="../img/R_studio.png" width="700">
 </p>
 
 2) Open an R script by clicking **"File"**, then **"New File >"** and selecting **"R script"**.
+
 3) Save the new R script, by clicking **"File"**, and selecting **"Save As..."**
+
 4) Name the file **"peak_analysis.R"** and click **"Save"**
 
 Now your R Studio should look like:
@@ -91,7 +93,7 @@ Now your R Studio should look like:
 
 When working with next-generation sequencing data, it can be very enticing to race to investigating your data soon after receiving it. However, it is considered best practice to take a few minutes to set up an environment that will help keep you and your data organized *before* you start your analysis. The downloaded project already has this done, but we will discuss what we did to help organize ourselves in this section. 
 
-Importantly, data management practices should be applied *throughout* your analyses. Some other advantages to a commiting to strong data management practices are:
+Importantly, data management practices should be applied *throughout* your analyses. Some other advantages that stem from committing to strong data management practices are:
 
 - Helping yourself and others if the data needs to be re-analyzed because it is well-organized
 - Disseminating data to collaborators and other researchers is easier
@@ -131,7 +133,7 @@ Let's create this and add it to the top of our script:
 # peak_analysis.R
 # Written by the Harvard Chan Bioinformatics Core on November 15th, 2024
 # This script was written as a demo for the Peak Analysis Workshop
-# In order to use this script, the user will need to have downloaded and uncompressed the R project from https://www.dropbox.com/scl/fi/q65yhy60q41p0zpv7ffat/Peak_analysis.zip?rlkey=mfzg1bnbjkabox1zwxb7gn9od&st=4xxsrmkd&dl=1
+# In order to use this script, the user will need to have downloaded and uncompressed the R project from https://www.dropbox.com/scl/fi/s9mxwd7ttqgjt040m6bm2/Peak_analysis.zip?rlkey=ceqbv4pyx59jxsoa0xoh9l6kb&st=q7rlclil&dl=1
 ```
 
 ## What is a peak?
@@ -171,8 +173,8 @@ The BED file format is tab-delimited (columns separated by tabs) and contains in
 
 Given the example above, **what coordinates would you use to define the sequence `ATG`?** 
 
-* If you were using the the 1-based (bottom) method you would indicate **4 to 6**. 
-* Using the 0-based method you would define the range as **3 to 6**. 
+* If you were using the 0-based method you would define the range as **3 to 6**. 
+* Using the the 1-based (bottom) method you would indicate **4 to 6**. 
 
 The benefits to having a **zero-based system** is the **ease of calculating distance or length** of sequences. We can easily determine the length of the `ATG` sequence using the zero-based coordinates by subtracting the start from the end, whereas for one-based coordinates we would need to add one after the subtraction. Therefore, many file formats used in computation, including **the BED file format**, use zero-based coordinates. 
 
@@ -221,7 +223,7 @@ Each step of this workflow is summmarized below:
   - *Replicate Concordance* -  Computing genomic region overlaps across replicates.
 - **Peak Annotation** - Identify transcript models near called peaks.
 - **Differential Enrichment** - Quantify peak calls that show diffential binding across conditions.
-- **Peak Visualization** - Inspect the peak calls and differentially called peaks within an [IGV browser](https://igv.org/) to ensure that read density (pileups) they qualitatively appear accurate.
+- **Peak Visualization** - Inspect the peak calls and differentially called peaks within an [IGV browser](https://igv.org/) to ensure that read density (pileups) qualitatively appear accurate.
 - **Motif Discovery** - Identify enriched sequence motifs within peaks.
 - **Functional Analysis** - Investigate whether certain biological pathways are enriched for peaks or differential binding across conditions.
 
