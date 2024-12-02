@@ -34,7 +34,7 @@ library(RColorBrewer)
 
 ### Load data
 
-Locate the metrics summary file called `metrics.csv`, which is located in the `meta` folder of your working directory. It is a CSV file in which each row corresponds to a sample, and each column contains information for a quality metric. 
+Locate the metrics summary file called `metrics.csv`, which is located in the `meta` folder of your working directory. It is a CSV file in which each row corresponds to a sample, and each column contains information for either metadata or a quality metric. 
 
 ```
 # Load QC metrics file
@@ -47,7 +47,7 @@ View(metrics)
 >
 > _We acknowledge that most participants of this workshop will not be using nf-core._ As such, for each metric, we will describe what it represents and how it is computed. We **provide code for you such that you may use it to compute similar metrics** for your own dataset and create your own CSV.
 
- **Note that the majority of the code we provide is for command-line tools, not R.** If you are attempting to run this on your own data, it may be beneficial to run this on your local high performance computing cluster where these tools are commonly pre-installed for you.
+ **Note that the majority of the code we provide is for command-line tools, not R.** If you are attempting to run this on your own data, it may be beneficial to run this on a high performance computing cluster where these tools are commonly pre-installed for you.
  
 ### Total reads
 
@@ -80,7 +80,7 @@ This data set isn't perfect -- while most of our samples have close to or more t
 
 <details>
 <summary><b>Click here for the code to compute total reads from your own data</b></summary>
-<br>There are a number of ways and programs to ascertain the total number of reads in a sample but, for this example, we will use Picard. <code>picard</code> is <a href="https://broadinstitute.github.io/picard/">a tool maintained by the Broad Institute</a> with a wide variety of functions to assist in next-generation sequencing data analysis. <code>picard</code> has multiple functions that can return the total number of reads as part of their analysis, but we will use the <code>CollectAlignmentSummaryMetrics</code> function because we will also need the alignment metrics for the next section on assessing the mapping rate. The command to run <code>picard</code>'s <code>CollectAlignmentSummaryMetrics </code> function is:<br><br>
+<br>There are a number of ways and programs to ascertain the total number of reads in a sample, but, for this example, we will use Picard. <code>picard</code> is <a href="https://broadinstitute.github.io/picard/">a tool maintained by the Broad Institute</a> with a wide variety of functions to assist in next-generation sequencing data analysis. <code>picard</code> has multiple functions that can return the total number of reads as part of their analysis, but we will use the <code>CollectAlignmentSummaryMetrics</code> function because we will also need the alignment metrics for the next section on assessing the mapping rate. The command to run <code>picard</code>'s <code>CollectAlignmentSummaryMetrics </code> function is:<br><br>
 <pre>
 &#35; Run picard CollectAlignmentSummaryMetrics for a sample
 java -jar picard.jar CollectAlignmentSummaryMetrics \
@@ -199,7 +199,7 @@ More detailed information on <code>phantompeakqualtools</code> can be found <a h
 * Low signal-to-noise: NSC values < 1.1
 * Minimum possible NSC value: 1 (no enrichment)
 
-> NOTE: This metric is sensitive to technical effects (e.g., high quality antibodies will generate higher scores) and biological effects (e.g., narrow peaks typically score higer than broad peaks).
+> NOTE: This metric is sensitive to technical effects (e.g., high quality antibodies will generate higher scores) and biological effects (e.g., narrow peaks typically score higher than broad peaks).
 
 ```
 # Plot NSC
@@ -238,7 +238,7 @@ More detailed information on <code>phantompeakqualtools</code> can be found <a h
 
 ### Relative strand cross-correlation coefficient (RSC)
 
-_This is the ratio of the fragment-length correlation value minus the background (minimum) cross-correlation value, divided by the phantom-peak cross-correlation value minues the background cross-correlation value._
+_This is the ratio of the fragment-length correlation value minus the background (minimum) cross-correlation value, divided by the phantom-peak cross-correlation value minus the background cross-correlation value._
 
 * High enrichment: RSC values > 1
 * Low signal-to-noise: RSC values < 0.8
@@ -321,19 +321,19 @@ sh calculate_frip.sh \
 
 ### Non-redundant fraction (NRF)
 
-The non-redundant fraction of reads is the number of distinct uniquely mapping reads (i.e., after removing duplicates and unmapped) divided by the total number of reads. It is a measure of library complexity. This value is 0-1 and, ideally, we would want to see values close to 1. Generally, an NRF of 0.8 and higher indicates acceptable data. The ENCODE website also sets out standardized thresholds for this and those are summarized in the table below. In our plot, we use a green, orange, and red dashed line to represent Ideal, Compliant, and Acceptable NRF cutoffs, respectively.
+The non-redundant fraction of reads is the number of distinct uniquely mapping reads (i.e., after removing duplicates and unmapped) divided by the total number of mapped reads. It is a measure of library complexity. This value is 0-1 and, ideally, we would want to see values close to 1. Generally, an NRF of 0.8 and higher indicates acceptable data. The ENCODE website also sets out standardized thresholds for this and those are summarized in the table below. In our plot, we use a green, orange, and red dashed line to represent Ideal, Compliant, and Acceptable NRF cutoffs, respectively.
 
 <details>
 <summary><b>Click here for the code to compute NRF values from your own data</b></summary>
-In order to determine the number of uniquely mapping reads, we can run <code>Picard</code>'s <code>MarkDuplicates</code> function. It will mark duplicate reads and also output a metrics file containing the number of total reads, unmapped reads and duplicated reads. The command to run this is:</br></br>
+In order to determine the number of uniquely mapping reads, we can run <code>Picard</code>'s <code>MarkDuplicates</code> function. It will mark duplicate reads and also output a metrics file containing the number of total reads, unmapped reads and duplicated reads. The command to run this is:<br><br>
 <pre>
 &#35; Mark duplicates and create metrics file
 java -jar picard.jar MarkDuplicates \
   --INPUT &lt;SORTED_BAM_FILE&gt; \
   --OUTPUT &lt;REMOVE_DUPLICATES_BAM_FILE&gt; \
   --METRICS_FILE &lt;METRICS_FILE&gt;
-</pre></br>
-From this we can derive our NRF:</br>
+</pre><br>
+From this we can derive our NRF:<br>
 <p align="center">
 <img src="https://latex.codecogs.com/svg.image?\frac{\left(TotalReads-UnmappedReads-DuplicateReads\right)}{TotalReads-UnmappedReads}" />
 </p>
