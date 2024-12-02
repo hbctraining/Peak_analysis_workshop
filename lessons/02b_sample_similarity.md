@@ -18,7 +18,7 @@ Approximate time: 45 minutes
 
 In the previous lesson, we evaluated quality metrics concerning peaks and reads in peaks in individual samples. But these aren't the only ways to measure quality in our data set. We did look for consistency of these metrics across all of our samples, but now it's **time for a closer look at our samples to see how they compare for samples within treatment groups and between groups**. To do this we will be visualizing our data using two different types of data:
 
-1. Read count distribution across the genome and
+1. Read count distribution across the genome
 2. Signal enrichment within regions called as peaks
 
 <p align="center">
@@ -44,10 +44,10 @@ Two commonly used methods for evaluating sample similarity are Principal Compone
 
 <details>
 <summary><b>Click here for the code to create a read count matrix using deepTools</b></summary>
-<br>The command <code>multiBamSummary</code> computes the read coverages for genomic regions for two or more BAM files. The analysis can be performed for the entire genome by running the program in ‘bins’ mode. If you want to count the read coverage for specific regions only (for example only consensus regions), you can use the BED-file mode instead. <br><br>
+<br>The command <code>multiBamSummary</code> computes the read coverages for genomic regions for two or more BAM files. The analysis can be performed for the entire genome by running the program in ‘bins’ mode. If you want to count the read coverage for specific regions only (for example only consensus regions), you can use the BED-file mode instead.<br><br>
 The standard output of multiBamSummary is a compressed numpy array (.npz), which can be used with other functions in deepTools to create PCA plots and correlation heatmaps. <b>Instead we opt to get a tab-delimited file to allow us flexibility to create our own plots by using the <code>--outRawCounts</code> parameter.</b><br>
 
-The command to run this is:</br></br>
+The command to run this is:<br><br>
 <pre>
 multiBamSummary bins \
 	  --bamfiles cKO_H3K27ac_ChIPseq_REP1.mLb.clN.sorted.bam cKO_H3K27ac_ChIPseq_REP2.mLb.clN.sorted.bam cKO_H3K27ac_ChIPseq_REP3.mLb.clN.sorted.bam \
@@ -56,11 +56,11 @@ multiBamSummary bins \
 	  --labels cKO_1 cKO_2 cKO_3 WT_1 WT_2 WT_3  \
 	  -p 6 \
 	  --outRawCounts multiBAMsummary_noInput.tab
-</pre></br>
-
+</pre><br>
+<hr />
 </details>
 
-We have created two versions of the read count matrix: one that contains ChIP and input samples and another that contains ChIP samples only. Both of these files can be found in the `data/multBamSummary` folder. Let's read in the data:
+We have created two versions of the read count matrix: one that contains ChIP and input samples and another that contains ChIP samples only. Both of these files can be found in the `data/multiBamSummary` folder. Let's read in the data:
 
 ```
 # Read in data
@@ -93,7 +93,7 @@ To make a fair comparison across samples, we need to normalize the data. We are 
 
 > _Later in this workshop when we perform differential enrichment analysis, we will discuss normalization in more detail._
 
-In order to perform the vst, we will use the [DESeq2 package](https://bioconductor.org/packages/release/bioc/html/DESeq2.html). First, we create a DESeq2 object and then we run the `vst()` function. Following that we can extract the vst transformed counts for visualization.
+In order to perform the vst, we will use the [DESeq2 package](https://bioconductor.org/packages/release/bioc/html/DESeq2.html). First, we create a DESeq2 object and then we run the `vst()` function. Following that step, we can extract the vst transformed counts for visualization.
 
 ```
 # Create DESeq2 object
@@ -106,7 +106,7 @@ vst_counts <- assay(vst)
 
 ### Principal Component Analysis (PCA)
 
-Principal Component Analysis (PCA) is a technique used to emphasize variation and bring out strong patterns in a dataset (dimensionality reduction). This is a very important technique used in the QC and analysis of ChIPseq.
+Principal Component Analysis (PCA) is a technique used to emphasize variation and bring out strong patterns in a dataset (dimensionality reduction). This is a very important technique used in the QC and analysis of ChIP-seq.
 
 If you've done any RNA-seq or single cell analysis, you're likely familiar with the concept of PCA, as this technique is commonly used to evaluate sample similarity. If you'd like to refamiliarize yourself on the details of how PCA is calculated, we recommend you read our materials [here](https://hbctraining.github.io/DGE_workshop_salmon_online/lessons/principal_component_analysis.html) or [watch this useful video from StatQuest](https://www.youtube.com/watch?v=_UVHneBUBW0&ab_channel=StatQuestwithJoshStarmer).
 
@@ -140,9 +140,9 @@ Essentially, if two samples have similar levels of expression peak enrichment th
 
 Below we highlight some features of our plot:
 
-* It looks like our samples **mostly separate on PC1, and can be attributed to genotype**.
- 	* PC1 does only explain 33% of the variance, and as observed on the plot there are clearly other contributions to the observed variance.
-* If you look at within-group variability you see the first **replicate from both WT and cKO are slightly separated from their respective groups on PC2**.
+- It looks like our samples **mostly separate on PC1, and can be attributed to genotype**.
+	- PC1 does only explain 33% of the variance and, as observed on the plot, there are clearly other contributions to the observed variance.
+- If you look at within-group variability you see the first **replicate from both WT and cKO are slightly separated from their respective groups on PC2**.
 
 If our biological factor of interest was not explained by these two components, we would want to consider coloring our data points by other aspects of the metadata to identify a covariate. In our case, that would be mostly technical factors (found in `metrics.csv`), but if our samples were processed in different batches, or performed on different dates, or if the samples were from tissues with different sexes or other features, these would be important features to label our plot by when looking at PCA. We could also plot beyond the first two principal components to see if our factor was explained by these.
 
@@ -169,7 +169,7 @@ pheatmap(cor(vst_counts), color=heat.colors, annotation=annotation)
 <img src="../img/corr_heatmap.png" width="550">
 </p>
 
-As expected given what we saw in the PCA plots, our samples cluster nicely by genotype. The block structure is not as emphasized, but this is likely due to the fact that we are looking at binned regions across the entire genome. If we subset to only look at consensus regions, this would change. If we had more samples and plotted more metadata, we might also be able to see whether batch or other biological or technical factor affected the clustering, and on what level.
+As expected given what we saw in the PCA plots, our samples cluster nicely by genotype. The block structure is not as emphasized, but this is likely due to the fact that we are looking at binned regions across the entire genome. If we subset to only look at consensus regions, this would change. If we had more samples and plotted more metadata, we might also be able to see whether batch or other biological or technical factors affected the clustering, and on what level.
 
 ***
 
