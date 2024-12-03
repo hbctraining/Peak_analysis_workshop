@@ -28,8 +28,6 @@ First we need to set up our environment by loading required libraries to help us
 ```
 # Load libraries
 library(tidyverse)
-library(pheatmap)
-library(RColorBrewer)
 ```
 
 ### Load data
