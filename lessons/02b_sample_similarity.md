@@ -33,6 +33,9 @@ Let's begin by creating a new script for this and the following lesson, and let'
 ## Assess concordance between samples and find overlapping peaks
 
 # Load libraries
+library(tidyverse)
+library(pheatmap)
+library(RColorBrewer)
 library(DESeq2)
 library(ggrepel)
 library(ChIPpeakAnno)
