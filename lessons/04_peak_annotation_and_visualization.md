@@ -21,7 +21,7 @@ Understanding the biological questions addressed by ChIP-seq experiments begins 
 
 **INSERT WORKFLOW SUBSET IMAGE HERE**
 
-In order to interpret these binding regions, a number of different peak annotation tools exist. Some examples include [Homer](http://homer.ucsd.edu/homer/motif/), [GREAT](https://pmc.ncbi.nlm.nih.gov/articles/PMC4840234/) (a web-based tool), [ChIPpeakAnno](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPpeakAnno/inst/doc/ChIPpeakAnno.html) and [ChIPseeker](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html). 
+In order to interpret these binding regions, a number of different peak annotation tools exist. Some examples include [Homer](http://homer.ucsd.edu/homer/motif/), [GREAT](https://pmc.ncbi.nlm.nih.gov/articles/PMC4840234/) (a web-based tool), [ChIPpeakAnno](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPpeakAnno/inst/doc/ChIPpeakAnno.html), and [ChIPseeker](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html). 
 
 **How do peak annotation tools work?**
 
@@ -135,7 +135,6 @@ plotAnnoBar(annot_WT1)
 <img src="../img/barplot_annot_wt1.png"  width="550">
 </p>
 
-
 ### UpsetR
 Annotation overlaps can be visualized by upsetR plot. Here, we use a function from ChIPseeker that grabs the required data and formats it to be compatible with UpSetR and draws the plot. With this plot we can see that there are many peaks that contain more than one annotation. We can observe the counts for various combinations of annotations.
 
@@ -146,7 +145,6 @@ upsetplot(annot_WT1)
 <p align="center">
 <img src="../img/upset_anno_wt1.png"  width="600">
 </p>
-
 
 ### Distribution of TF-binding loci with respect to TSS
 The distance between the peak and the TSS of the nearest gene is also reported in the annotation output and can be visualzed with a barplot.
@@ -159,7 +157,6 @@ plotDistToTSS(annot_WT1)
 <img src="../img/dist_tss_annot_wt1.png"  width="550">
 </p>
 
-
 ## Visualizing multiple samples
 
 These are all great ways to visualize the information from our annotation table; however, so far we have only done this for a single sample. It would be very helpful to create similar plots after collating annotations across all samples in our dataset. In this way, we can **assess consistencies across replicates within a group and compare samples between groups.**
@@ -167,7 +164,6 @@ These are all great ways to visualize the information from our annotation table;
 In order to do this, we will first combine the GRanges objects for each samples into a list and then annotate each sample using `lapply()`.
 
 ```{r}
-
 # Create a list of GRanges objects
 samples_list <- list(
   WT1 = WT_H3K27ac_ChIPseq_REP1,
@@ -180,7 +176,6 @@ samples_list <- list(
 # Annotate each sample
 peakAnnoList <- lapply(samples_list, annotatePeak, TxDb=txdb,
                        tssRegion=c(-3000, 3000), annoDb="org.Mm.eg.db", verbose=FALSE)
-
 ```
 
 Now, the annotation feature distribution of all the samples can also be plotted together:
