@@ -10,10 +10,9 @@ Approximate time:
 
 ## Learning Objectives
 
-* Perform exploratory data analysis and visualize sample concordance.
+* Perform exploratory data analysis using an affinity binding matrix
 * Learn to use DiffBind for differential binding analysis
-* Interpret results and export output for further downstream analysis.
-
+* Interpret results and export output for further downstream analysis
 
 ## Differential enrichment analysis
 
@@ -82,8 +81,7 @@ library(tidyverse)
 ### Reading in the data
 The DiffBind pipeline starts with importing the required data (BAM files and peaksets). Rather than reading and loading in individaul samples from the dataset, DiffBind requires you to create a metadata file. This **metadata file creation is a critical step**, and if not done correctly can cause errors, preventing us from moving foward! 
 
-
-This metadata file that includes one line for each ChIP peakset, with columns of information that we describe in more detail below. Let's read in our metadata and inspect the column headers to understand the required format for DiffBind.
+This metadata file includes one line for each ChIP peakset, with columns of information that we describe in more detail below. Let's read in our metadata and inspect the column headers to understand the required format for DiffBind.
 
 ```{r}
 # Read in samplesheet
@@ -95,53 +93,51 @@ names(samples)
 [1] "SampleID"   "Tissue"     "Factor"     "Condition"  "Replicate"  "bamReads"   "ControlID"  "bamControl" "Peaks"      "PeakCaller"
 ```
 
-An experiment will have multiple samples. Each sample needs a unique SampleID. A comparative analysis requires at least two samples in a class. Classes are indicated in the metadata as **Factor**, **Tissue**, **Condition**, **Treatment**
+Each sample listed in the sample sheet needs a unique SampleID. A comparative analysis requires at least two samples in a class. Classes are indicated in the metadata as **Factor**, **Tissue**, **Condition**, **Treatment**. 
+
+> **NOTE**: These columns are mandatory and if there is no difference among samples, the same entry can be used across all rows. At least one of these columns will need to have two or more sample classes.
 
 - **Tissue** - This is a designation for the cell type, tissue type, or some other indication of the biological source of the material.
-  
 - **Factor** - This is usually what protein the antibody was targeting, such as a transcription factor or a histone mark.
-
 - **Condition** - Indicates an experimental condition, such as WT or Mutant.
-  
 - **Treatment** - Specifies any treatments applied to the cells.
 
-> Note: Not all classes are required, but at leaset one is necessary for comparision. For example, in our datasheet, we have Tissue, Factor, and Condition.
+Metadata should also contain columns pointing to the path where alignment files and peak calls are located, for reading in. 
 
-Metadata should also comprise aligned sequencing reads (generally in bam format). Each sample needs an aligned sequencing library, but may include the following:
+- **bamReads**: This points to the primary aligned file for the sample from Chip experiment (or other assays like ATAC)
+- **bamControl**: This is an optional set of control reads associated with the sample or sample class. For ChIP experiments, this is most often an Input control (ChIP run without an antibody), or a ChIP run with a non-specific antibody (IgG). ATAC-seq experiment usually do not have a control.
+- **ControlID**: Id for the input control sample
+- **Peaks**: The path to peakset files (in our case narrowPeak files)
+- **PeakCaller**:
 
-- bamReads: This points to the primary aligned file for the sample from Chip experiment (or other assays like ATAC)
-  
-- bamControl: This is an optional set of control reads associated with the sample or sample class. For ChIP experiments, this is most often an Input control (ChIP run without an antibody), or a ChIP run with a non-specific antibody. ATAC experiment usually do not have a control.
-  
-- SpikeIn: This is also an option set of spike-in reads for normalization.
-
-Id for the input control is given in `ControlID` column.
-
-Diffbind requires a called peaks for each sample. The aligned reads are used to call the peaks with the peak calling software such as MACS. The called peaks here are denoted in the `Peaks` column.
+ > There is also a 'SpikeIn' option to provide the BAM files from alignment to the spike in genome. More information on spike-ins is discussed below.
 
 
-After reading in the peaksets, a merging function finds all overlapping peaks and derives a single set of unique genomic intervals, called the consensus peakset. A region is included in the consensus set if it appears in at least two samples. This consensus peakset represents the overall set of candidate binding sites further analysis.
+### Affinity binding matrix
+DiffBind will read in the data and **determine a set of consensus peaks**. Using default settings peaks that are called in at least two samples, regardless of which sample group the belong to are considered in the consensus set. You can create your own consensus peak set as outlined in Section 8.2 in the DiffBind vignette. For example, you may want to only include peaks that overlap in a subset of WT samples _and_ a subset of cKO samples. This is the consensus-of-consensus approach, where you first make a consensus peakset for each sample group, then combine them in an overall consensus you use for counting. This consensus peakset represents the overall set of candidate binding sites further analysis.
 
+The `dba()` function is used to read in data files an create the DiffBind object. The `scoreCol` refers to the peak signal score in the peak files. If using MACS software scores are generally in 5th column. **The code below will not work since we do not have BAM files locally available.**
 
-## Affinity binding matrix
+```
+### DO NOT RUN THIS CODE ###
 
-
-
-The initial steps of the pipeline can be computationally intensive, so they have been done for you, and the output saved as an `.rds` file in the data folder. Lets review these steps (Do NOT RUN).
-
-```{r}
-sample=read.csv("metadata.csv") # reading the metadata as above
-
-dbObj=dba(sampleSheet=sample, scoreCol=5) # creating the diffbind object with dba function, scoreCol refers to the peak signal score in the peak files. If used MACS software scores are generally in 5th column
-
-dbObj=dba.count(dbObj, bParallel=FALSE) # This is the most computationally intensive part
+## Read in data files to create DiffBind object 
+dbObj <- dba(sampleSheet=sample, scoreCol=5) 
 ```
 
-First step in generating the affinity binding matrix involves reading in the metadata that we prepared. The second step involves creating the diffbind object. We do that using `dba` function. This function takes the metadata as `sampleSheet` and `scoreCol` referes to the peak singal score in the peak files. If used MACS, score is generally in the 5th column. 
+Next, we use the `dba.count()` which takes the alignment files and **compute for each sample, the count information for each of the peaks/regions in the consensus set**. In this step, for each of the consensus regions DiffBind takes the number of aligned reads in the ChIP sample and the input sample, to compute a normalized read count for each sample at every potential binding site. The peaks in the consensus peakset may be re-centered and trimmed based on calculating their summits (point of greatest read overlap) in order to provide more standardized peak intervals.
 
-Next step is to take the alignment files and compute count information for each of the peaks/regions in the consensus set, we can use `dba.count()` function to do that. In this step, for each of the consensus regions DiffBind takes the number of aligned reads in the ChIP sample and the input sample, to compute a normalized read count for each sample at every potential binding sites. The peaks in the consensus peakset may be re-centered and trimmed based on calculating their summits (point of greatest read overlap) in order to provide more standardized peak intervals. This is the computationally intensive step so we ran these steps and saved the output as an RDS object. Which we are going to import in our local Rstudio for downstream analysis.
+This step is very **computationally intensive**, as such we will not run this code in class.
 
-## Data exploration
+```{r}
+# Count reads to create affinity binding matrix
+dbObj <- dba.count(dbObj, bParallel=FALSE) # This is the most computationally intensive part
+```
+
+> #### What are my options for normalization?
+> 
+
+### Data exploration
 
 Before performing differential binding analysis, it is essential to explore the count matrix, examine various sample statistics, and assess the overall similarity between samples. 
 
