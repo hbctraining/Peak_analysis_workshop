@@ -58,7 +58,9 @@ Find "Mouse mm10" from the menu and left-click "OK"
 <img src="../img/IGV_reference_menu_with_caption.png"  width="600">
 </p>
 
-### Download bigWig files
+### Download files for visualization
+
+Next, we need to download some files that we will be visualizing in IGV. Right-click [this link](https://www.dropbox.com/s/7pzb1yvpgopzar9/bigWig.zip?st=jgzjx01b&dl=0) and select "Save Link As..." to download the ZIP compressed directory of the BigWig files from Dropbox. Place this file within the `data` folder of your `Peak_analysis`. Repeat this process with [this link](https://www.dropbox.com/scl/fi/lwwm49gfgh433pzhxzdnu/DiffBind.zip?rlkey=b8xwzcftsn0dyjha1uzpdnn3q&st=jfyqpmco&dl=0) for the BED file of differentially called peaks from DiffBind and also place this file within the `data` folder of your `Peak_analysis`.
 
 <details><summary><b>Click here to see how to create bigWig files</b></summary>
 
@@ -74,7 +76,9 @@ java -jar picard.jar CollectAlignmentSummaryMetrics \
 
 We will be interested in the value associated with <code>PF_READS_ALIGNED</code>. This is the number of your mapped reads. We will use this number to create a scaling factor in the next step to create a bedGraph file.<br>
 
-In order to create a bedGraph file we will use <code>bedtools</code>'s <code>genomecov</code> tool. <br>
+The full documentation for <code>picard CollectAlignmentSummaryMetrics</code> can be found <a href="https://gatk.broadinstitute.org/hc/en-us/articles/360040507751-CollectAlignmentSummaryMetrics-Picard">here</a>.<br>
+
+In order to create a bedGraph file we will use <code>bedtools</code>'s <code>genomecov</code> tool.<br>
 
 <pre>
 $SCALE_FACTOR=`awk 'BEGIN { print 1000000 / $MAPPED_READ_COUNT }'`
@@ -82,7 +86,8 @@ $SCALE_FACTOR=`awk 'BEGIN { print 1000000 / $MAPPED_READ_COUNT }'`
 bedtools genomecov \
   -ibam $INPUT_SORTED_BAM \
   -bg \
-  -scale $SCALE_FACTOR \
+  -scale $SCALE_FACTOR | \
+  sort -k1,1 -k2,2n \
   > $OUTPUT_FILE
 </pre><br>
 
@@ -93,8 +98,11 @@ We will need to create a bash variabel to hold a scale factor to a miilion which
   <li><code>-ibam</code> - Input sorted BAM file</li>
   <li><code>-bg</code> - Output depth in bedGraph format</li>
   <li><code>-scale</code> - Scale factor used for scaling the data</li>
+  <li><code>sort -k1,1 -k2,2n</code> - The output file is unsorted and needs to be sorted by chromosome and chromosome start location
   <li><code>&gt; $OUTPUT_FILE</code> - Write to an ouptut file</li>
 </ul><br>
+
+The full documentation for <code>bedtools genomecov</code> can be found <a href="https://bedtools.readthedocs.io/en/latest/content/tools/genomecov.html">here</a>.
 
 At this point it is possible to load bedGraph formatted files into IGV, but they are much larger than BigWig files, so we will convert our bedGraph files into BigWig files using a tool called <code>bedGraphToBigWig</code>:<br>
 
@@ -102,7 +110,7 @@ At this point it is possible to load bedGraph formatted files into IGV, but they
 bedGraphToBigWig \
     $BEDGRAPH_INPUT \
     $CHROMOSOME_SIZES_FILE \
-    $BIGWIG_OUTPUT
+    $BIGWIG_OUTPUT 
 </pre><br>
 
 We can break this command down as:<br>
@@ -112,6 +120,8 @@ We can break this command down as:<br>
   <li><code>$CHROMOSOME_SIZES_FILE</code> - A tab-delimited file with chromosomes in the first column and their associated sizes in the second column. For more information on how to create this file, click on the dropdown below called "Click here to see how to create a chromosome sizes file"</li>
   <li><code>$BIGWIG_OUTPUT</code> - The BigWig output file</li>
 </ul><br>
+
+The download for <code>bedGraphToBigWig</code> can be found <a href="https://github.com/ENCODE-DCC/kentUtils">here</a>.<br>
 
 <details><summary><b>Click here to see how to create a chromosome sizes file</b></summary>
 There are several ways to make a tab-delimited file with the chromosomes in the first column and their asscoiated sizes in the second column. One way is to use the <code>samtools</code> package <code>faidx</code> to create a FASTA index file. The documentation to run this cool can be found <a href="https://www.htslib.org/doc/samtools-faidx.html">here</a>. The command to run the <code>samtools faidx</code> tool is:
@@ -125,7 +135,9 @@ We can break this command into two parts:<br>
 
 <ul><li><code>samtools faidx</code> - Call the <code>samtools faidx</code> tool</li>
   <li><code>$REFERENCE_GENOME_FASTA</code> - The reference genome FASTA file</li>
-</ul>
+</ul><br>
+
+The full documentation for using <code>samtools faidx</code> can be found <a href="https://www.htslib.org/doc/samtools-faidx.html">here</a>.<br>
 
 However, this output will have a few more column than you need. You only need the first two columns, so we can use <code>awk</code> to parse out the first two columns:
 
@@ -147,6 +159,7 @@ This command is composed of a few parts:
 </ul>
 <hr />
 </details>
+We discuss an alternative way of generating BigWig files in our <a href="https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/08_creating_bigwig_files.html">Chromatin Biology materials</a>.
 <hr />
 </details>
 
