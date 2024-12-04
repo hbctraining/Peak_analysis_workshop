@@ -17,7 +17,7 @@ Approximate time:
 
 ## Differential enrichment analysis
 
-Differential enrichment analysis is a powerful computational approach used to identify variations in protein-DNA binding events across different biological conditions, such as treatments, disease states, or cell types. It is applicable for datasets in which more than one sample class is being evaluated and best results are acheived in cases where each sample class has biological replicates. By **comparing enriched regions of the genome—where proteins like transcription factors or histone modifications are bound—researchers can pinpoint specific genomic sites that exhibit statistically significant changes in binding between the conditions being studied**. 
+Differential enrichment analysis is a powerful computational approach used to identify variations in protein-DNA binding events across different biological conditions, such as treatments, disease states, or cell types. It is applicable for datasets in which more than one sample class is being evaluated and best results are acheived in cases where each sample class has biological replicates. By **comparing enriched regions of the genome**—where proteins like transcription factors or histone modifications are bound—researchers can **pinpoint specific genomic sites that exhibit statistically significant changes** in binding between the conditions being studied. 
 
 In our dataset we have samples from two different conditions; wildtype and the conditional knockout of PRDM16 (cKO).This analysis will be helpful in understanding the transcriptional programs impacted during cortical development when PRDM16 is non-functional. 
 
@@ -29,7 +29,7 @@ A wide variety of computational tools are available for differential analysis of
 
 * **Peak calls or alignment files**
   * Some tools require peaks to be called prior to differntial enrichment analysis, while others implement their own detection method or work using sliding windows.
-* ***Statistical distribution**
+* **Statistical distribution**
   * Use of a Poisson distribution or on a more flexible negative binomial distribution.
 * **Assumptions of the data**
   * Methods adapted from RNA-seq assume the majority of occupied genomic regions do not differ between experimental state. This may not hold for studies where large perurbations can have large scale globla impact on chromatin.
@@ -38,15 +38,18 @@ A wide variety of computational tools are available for differential analysis of
 * **Binding profile**
   * A narrow peak will identify smaller regions, whereas broad peaks can range between a few hundred to thousands of base pairs.   
 
- All of these aspects  make it challenging to know what the optimal computational tool is for differential enrichement analysis of your data.
+ All of these aspects  make it challenging to know what the optimal computational tool is for differential enrichement analysis of your data. A recent [study performed a comprehensive assessment of differential ChIP-seq tools](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02686-y). In this work the authors **evaluated the performance of 33 computational tools** using reference datasets obtained by in silico simulation of ChIP-seq. Tool performances were evaluated with precision-recall curves, and the accuracy of tested tools was assessed depending on peak shape and biological regulation scenario. The **decision tree** displayed below was generated based on the results of this study and is helpful in **providing recommendations**.
+
+<p align="center">
+<img src="../img/DiffEnrich_image.png"  width="850">
+</p>
+
+_Image source: [Eder T. and Grebian F., Genome Biology 2022](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02686-y)_ 
  
 
+In this workshop, we have chosen to use **[DiffBind](https://bioconductor.org/packages/devel/bioc/vignettes/DiffBind/inst/doc/DiffBind.pdf)** for the differential enrichment analysis. From the figure above we see that it appears to be a top 5 tool for every scenario. We will walk through the DiffBind pipeline to perform data exploration, conduct differential binding analysis, evaluate the results, and save the output. 
 
-
-
-
-In this session, we will use DiffBind for the differential analysis. We will walk through the pipeline to perform data exploration, conduct differential binding analysis, evaluate the results, and save the output. 
-
+## DiffBind
 DiffBind is an R Biocondutor package designed to identify genomic sites that are differentially enriched between sample groups. It works primarily with sets of peak calls ('peaksets'), which represent candidate protein binding sites as genomic intervals for each sample. DiffBind provides a range of functionalities that support the processing of peaksets, including:
 
 - Overlapping and merging peaksets across an entire dataset.
