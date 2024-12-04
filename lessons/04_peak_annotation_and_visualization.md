@@ -85,7 +85,7 @@ annot_WT1@anno %>%
 
 The annotation output file retains all the information from the peak file and also reports the annotation information. The nearest genes, their position and strand information along with the distance from peak to the TSS of its nearest gene is also reported.  For annotating genomic regions, `annotatePeak()` will not only give the gene information but also reports detailed information when genomic region is Exon or Intron. For example, ‘Exon (ENSMUST00000144339.1/ENSMUST00000144339.1, exon 1 of 3’, means that the peak overlaps with the 1st of 3 exons that transcript possesses.
 
-To view a genomic annotation summary, we can just type out the variable name. We see that a fairly large proportion of our peaks for WT replicate 1 are in promotor regions, but there are also equallly high percentages in intronic and distal intergenic regions. 
+To view a genomic annotation summary, we can just type out the variable name. We see that a fairly large proportion of our peaks for WT replicate 1 are in promotor regions, but there are also equallly high percentages in intronic and distal intergenic regions. This result is in line with what we know about the H3K27Ac mark; studies have shown that it localizes to active enhancers, supe enhancers and promoters to activate gene expression.
 
 ```{r}
 annot_WT1
