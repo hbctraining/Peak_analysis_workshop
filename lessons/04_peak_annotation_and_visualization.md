@@ -10,11 +10,12 @@ Approximate time: 45 minutes
 
 ## Learning Objectives
 
-* Annotate peaks with genomic features using Chipseeker
+* Annotate peaks with genomic features using ChIPseeker
 * Visualize annotations and compare peak coverage between experimental groups
 
 
 ## Peak annotation 
+
 Understanding the biological questions addressed by ChIP-seq experiments begins with annotating the genomic regions we have identifed as peaks with genomic context. 
 
 
@@ -24,7 +25,7 @@ In order to interpret these binding regions, a number of different peak annotati
 
 **How do peak annotation tools work?**
 
-Because many cis-regulatory elements are close to transcription start sites of their targets, it is common to associate each peak to its nearest gene, either upstream or downstream. Annotation tools  **apply methods to calculate the nearest TSS to the given genomic coordinates and annotates the peak with that gene**. However, problems exist in regions where multiple genes are located in close proximity. Different tools address this complex issue using different approaches and this can result in varying results.
+Because many cis-regulatory elements are close to transcription start sites of their targets, it is common to associate each peak to its nearest gene, either upstream or downstream. Annotation tools  **apply methods to calculate the nearest TSS to the given genomic coordinates and annotate the peak with that gene**. However, problems exist in regions where multiple genes are located in close proximity. Different tools address this complex issue using different approaches and this can result in varying results.
 
 <p align="center">
 <img src="../img/nearest_gene_image.png"  width="800">
@@ -34,11 +35,12 @@ _Image source: Welch R.P. et al, Nucleic Acids Research, 2014 [doi: 10.1093/nar/
 
 
 ## Annotating peaks 
+
 In this workshop we will use an R Bioconductor package called **[ChIPseeker](https://bioconductor.org/packages/release/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html) to annotate peaks, visualize features, and compare profiles**. Some features of ChIPseeker include:
 
-* Comparing results in batch; across replicates or between experimental groups
-* Perform functional annotations, and infer cooperative regulation
-* Support querying the GEO database to compare experimental datasets with publicly available ChIP-seq data and offers statistical testing for significant overlaps among datasets.
+* Comparing results in batch; across replicates or between experimental groups.
+* Perform functional annotations and infer cooperative regulation.
+* Support querying the GEO database to compare experimental datasets with publicly available ChIP-seq data and offer statistical testing for significant overlaps among datasets.
 
 ### Setting up
 Let's open up a new script file and call it `peak_annotation.R`. Add a title to the script and as usual we will begin with loading required libraries:
@@ -55,37 +57,33 @@ library(tidyverse)
 
 > **NOTE:** The `readPeakFile()` function allows us to load peaks from a BED file. It will convert the BED file into GRanges object. **However, we already have all of our peak data loaded in our environment as GRanges object from the previous lesson.**
 
-First, we will need to assign the **annotation database** to a variable. Bioconductor provides a whole host of [different annotataion packages](https://www.bioconductor.org/packages/release/data/annotation/) which range across many organisms. The specific database that is required by ChIPseeker is the `TxDb` family of annotation databases. For commonly used genome versions and organisms there are 
- options available for use (for example `TxDb.Mmusculus.UCSC.mm10.knownGene` for mouse, and `TxDb.Hsapiens.UCSC.hg38.knownGene` for human). However, there is also an option for users to prepare prepare their own database object using UCSC Genome Bioinformatics and BioMart database in R with `makeTxDbFromBiomart()` and `makeTxDbFromUCSC.TxDb()` functions.
+First, we will need to assign the **annotation database** to a variable. Bioconductor provides a whole host of [different annotation packages](https://www.bioconductor.org/packages/release/data/annotation/) that range across many organisms. The specific database that is required by ChIPseeker is the `TxDb` family of annotation databases. For commonly used genome versions and organisms there are options available for use (for example, `TxDb.Mmusculus.UCSC.mm10.knownGene` for mouse, and `TxDb.Hsapiens.UCSC.hg38.knownGene` for human). However, there is also an option for users to prepare prepare their own database object using UCSC Genome Bioinformatics and BioMart database in R with `makeTxDbFromBiomart()` and `makeTxDbFromUCSC.TxDb()` functions.
 
 ```{r}
 # Set the annotation database
 txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
 ```
 
-Now let's annotate our peaks!  Annotation of the peaks to the nearest gene and for various genomic characteristics is performed by `annotatePeak()` function. By default TSS region is defined as -3kb to +3kb, however users can define this region as desired. The result of the annotation comes in csAnno (a special format for ChIP-seq annotation). This can be converted to GRanges with `as.GRanges()` format and to data frame with `as.data.frame()` function. We will begin with annotating peaks from a single sample:
-
+Now let's annotate our peaks!  Annotation of the peaks to the nearest gene and for various genomic characteristics is performed by the `annotatePeak()` function. By default, the TSS region is defined as -3kb to +3kb; however, users can define this region as desired. The result of the annotation comes in csAnno (a special format for ChIP-seq annotation). This can be converted to GRanges with the `as.GRanges()` function and to data frame with the `as.data.frame()` function. We will begin with annotating peaks from a single sample:
 
 ```{r}
 # Annotate Peaks 
-annot_WT1 <- annotatePeak(WT_H3K27ac_ChIPseq_REP1, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
+annot_WT1 <- annotatePeak(WT_H3K27ac_ChIPseq_REP1, tssRegion=c(-3000, 3000), TxDb=txdb, annoDb="org.Mm.eg.db")
 
 # View the result
 annot_WT1@anno %>% 
   data.frame() %>% View()
 ```
 
-> Note: The parameter `annoDb` is optional, if provided extra information about the annotation including gene symbol, genename, ensembl/entrezid will be added in extra columns.
-
+> Note: The parameter `annoDb` is optional; if provided, extra information about the annotation including gene symbol, gene name, and ensembl/entrez id will be added in extra columns.
 
 <p align="center">
 <img src="../img/anno_resullt_table.png"  width="800">
 </p>
 
+The annotation output file retains all the information from the peak file and also reports the annotation information. The nearest genes, their position and strand information, along with the distance from peak to the TSS of its nearest gene is also reported. For annotating genomic regions, `annotatePeak()` will not only give the gene information but also reports detailed information when genomic regions are exonic or intronic. For example, ‘Exon (ENSMUST00000144339.1/ENSMUST00000144339.1, exon 1 of 3’, means that the peak overlaps with the first of 3 exons that transcript possesses.
 
-The annotation output file retains all the information from the peak file and also reports the annotation information. The nearest genes, their position and strand information along with the distance from peak to the TSS of its nearest gene is also reported.  For annotating genomic regions, `annotatePeak()` will not only give the gene information but also reports detailed information when genomic region is Exon or Intron. For example, ‘Exon (ENSMUST00000144339.1/ENSMUST00000144339.1, exon 1 of 3’, means that the peak overlaps with the 1st of 3 exons that transcript possesses.
-
-To view a genomic annotation summary, we can just type out the variable name. We see that a fairly large proportion of our peaks for WT replicate 1 are in promotor regions, but there are also equallly high percentages in intronic and distal intergenic regions. This result is in line with what we know about the H3K27Ac mark; studies have shown that it localizes to active enhancers, supe enhancers and promoters to activate gene expression.
+To view a genomic annotation summary, we can just type out the variable name. We see that a fairly large proportion of our peaks for WT replicate 1 are in promoter regions, but there are also equally high percentages in intronic and distal intergenic regions. This result is in line with what we know about the H3K27Ac mark; studies have shown that it localizes to active enhancers, super enhancers, and promoters to activate gene expression.
 
 ```{r}
 annot_WT1
@@ -110,6 +108,7 @@ Genomic Annotation Summary:
 ```
 
 ## Annotation visualization
+
 There are several functions for visualization provided by ChIPseeker package to effectively visualize annotation of various genomic features. We will go through some of these options below.
 
 ### Piechart
@@ -138,7 +137,6 @@ plotAnnoBar(annot_WT1)
 
 
 ### UpsetR
-
 Annotation overlaps can be visualized by upsetR plot. Here, we use a function from ChIPseeker that grabs the required data and formats it to be compatible with UpSetR and draws the plot. With this plot we can see that there are many peaks that contain more than one annotation. We can observe the counts for various combinations of annotations.
 
 ```{r}
@@ -151,7 +149,6 @@ upsetplot(annot_WT1)
 
 
 ### Distribution of TF-binding loci with respect to TSS
-
 The distance between the peak and the TSS of the nearest gene is also reported in the annotation output and can be visualzed with a barplot.
 
 ```{r}
@@ -164,7 +161,8 @@ plotDistToTSS(annot_WT1)
 
 
 ## Visualizing multiple samples
-These are all great ways to visualize the information from our annotation table, however so far we have only done this for a single sample. It would be very helpful to create similar plots after collating annotations across all samples in our dataset. In this way, we can **assess consistencies across replicates within a group and compare samples between groups.**
+
+These are all great ways to visualize the information from our annotation table; however, so far we have only done this for a single sample. It would be very helpful to create similar plots after collating annotations across all samples in our dataset. In this way, we can **assess consistencies across replicates within a group and compare samples between groups.**
 
 In order to do this, we will first combine the GRanges objects for each samples into a list and then annotate each sample using `lapply()`.
 
@@ -207,11 +205,11 @@ plotDistToTSS(peakAnnoList)
 <img src="../img/dist_TSS_allsamples.png"  width="600">
 </p>
 
-By plotting all samples together, we can easily identify trends. Overall, there are **not dramatic differences** between the WT and cKO groups. This is not surprising since we are comparing enrichment from the same histone mark with slightly different conditions. We do see a **small shift in the promoter regions**, that is less enrichment is observed around the TSS in WT compared to cKO. There may be subtle differences that will be more clearly visible when we drill down to individual regions.
+By plotting all samples together, we can easily identify trends. Overall, there are **not dramatic differences** between the WT and cKO groups. This is not surprising since we are comparing enrichment from the same histone mark with slightly different conditions. We do see a **small shift in the promoter regions**; that is, less enrichment is observed around the TSS in WT compared to cKO. There may be subtle differences that will be more clearly visible when we drill down to individual regions.
 
 ## Visualizing enrichment around the TSS
-To plot the binding around the TSS region, we need to first prepare the TSS regions using `getPromoters()`. To identify TSS regions we set up the flanking regions of 2000bp upstream and 2000bp downstream. Take a look at `promoter` after running the code below. You should see that we have created a GRanges object that contains **the start and end location for all TSSs in the mouse genome**. 
 
+To plot the binding around the TSS region, we need to first prepare the TSS regions using `getPromoters()`. To identify TSS regions we set up the flanking regions of 2000bp upstream and 2000bp downstream. Take a look at `promoter` after running the code below. You should see that we have created a GRanges object that contains **the start and end location for all TSSs in the mouse genome**. 
 
 ```{r}
 # Get promoters
@@ -243,10 +241,10 @@ Next, we align the peaks that are mapping to these regions, and generate the tag
 tagMatrix_wt1 <- getTagMatrix(WT_H3K27ac_ChIPseq_REP1, windows = promoter)
 ```
 
-> **NOTE:** This tag matrix is an estimate of read count frequency because it is based on peak overlaps. You can create a similar matrix using the actual read pileup data from BAM files using the [deepTools suite](https://deeptools.readthedocs.io/en/develop/content/tools/computeMatrix.html). The software also had commands for creating the profile plots and heatmaps described below. _This is computationaly expensive and so you will want to use an HPC to run this ._ For more information see [our materials linked here](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/09_data_visualization.html#evaluating-signal-in-prdm16-binding-sites).
+> **NOTE:** This tag matrix is an estimate of read count frequency because it is based on peak overlaps. You can create a similar matrix using the actual read pileup data from BAM files using the [deepTools suite](https://deeptools.readthedocs.io/en/develop/content/tools/computeMatrix.html). The software also has commands for creating the profile plots and heatmaps described below. _This is computationaly expensive and so you will want to use an HPC to run this._ For more information see [our materials linked here](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/09_data_visualization.html#evaluating-signal-in-prdm16-binding-sites).
 
 ### Profile plots
-Now, that we have a tagMatrix we can use this to create a profile plot. On the x-axis we have the genomic region where the limits will depend on what you set as your flanking regions. On that y-axis we have the read count for each base within that window, scaled across all promoter regions. 
+Now that we have a tagMatrix, we can use this to create a profile plot. On the x-axis, we have the genomic region, where the limits will depend on what you set as your flanking regions. On the y-axis, we have the read count for each base within that window, scaled across all promoter regions. 
 
 With these plots the **confidence interval is estimated by bootstrap method (1000 iterations) and is shown in the grey shading** that follows the curve. The WT1 peaks exhibit a nice narrow peak at the TSS with small confidence intervals.
 
@@ -266,7 +264,7 @@ plotAvgProf(tagMatrix_wt1, xlim=c(-2000, 2000),
 The heatmap is another method of visualizing the read count frequency relative to the TSS. **This function requires a lot of memory to run.** If you are trying it we recommend increasing your maximum memory using `memory.limit(size=memory_on_your_laptop)`. 
 
 ```
-# Plot heatmap - this may not plot it requires alot o memory!
+# Plot heatmap - this may not plot as it requires a lot of memory!
 tagHeatmap(tagMatrix_wt1)
 ```
 
@@ -274,12 +272,12 @@ tagHeatmap(tagMatrix_wt1)
 <img src="../img/Chipseq_tagheatmap4.png"  width="500">
 </p>
 
-> **NOTE:** Heatmaps can also be created for other genomic regions using the `peakHeatmap()` function. This fucntion reads directly from BED file and has parameters to specify `by` and `type`, and example would be to look at read denisty across gene bodies. for more information take a look at the [ChIPseeker vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html#profile-of-chip-peaks-binding-to-body-regions).
+> **NOTE:** Heatmaps can also be created for other genomic regions using the `peakHeatmap()` function. This function reads directly from the BED file and has parameters to specify `by` and `type`. An example would be to look at read density across gene bodies. For more information take a look at the [ChIPseeker vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html#profile-of-chip-peaks-binding-to-body-regions).
 
-### Profle plots and heatmaps across multiple samples
+### Profile plots and heatmaps across multiple samples
 As we showed previously with some of the annotation visualizations, we can also plot samples together in a single plot. This provides ease in direct comparisons. In order to do this, we first need to create a list of tagMatrices for ech of our samples.
 
-**We suggest not running the code below if you are using your local laptop.** It may crash your RStudio session  as it requires alot of memory!
+**We suggest not running the code below if you are using your local laptop.** It may crash your RStudio session as it requires alot of memory!
 
 ```r
 # Create a tagMatrix for each sample
@@ -296,7 +294,6 @@ plotAvgProf(tagMatrixList, xlim=c(-2000, 2000))
 <p align="center">
 <img src="../img/plot_profile_singleplot.png"  width="500">
 </p>
-
 
 ```r
 # Plot profile plots, faceted by row
@@ -317,7 +314,7 @@ tagHeatmap(tagMatrixList)
 **ADD FIGURE HERE**
 
 ## Summary
-Overall, the annotation and visualizations are in line with our expectations for an H3K27Ac binding profile. H3K27ac is associated with the higher activation of transcription and is therefore defined as an active enhancer mark. H3K27ac is found at both proximal and distal regions of transcription start site (TSS), and we saw high percentages of peaks annotated at both regions. The ChIPseeker package has additional functionality that we did not explore due to limits in computational resources. We encourage you to peruse [the vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html) for more information and explore other tools for visualization.
+Overall, the annotation and visualizations are in line with our expectations for an H3K27ac binding profile. H3K27ac is associated with the higher activation of transcription and is therefore defined as an active enhancer mark. H3K27ac is found at both proximal and distal regions of transcription start site (TSS), and we saw high percentages of peaks annotated at both regions. The ChIPseeker package has additional functionality that we did not explore due to limits in computational resources. We encourage you to peruse [the vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html) for more information and explore other tools for visualization.
 
 [Back to the Schedule](../schedule/README.md) 
 
