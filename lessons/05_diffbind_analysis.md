@@ -4,7 +4,7 @@ author: "Heather Wick, Upendra Bhattarai, Meeta Mistry"
 date: "Aug 16th, 2024"
 ---
 
-Contributors: Heather Wick, Upendra Bhattarai, Meeta Mistry
+Contributors: Upendra Bhattarai, Meeta Mistry
 
 Approximate time: 
 
@@ -15,48 +15,35 @@ Approximate time:
 * Interpret results and export output for further downstream analysis.
 
 
-## Overview
+## Differential enrichment analysis
 
-Differential binding analysis aims to detect and quantify changes in protein-DNA interactions between sample groups. In this dataset, two sample groups—**Wild Type (WT)** and **PRDM Knockout (KO)**—were processed using chromatin immunoprecipitation for the **H3K27Ac mark** followed by sequencing. This analysis identifies genomic locations where binding signals significantly differ between WT and KO, allowing us to assess and quantify these differences.
+Differential enrichment analysis is a powerful computational approach used to identify variations in protein-DNA binding events across different biological conditions, such as treatments, disease states, or cell types. It is applicable for datasets in which more than one sample class is being evaluated and best results are acheived in cases where each sample class has biological replicates. By **comparing enriched regions of the genome—where proteins like transcription factors or histone modifications are bound—researchers can pinpoint specific genomic sites that exhibit statistically significant changes in binding between the conditions being studied**. 
+
+In our dataset we have samples from two different conditions; wildtype and the conditional knockout of PRDM16 (cKO).This analysis will be helpful in understanding the transcriptional programs impacted during cortical development when PRDM16 is non-functional. 
+
+**INSERT WORKFLOW IMAGE HERE**
+
 
 ## Tools for evaluating differential enrichment
+A wide variety of computational tools are available for differential analysis of ChIP-seq experiments. Each of these tools differ in the underlying algorithms and the assumptions of the data, as such this results in challenge of knowing which tool is right for your condition. Below we list some things to consider when evaluating the different apporaches:
 
-A large number of algorithms and tools exists for quantitative comparison of ChIP-seq data. 
+* **Peak calls or alignment files**
+  * Some tools require peaks to be called prior to differntial enrichment analysis, while others implement their own detection method or work using sliding windows.
+* ***Statistical distribution**
+  * Use of a Poisson distribution or on a more flexible negative binomial distribution.
+* **Assumptions of the data**
+  * Methods adapted from RNA-seq assume the majority of occupied genomic regions do not differ between experimental state. This may not hold for studies where large perurbations can have large scale globla impact on chromatin.
+* **Biological replicates**
+  * Some tools work in the absence of replicates for each condition, and others require replicates to provide differential analysis.
+* **Binding profile**
+  * A narrow peak will identify smaller regions, whereas broad peaks can range between a few hundred to thousands of base pairs.   
 
-| **Peak Dependent Tools**  | **Peak Independent Tools** |
-|---------------------------|----------------------------|
-| ChIPComp                  | bdgdiff/MACS2              |
-| DiffBind                  | ChIPDiff                   |
-| DESeq2                    | ChiPnorm                   |
-| uniquepeak                | chromstaR                  |
-| DiffReps                  | csaw                       |
-| edgeR                     | diffReps                   |
-| HOME/Rep                  | EpiCenter                  |
-| MAnorm                    | GenoGAM                    |
-| MAnorm2                   | histoneHMM                 |
-| MMDiff                    | HMMcan                     |
-| narrowPeaks               | HOMER                      |
-|                           | MEDIPS                     |
-|                           | MultiGPS                   |
-|                           | normR                      |
-|                           | ODIN                       |
-|                           | PePr                       |
-|                           | QChIPat                    |
-|                           | RSEG                       |
-|                           | SICER2                     |
-|                           | slidingwindow              |
-|                           | THOR                       |
+ All of these aspects  make it challenging to know what the optimal computational tool is for differential enrichement analysis of your data.
+ 
 
-Some tools require a priori peak calling, while others do not need peak calling to be performed beforehand. Although these tools operate differently, they share the same overarching goal: identify differential enrichment. The coice of tool depends on your dataset and the biological question being addressed. 
-Consider the following factors:
 
-- What inputs are required by the user? Some tools require preliminary detection of enriched regions by external peak-calling algorithms, while others implement their own detection method.
-  
-- Does the tool facilitate the use of replicates within each sample group?
-  
-- What is the underlying statistical model used for signal distribution? Is it based either on the Poisson distribution or on a more flexible negative binomial distribution.
-  
-- Some tools have been specifically designed for particular ChIP-seq data (signal type), such as histone modifications or transcription factor (TF) binding.
+
+
 
 In this session, we will use DiffBind for the differential analysis. We will walk through the pipeline to perform data exploration, conduct differential binding analysis, evaluate the results, and save the output. 
 
