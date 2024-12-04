@@ -89,7 +89,9 @@ samples <- read.csv("data/DiffBind/metadata.csv")
 names(samples)
 ```
 
-```{r, output}
+Output:
+
+```{r}
 [1] "SampleID"   "Tissue"     "Factor"     "Condition"  "Replicate"  "bamReads"   "ControlID"  "bamControl" "Peaks"      "PeakCaller"
 ```
 
@@ -161,6 +163,7 @@ dbObj
 ```
 
 Output:
+
 ```
 6 Samples, 85868 sites in matrix:
         ID Tissue  Factor Condition Replicate    Reads FRiP
@@ -185,7 +188,7 @@ libsizes
 
 Output:
 
-```
+```{r}
          LibReads FRiP peakReads
 WT_REP1  14916464 0.20   2983293
 WT_REP2  21174308 0.18   3811375
@@ -202,6 +205,7 @@ We can use Principal Component Analysis (PCA) to explore the sample similarity. 
 # PCA plot
 dba.plotPCA(dbObj, attributes=DBA_CONDITION, label=DBA_ID, score = DBA_SCORE_NORMALIZED, labelSize = 0.6)
 ```
+
 <p align="center">
 <img src="../img/diffbind_pca.png"  width="500">
 </p>
@@ -236,7 +240,7 @@ dbObj <- dba.contrast(dbObj, categories = DBA_CONDITION)
 dbObj
 ```
 
-```{r, output}
+```{r}
 6 Samples, 85868 sites in matrix:
         ID Tissue  Factor Condition Replicate    Reads FRiP
 1  WT_REP1 PRDM16 H3K27ac        WT         1 14916464 0.20
@@ -266,7 +270,7 @@ dbObj <- dba.analyze(dbObj, method = DBA_ALL_METHODS, bGreylist = FALSE, bBlackl
 >
 > Within DiffBind blacklist regions for many reference genomes identified as part of the ENCODE project can be accessed through the `dba.blacklist()` function. As for greylist filtering, if the control samples are available, one can prepare regions to be excluded specific to the experiment using the [`GreyListChIP` package](https://www.bioconductor.org/packages/release/bioc/html/GreyListChIP.html).
 
-Now let's **extract summary** of the analysis with `dba.show()` function. The default significance threshold is padj <0.05
+Let's **extract summary** of the analysis with `dba.show()` function. The default significance threshold is padj <0.05
 
 ```{r}
 # Extract summary
@@ -278,7 +282,7 @@ de_summary
      Factor Group Samples Group2 Samples2 DB.edgeR DB.DESeq2
 1 Condition   cKO       3     WT        3     3244       925
 ```
-Here, **DESeq2 identifies fewer peaks than edgeR**, reflecting its more stringent. This is not unusual, as we also see a lack of complete agreement with these tools with RNA-seq analyses.
+Here, **DESeq2 identifies fewer peaks than edgeR**, reflecting it is a more stringent approach. This is not unusual, as we also see a lack of complete agreement with these tools with RNA-seq analyses.
 
 ***
 
@@ -297,6 +301,7 @@ Perhaps you are curious if there is any consensus in result from the two differn
 # Overlap between edgeR and DESeq2 results
 dba.plotVenn(dbObj, contrast = 1, method = DBA_ALL_METHODS)
 ```
+
 <p align="center">
 <img src="../img/diffbind_venn_deseq2_edgeR.png"  width="500">
 </p>
@@ -370,7 +375,7 @@ This **produces a GRanges object** with genomic coordinates and binding statisti
 res_deseq
 ```
 
-```{r, output}
+```{r}
 GRanges object with 85868 ranges and 6 metadata columns:
               seqnames              ranges strand |      Conc  Conc_cKO   Conc_WT         Fold     p-value         FDR
                  <Rle>           <IRanges>  <Rle> | <numeric> <numeric> <numeric>    <numeric>   <numeric>   <numeric>
