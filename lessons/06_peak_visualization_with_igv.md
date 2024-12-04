@@ -165,11 +165,25 @@ We discuss an alternative way of generating BigWig files in our <a href="https:/
 
 ### Load a track
 
-REP 3
+Now that we have the data that we would like to visualize, let's go ahead and load it into IGV. Many file formats you load into IGV will load as a single "track", or horizonatla row of genomic data. However some, like BAM/SAM, will load as multiple tracks. Let's go ahead and load the BigWig track for our cKO IP replicate 3 sample.
 
-narrowPeak - cKO
+In order to load a track, left-click on "File" in the top-left and select "Load from File...":
 
-BigWig track -cKO
+<p align="center">
+<img src="../img/IGV_File_load_track_with_caption.png"  width="600">
+</p>
+
+Next, navigate in your file browser to the file you'd like to load, then left-click to select it and left-click "Open". In this case we are trying to open the file called "cKO_H3K27ac_ChIPseq_REP3.bigWig", which should be inside your "bigWig" directory within your "data" directory:
+
+<p align="center">
+<img src="../img/IGV_select_track_with_caption.png"  width="600">
+</p>
+
+After loading the cKO IP replicate 3 BigWig track, your IGV session should look like:
+
+<p align="center">
+<img src="../img/IGV_loaded_track_with_caption.png"  width="600">
+</p>
 
 ### Exercise 
 
