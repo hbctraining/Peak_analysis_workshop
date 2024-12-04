@@ -15,7 +15,12 @@ Approximate time: 45 minutes
 
 
 ## Peak annotation 
-Understanding the biological questions addressed by ChIP-seq experiments begins with annotating the genomic regions we have identifed as peaks with genomic context. In order to interpret these binding regions, a number of different peak annotation tools exist. Some examples include [Homer](http://homer.ucsd.edu/homer/motif/), [GREAT](https://pmc.ncbi.nlm.nih.gov/articles/PMC4840234/) (a web-based tool), [ChIPpeakAnno](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPpeakAnno/inst/doc/ChIPpeakAnno.html) and [ChIPseeker](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html). 
+Understanding the biological questions addressed by ChIP-seq experiments begins with annotating the genomic regions we have identifed as peaks with genomic context. 
+
+
+**INSERT WORKFLOW SUBSET IMAGE HERE**
+
+In order to interpret these binding regions, a number of different peak annotation tools exist. Some examples include [Homer](http://homer.ucsd.edu/homer/motif/), [GREAT](https://pmc.ncbi.nlm.nih.gov/articles/PMC4840234/) (a web-based tool), [ChIPpeakAnno](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPpeakAnno/inst/doc/ChIPpeakAnno.html) and [ChIPseeker](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html). 
 
 **How do peak annotation tools work?**
 
@@ -284,12 +289,22 @@ tagMatrixList <- lapply(samples_list, getTagMatrix, windows=promoter)
 Once we have that, we can create a single plot with each sample line with a different color. Alternatively, we can create each profile  plot separately and facet by row as displayed below.
 
 ```r
+# Plot profile plots, multiple lines in a single plot
+plotAvgProf(tagMatrixList, xlim=c(-2000, 2000))
+```
+
+<p align="center">
+<img src="../img/plot_profile_singleplot.png"  width="500">
+</p>
+
+
+```r
 # Plot profile plots, faceted by row
 plotAvgProf(tagMatrixList, xlim=c(-2000, 2000), conf=0.95,resample=500, facet="row")
 ```
 
 <p align="center">
-<img src="../img/Chipseq_av.profiles_all.png"  width="600">
+<img src="../img/Profile_pplots_allsamples.png"  width="500">
 </p>
 
 We can also plot multiple heatmaps drawn side by side:
