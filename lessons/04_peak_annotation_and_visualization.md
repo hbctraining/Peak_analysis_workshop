@@ -15,7 +15,11 @@ Approximate time: 45 minutes
 
 
 ## Peak annotation 
-Understanding the biological questions addressed by ChIP-seq experiments begins with annotating the genomic regions we have identifed as peaks with genomic context. In order to interpret these binding regions, a number of different peak annotation tools exist. Some examples include [Homer](http://homer.ucsd.edu/homer/motif/), [GREAT](https://pmc.ncbi.nlm.nih.gov/articles/PMC4840234/) (a web-based tool), [ChIPpeakAnno](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPpeakAnno/inst/doc/ChIPpeakAnno.html) and [ChIPseeker](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html). Because many cis-regulatory elements are close to transcription start sites of their targets, it is common to associate each peak to its nearest gene, either upstream or downstream. Annotation tools  **apply methods to calculate the nearest TSS to the given genomic coordinates and annotates the peak with that gene**. However, problems exist in regions where multiple genes are located in close proximity. Different tools address this complex issue using different approaches and this can result in varying results.
+Understanding the biological questions addressed by ChIP-seq experiments begins with annotating the genomic regions we have identifed as peaks with genomic context. In order to interpret these binding regions, a number of different peak annotation tools exist. Some examples include [Homer](http://homer.ucsd.edu/homer/motif/), [GREAT](https://pmc.ncbi.nlm.nih.gov/articles/PMC4840234/) (a web-based tool), [ChIPpeakAnno](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPpeakAnno/inst/doc/ChIPpeakAnno.html) and [ChIPseeker](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html). 
+
+**How do peak annotation tools work?**
+
+Because many cis-regulatory elements are close to transcription start sites of their targets, it is common to associate each peak to its nearest gene, either upstream or downstream. Annotation tools  **apply methods to calculate the nearest TSS to the given genomic coordinates and annotates the peak with that gene**. However, problems exist in regions where multiple genes are located in close proximity. Different tools address this complex issue using different approaches and this can result in varying results.
 
 <p align="center">
 <img src="../img/nearest_gene_image.png"  width="800">
@@ -46,16 +50,18 @@ library(tidyverse)
 
 > **NOTE:** The `readPeakFile()` function allows us to load peaks from a BED file. It will convert the BED file into GRanges object. **However, we already have all of our peak data loaded in our environment as GRanges object from the previous lesson.**
 
-First, we will need to assign the **annotation database** to a variable. Bioconductor provides the annotation database `TxDb` for commonly used genome versions to use for annotation in ChIPseeker, e.g. `TxDb.Mmusculus.UCSC.mm10.knownGene`, `TxDb.Hsapiens.UCSC.hg38.knownGene`, but users can also prepare prepare their own database object using UCSC Genome Bioinformatics and BioMart database in R with `makeTxDbFromBiomart()` and `makeTxDbFromUCSC.TxDb()` functions.
-
-Annotation of the peaks to the nearest gene and for various genomic characteristics is performed by `annotatePeak()` function. By default TSS region is defined as -3kb to +3kb, however users can define this region. The result of the annotation comes in csAnno (a special format for ChIP-seq annotation). This can be converted to GRanges with `as.GRanges()` format and to data frame with `as.data.frame()` function.
-
-Lets annotate our peakset:
+First, we will need to assign the **annotation database** to a variable. Bioconductor provides a whole host of [different annotataion packages](https://www.bioconductor.org/packages/release/data/annotation/) which range across many organisms. The specific database that is required by ChIPseeker is the `TxDb` family of annotation databases. For commonly used genome versions and organisms there are 
+ options available for use (for example `TxDb.Mmusculus.UCSC.mm10.knownGene` for mouse, and `TxDb.Hsapiens.UCSC.hg38.knownGene` for human). However, there is also an option for users to prepare prepare their own database object using UCSC Genome Bioinformatics and BioMart database in R with `makeTxDbFromBiomart()` and `makeTxDbFromUCSC.TxDb()` functions.
 
 ```{r}
 # Set the annotation database
 txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
+```
 
+Now let's annotate our peaks!  Annotation of the peaks to the nearest gene and for various genomic characteristics is performed by `annotatePeak()` function. By default TSS region is defined as -3kb to +3kb, however users can define this region as desired. The result of the annotation comes in csAnno (a special format for ChIP-seq annotation). This can be converted to GRanges with `as.GRanges()` format and to data frame with `as.data.frame()` function. We will begin with annotating peaks from a single sample:
+
+
+```{r}
 # Annotate Peaks 
 annot_WT1 <- annotatePeak(WT_H3K27ac_ChIPseq_REP1, tssRegion=c(-3000, 3000),TxDb=txdb, annoDb="org.Mm.eg.db")
 
