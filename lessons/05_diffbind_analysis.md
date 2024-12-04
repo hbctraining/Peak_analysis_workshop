@@ -134,23 +134,29 @@ This step is very **computationally intensive**, as such we will not run this co
 dbObj <- dba.count(dbObj, bParallel=FALSE) # This is the most computationally intensive part
 ```
 
+We have run this code for you on the O2 cluster and have saved the DiffBind object. The file is located in your working directory under `data/DiffBind` and we will have you load it in using the code below:
+
+```
+# Load in the existing DiffBind object
+dbObj <- readRDS("data/DiffBind/dbObj.rds")
+```
+
 > #### What are my options for normalization?
-> 
+> For each region the ChIP peak count is computed by subtracting out the background using `max(chip_counts - control_counts,1)`. Those values are  normalized based on sequencing depth. Normalization is discussed in great detail in Section 7 of the DiffBind vignette. Note that when running the differential analysis, the normalization applied will depend on the method (DESeq2 or edgeR), which is discussed later in the lesson.
+>
+> There is also an option for spike-in normalization. The spike-in strategy is based on the use of a fixed amount of exogenous chromatin from another species that is added to sample in an effort to control for technical variation. More information on how spike-in data is ideally, [this lesson](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/01b_experimental_design_considerations.html#spike-in-dna) is a good resource.
 
 ### Data exploration
-
 Before performing differential binding analysis, it is essential to explore the count matrix, examine various sample statistics, and assess the overall similarity between samples. 
 
-This initial step help us understand:
+This initial step can help us understand:
 
 - Which samples are similar to each other and which are different?
-  
 - What are the major sources of variation, and do they align with the expectations from the research design?
 
-Let's load the DiffBind object in our RStudio and examine it.
+Let's examine our DiffBind object:
 
 ```{r}
-dbObj <- readRDS("data/DiffBind/dbObj.rds")
 dbObj
 ```
 
@@ -166,9 +172,10 @@ Output:
 6 cKO_REP3 PRDM16 H3K27ac       cKO         3 16677061 0.20
 ```
 
-From this output, we observe 85,868 total sites in the consensus peaksets across six samples. The first five columns display the sample metadata provided in the sample sheet used to create the DiffBind object. The Reads column indicates the number of reads in each sample, while the FRiP score (Fraction of Reads in Peaks) shows the fraction of mapped reads falling into the consensus peaksets. Multiplying the number of reads by FRiP score gives the number of reads that overlap the consensus peaksets. We can calculate this using `dba.show` function.
+From this output, we observe **85,868 total sites in the consensus peaksets across six samples**. The first five columns display the sample metadata provided in the sample sheet used to create the DiffBind object. The Reads column indicates the number of reads in each sample, while the FRiP score (Fraction of Reads in Peaks) shows the fraction of mapped reads falling into the consensus peaksets. Multiplying the number of reads by FRiP score gives the number of reads that overlap the consensus peaksets. We can calculate this using `dba.show` function.
 
 ```{r}
+# Create a dataframe with total number of reads in our affinity matrix
 info <- dba.show(dbObj)
 libsizes <- cbind(LibReads=info$Reads, FRiP=info$FRiP, peakReads=round(info$Reads * info$FRiP))
 rownames(libsizes) <- info$ID
@@ -187,51 +194,44 @@ cKO_REP1 13292841 0.22   2924425
 cKO_REP2 13900397 0.20   2780079
 cKO_REP3 16677061 0.20   3335412
 ```
-### PCA
 
-We can use Principal Component Analysis (PCA) to explore the sample similarity. A PCA plot helps us determine how replicates cluster together and identifies the primary source of variation in the data. The `dba.plotPCA` function in DiffBind uses log2-normalized read counts by default.
+### PCA
+We can use Principal Component Analysis (PCA) to explore the sample similarity. A PCA plot helps us determine how replicates cluster together and identifies the primary source of variation in the data. The `dba.plotPCA()` function in DiffBind uses the log2-normalized read counts by default.
 
 ```{r}
+# PCA plot
 dba.plotPCA(dbObj, attributes=DBA_CONDITION, label=DBA_ID, score = DBA_SCORE_NORMALIZED, labelSize = 0.6)
 ```
 <p align="center">
-<img src="../img/diffbind_pca.png"  width="600">
+<img src="../img/diffbind_pca.png"  width="500">
 </p>
 
 
-In this data, PC1 explaining 32% of the variation, separates the WT and cKO samples, indicating that the primary source of variation in the dataset is the difference between conditions, PC2, accounting for 22% of the variation, shows slightly more variability in WT replicate 3 and cKO replicate 2 compared to their counterparts.
+In this data, PC1 is explaining 32% of the variation, and on this axis we observe a separation of the WT and cKO samples. This is a good indication that the primary source of variation in the dataset is the difference between conditions. PC2 is accounting for 22% of the variation. Here, we see that there is slightly more variability in WT replicate 3 and cKO replicate 2 compared to their counterparts.
 
 ### Correlation Heatmap
-Correlational heatmap visualizes the clustering of samples based on their similarity. This can be generated using the `dba.plotHeatmap` function.
+An inter-sample correlation heatmap visualizes the clustering of samples based on their similarity. This can be generated using the `dba.plotHeatmap()` function. Often, this plot will complement any trends we observe with PCA.
 
 ```{r}
+# Plot correlation heatmap
 dba.plotHeatmap(dbObj, ColAttributes = DBA_TISSUE,
                 score = DBA_SCORE_NORMALIZED)
 ```
 
 <p align="center">
-<img src="../img/diffbind_correlation_heatmap.png"  width="600">
+<img src="../img/diffbind_correlation_heatmap.png"  width="500">
 </p>
-
 
 From the heatmap, we observe that the replicates cluster together, as expected. Although there is variability between the replicates, the largest differences are between the two conditions (WT and cKO).
 
 
-Discussion:
-What do you think about sample concordance?
-Were these plots helpful?
+### Differential binding affinity analysis
+The core functionality of DiffBind is its ability to identify differentially bound sites; binding sites that exhibit statistically significant differences in binding affinity between sample groups. There are two tools that are used to find statisticaly different sites, DESeq2 and edgeR. By default DESeq2 is set with input substraction and library-size normalization automatically in its pipeline. Each tool assigns a p-value and FDR to candidate binding sites, indicating confidence in their differential binding status.
 
-
-## Differential binding affinity analysis
-
-The core functionality of DiffBind is its ability to identify differentially bound sites; binding sites that exhibit statistically significant differences in binding affinity between sample groups. DiffBind uses DESeq2 for differential binding analysis by default with input substraction and library-size normalization set automatically in its pipeline. Additionally, users have option to use edgeR within DiffBind. Each tool assigns a p-value and FDR to candidate binding sites, indicating confidence in their differential binding status.
-
-
-### Establishing a contrast
-
-Before running the differential binding analysis, we need to define the contrast; i.e. the groups of samples to be compared. In this example, the factor of interst is **Condition** (WT vs cKO). Contrasts are set using the `dba.contrast()` function, as follows:
+Before running the differential binding analysis, we need to **define the contrast**; i.e. the groups of samples to be compared. In this example, the factor of interest is **Condition** (WT vs cKO). Contrasts are set using the `dba.contrast()` function, as follows:
 
 ```{r}
+# Set contrasts
 dbObj <- dba.contrast(dbObj, categories = DBA_CONDITION)
 dbObj
 ```
@@ -253,40 +253,39 @@ Design: [~Condition] | 1 Contrast:
 
 If there are only two replicates in any group, specify `minMembers = 2` within `dba.contrast`. Here the design [~Condition] indicates that the analysis is focused on the **Condition**, with one contrast: cKO vs WT.
 
-
-### Differential analysis
-Now we can perform differential binding analysis using the `dba.analyze()` function. By default, this function applies both blacklist and greylist filtering, which are designed to exclude problematic regions in the genome.
-
-    Note: 
-      * **Blacklists:** are pre-defined lists of regions specific to a reference genome that are known to be problematic. The best known lists have been identified as part of the ENCODE project.
-    
-      * **Greylists:** are specific to a ChIP-seq experiment, and are derived from the controls generated as part of the experiment. The idea is to identify anomalous regions where a disproportionate degree of signal is present. These regions can then be excluded from subsequent analysis.
-
-`Blacklist` regions for many reference genomes identified as part of the ENCODE project can be accessed through the `dba.blacklist()` function in DiffBind. If the control samples are available, one can prepare regions to be excluded specific to the experiment. Those are called `Greylists` using the `GreyListChIP` package.
-
-Since the dataset has already undergone blacklist filtering via the nf-core pipeline, we can skip this step and proceed with the analysis.
+Now we can **perform differential binding** analysis using the `dba.analyze()` function. Note that we have opted to run both edgeR and DESeq2 by using `DBA_ALL_METHODS` By default, this function also applies both blacklist and greylist filtering, which are designed to exclude problematic regions in the genome. Since the dataset has already undergone blacklist filtering in the upstream workflow, we can skip this step and proceed with the analysis.
 
 ```{r}
+# Identify differentially bound regions
 dbObj <- dba.analyze(dbObj, method = DBA_ALL_METHODS, bGreylist = FALSE, bBlacklist = FALSE)
 ```
-Extract summary of the analysis with `dba.show()` function. The default significance threshold is padj <0.05
-
+**Extract summary** of the analysis with `dba.show()` function. The default significance threshold is padj <0.05
 
 ```{r}
+# Extract summary
 de_summary <- dba.show(dbObj, bContrasts = T, th=0.05)
 de_summary
 ```
-
 
 ```{r, output}
      Factor Group Samples Group2 Samples2 DB.edgeR DB.DESeq2
 1 Condition   cKO       3     WT        3     3244       925
 ```
-Here, DESeq2 identifies fewer peaks than edgeR, reflecting its more stringent. This is not unsual, as we also see a lack of complete agreement with these tools ub RNA-seq analyses.
+Here, **DESeq2 identifies fewer peaks than edgeR**, reflecting its more stringent. This is not unusual, as we also see a lack of complete agreement with these tools with RNA-seq analyses.
 
-Exercise:
+***
 
-- Try a more stringent threshold of 0.01 and a more lenient threshold of 0.1 and compare the differences between the differnetially bound sites between the conditions.
+**Exercise**
+
+1. Try summarizing results with a more stringent threshold of 0.01 and a more lenient threshold of 0.1 Compare the differences between the differntially bound sites between the conditions. Is it a dramatic difference in numbers?
+
+***
+
+  * **Blacklists:** are pre-defined lists of regions specific to a reference genome that are known to be problematic. The best known lists have been identified as part of the ENCODE project.
+    
+ * **Greylists:** are specific to a ChIP-seq experiment, and are derived from the controls generated as part of the experiment. The idea is to identify anomalous regions where a disproportionate degree of signal is present. These regions can then be excluded from subsequent analysis.
+
+`Blacklist` regions for many reference genomes identified as part of the ENCODE project can be accessed through the `dba.blacklist()` function in DiffBind. If the control samples are available, one can prepare regions to be excluded specific to the experiment. Those are called `Greylists` using the `GreyListChIP` package.
 
 ## Visualization
 
