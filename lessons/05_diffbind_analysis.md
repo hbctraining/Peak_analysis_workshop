@@ -50,49 +50,43 @@ _Image source: [Eder T. and Grebian F., Genome Biology 2022](https://genomebiolo
 In this workshop, we have chosen to use **[DiffBind](https://bioconductor.org/packages/devel/bioc/vignettes/DiffBind/inst/doc/DiffBind.pdf)** for the differential enrichment analysis. From the figure above we see that it appears to be a top 5 tool for every scenario. We will walk through the DiffBind pipeline to perform data exploration, conduct differential binding analysis, evaluate the results, and save the output. 
 
 ## DiffBind
-DiffBind is an R Biocondutor package designed to identify genomic sites that are differentially enriched between sample groups. It works primarily with sets of peak calls ('peaksets'), which represent candidate protein binding sites as genomic intervals for each sample. DiffBind provides a range of functionalities that support the processing of peaksets, including:
+DiffBind is an R Biocondutor package designed to identify genomic sites that are differentially enriched between sample groups. It works primarily with sets of peak calls ('peaksets'), which represent candidate protein binding sites as genomic intervals for each sample. **Biological replicates are required in order to run DiffBind analysis.** DiffBind provides a range of functionalities that support the processing of peaksets, including:
 
-- Overlapping and merging peaksets across an entire dataset.
-- Counting sequencing reads in overlapping intervals.
-- Identifying statistically significant differentially bound sites based on differences in read densities (a proxy for binding affinity).
+- Overlapping and merging peaksets across an entire dataset
+- Counting sequencing reads in overlapping intervals
+- Identifying statistically significant differentially bound sites based on differences in read densities (a proxy for binding affinity)
   
 We will discuss the importance of each step in the process, but for more detailed information please refer to the [DiffBind vignette](https://bioconductor.org/packages/devel/bioc/vignettes/DiffBind/inst/doc/DiffBind.pdf).
 
-### Required inputs:
+ The following **files are required as input** to run DiffBind:
 
-- bam files from the ChIP sample's read mapping.
-- bam files from the input sample's read mapping.
-- called peaks, output from peak caller.
+- Alignment files (BAM) from the ChIP sample
+- Alignment files (BAM) from the input sample
+- Peak file (BED file format) output from peak caller
 
-> Note: Peaks from replicates are used individually, not merged.
+> **NOTE:** Peaks from replicates are used individually, not merged.
 
-## Setting up
-
-We do not need to download any new data because all necessary files are already in the current project.
+### Setting up
 
 1. Open the R project `chipseq-project` in your RStudio environment.
 2. Open a new R script `'File' -> 'New File' -> 'Rscript'`, and save it as `diffbind.R`
 
-Now that we are setup, let's load the DiffBind and Tidyverse libraries.
+Let's begin with loading the DiffBind and Tidyverse libraries.
 
 ```{r}
+# Load libraries
 library(DiffBind)
 library(tidyverse)
 ```
 
-## Reading in the data
-The DiffBind pipeline starts with importing the required data (bam files and peaksets). Bam files are the alignment files of the samples to the reference and peaksets are derived from peak callers such as MACS. The easy way of importing these data is through a metadata file. We need to prepare a metadata file that includes one line for each peakset in a format compatible with DiffBind. 
-
-> Note: If multiple peak callers are used for comparison, each sample will have more than one line in the sample sheet. A merging function generates a consensus peakset for the experiment. 
-
-After reading in the peaksets, a merging function finds all overlapping peaks and derives a single set of unique genomic intervals, called the consensus peakset. A region is included in the consensus set if it appears in at least two samples. This consensus peakset represents the overall set of candidate binding sites further analysis.
+### Reading in the data
+The DiffBind pipeline starts with importing the required data (BAM files and peaksets). Rather than reading and loading in individaul samples from the dataset, DiffBind requires you to create a metadata file. This **metadata file creation is a critical step**, and if not done correctly can cause errors, preventing us from moving foward! 
 
 
-## Metadata format
-Let's read in our metadata and inspect the column headers to understand the required format DiffBind.
-
+This metadata file that includes one line for each ChIP peakset, with columns of information that we describe in more detail below. Let's read in our metadata and inspect the column headers to understand the required format for DiffBind.
 
 ```{r}
+# Read in samplesheet
 samples <- read.csv("data/DiffBind/metadata.csv")
 names(samples)
 ```
@@ -100,7 +94,6 @@ names(samples)
 ```{r, output}
 [1] "SampleID"   "Tissue"     "Factor"     "Condition"  "Replicate"  "bamReads"   "ControlID"  "bamControl" "Peaks"      "PeakCaller"
 ```
-
 
 An experiment will have multiple samples. Each sample needs a unique SampleID. A comparative analysis requires at least two samples in a class. Classes are indicated in the metadata as **Factor**, **Tissue**, **Condition**, **Treatment**
 
@@ -126,7 +119,13 @@ Id for the input control is given in `ControlID` column.
 
 Diffbind requires a called peaks for each sample. The aligned reads are used to call the peaks with the peak calling software such as MACS. The called peaks here are denoted in the `Peaks` column.
 
+
+After reading in the peaksets, a merging function finds all overlapping peaks and derives a single set of unique genomic intervals, called the consensus peakset. A region is included in the consensus set if it appears in at least two samples. This consensus peakset represents the overall set of candidate binding sites further analysis.
+
+
 ## Affinity binding matrix
+
+
 
 The initial steps of the pipeline can be computationally intensive, so they have been done for you, and the output saved as an `.rds` file in the data folder. Lets review these steps (Do NOT RUN).
 
