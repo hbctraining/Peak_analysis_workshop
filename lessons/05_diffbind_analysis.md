@@ -109,7 +109,7 @@ names(samples)
 
 Output:
 
-```{r, output}
+```{r}
 [1] "SampleID"   "Tissue"     "Factor"     "Condition"  "Replicate"  "bamReads"   "ControlID"  "bamControl" "Peaks"      "PeakCaller"
 ```
 
