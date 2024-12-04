@@ -6,13 +6,13 @@ date: "Aug 16th, 2024"
 
 Contributors: Upendra Bhattarai, Meeta Mistry
 
-Approximate time: 
+Approximate time: 70 minutes
 
 ## Learning Objectives
 
 * Perform exploratory data analysis using an affinity binding matrix
-* Learn to use DiffBind for differential binding analysis
-* Interpret results and export output for further downstream analysis
+* Demonstrate the use of DiffBind for differential binding analysis
+* Evaluate results and export output for further downstream analysis
 
 ## Differential enrichment analysis
 
