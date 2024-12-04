@@ -433,7 +433,7 @@ This produces a GRanges object with genomic coordinates and binding statistics, 
 res_deseq
 ```
 
-```{r, output}
+```{r}
 GRanges object with 85868 ranges and 6 metadata columns:
               seqnames              ranges strand |      Conc  Conc_cKO   Conc_WT         Fold     p-value         FDR
                  <Rle>           <IRanges>  <Rle> | <numeric> <numeric> <numeric>    <numeric>   <numeric>   <numeric>
