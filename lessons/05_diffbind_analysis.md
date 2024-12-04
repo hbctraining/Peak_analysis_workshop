@@ -404,9 +404,13 @@ Each of the **columns in the results are described below**:
 - **FDR**: False discovery rate after multiple correction
 
 
-We can convert the GRanges object to a data frame where the genomic coordinates get written as columns and can be saved as a table.
+First, we'll save the GRanges object to file for use during functional analysis. Then, we can convert the GRanges object to a data frame where the genomic coordinates get written as columns and can be saved as a tab-delimited file.
 
 ```{r}
+
+# Write GRanges to rds
+saveRDS(res_deseq, file = "all_res_deseq2.rds")
+
 # Write results to a file
 out <- as.data.frame(res_deseq)
 write.table(out, file="results/cKO_vs_WT_deseq2.txt", sep="\t", quote=F, row.names=F)
