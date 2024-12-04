@@ -35,7 +35,6 @@ library(clusterProfiler)
 res_deseq <- readRDS("res_all.rds")
 ```
 
-## Annotating Peaks with ChIPseeker
 The GRanges object `res_deseq` contains results from the Diffbind analysis, including genomic coordinates, fold change, p-values, and FDR for each analyzed site. Before functional analysis, we first need to annotate the genomic loci with their nearest gene names. We can do this using the `annotatePeak()` function in the ChIPseeker package.
 
 ```{r}
