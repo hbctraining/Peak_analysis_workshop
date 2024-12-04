@@ -185,6 +185,7 @@ dbObj
 ```
 
 Output:
+
 ```
 6 Samples, 85868 sites in matrix:
         ID Tissue  Factor Condition Replicate    Reads FRiP
@@ -208,7 +209,7 @@ libsizes
 
 Output:
 
-```
+```{r}
          LibReads FRiP peakReads
 WT_REP1  14916464 0.20   2983293
 WT_REP2  21174308 0.18   3811375
@@ -224,6 +225,7 @@ We can use Principal Component Analysis (PCA) to explore the sample similarity. 
 ```{r}
 dba.plotPCA(dbObj, attributes=DBA_CONDITION, label=DBA_ID, score = DBA_SCORE_NORMALIZED, labelSize = 0.6)
 ```
+
 <p align="center">
 <img src="../img/diffbind_pca.png"  width="600">
 </p>
@@ -266,7 +268,7 @@ dbObj <- dba.contrast(dbObj, categories = DBA_CONDITION)
 dbObj
 ```
 
-```{r, output}
+```{r}
 6 Samples, 85868 sites in matrix:
         ID Tissue  Factor Condition Replicate    Reads FRiP
 1  WT_REP1 PRDM16 H3K27ac        WT         1 14916464 0.20
@@ -287,10 +289,10 @@ If there are only two replicates in any group, specify `minMembers = 2` within `
 ### Differential analysis
 Now we can perform differential binding analysis using the `dba.analyze()` function. By default, this function applies both blacklist and greylist filtering, which are designed to exclude problematic regions in the genome.
 
-    Note: 
-      * **Blacklists:** are pre-defined lists of regions specific to a reference genome that are known to be problematic. The best known lists have been identified as part of the ENCODE project.
-    
-      * **Greylists:** are specific to a ChIP-seq experiment, and are derived from the controls generated as part of the experiment. The idea is to identify anomalous regions where a disproportionate degree of signal is present. These regions can then be excluded from subsequent analysis.
+>Note: 
+>* **Blacklists:** are pre-defined lists of regions specific to a reference genome that are known to be problematic. The best known lists have been identified as part of the ENCODE project.
+>  
+>* **Greylists:** are specific to a ChIP-seq experiment, and are derived from the controls generated as part of the experiment. The idea is to identify anomalous regions where a disproportionate degree of signal is present. These regions can then be excluded from subsequent analysis.
 
 `Blacklist` regions for many reference genomes identified as part of the ENCODE project can be accessed through the `dba.blacklist()` function in DiffBind. If the control samples are available, one can prepare regions to be excluded specific to the experiment. Those are called `Greylists` using the `GreyListChIP` package.
 
@@ -308,10 +310,11 @@ de_summary
 ```
 
 
-```{r, output}
+```{r}
      Factor Group Samples Group2 Samples2 DB.edgeR DB.DESeq2
 1 Condition   cKO       3     WT        3     3244       925
 ```
+
 Here, DESeq2 identifies fewer peaks than edgeR, reflecting its more stringent. This is not unsual, as we also see a lack of complete agreement with these tools ub RNA-seq analyses.
 
 Exercise:
@@ -327,6 +330,7 @@ Visualize overlaps of differentially bound sites identified by DESeq2 and edgeR 
 ```{r}
 dba.plotVenn(dbObj, contrast = 1, method = DBA_ALL_METHODS)
 ```
+
 <p align="center">
 <img src="../img/diffbind_venn_deseq2_edgeR.png"  width="600">
 </p>
