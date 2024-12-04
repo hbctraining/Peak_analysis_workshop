@@ -1,12 +1,12 @@
 ---
 title: "Annotation and differential enrichment analysis"
-author: "Heather Wick, Upendra Bhattarai, Meeta Mistry"
+author: "Upendra Bhattarai, Meeta Mistry"
 date: "Aug 16th, 2024"
 ---
 
-Contributors: Heather Wick, Upendra Bhattarai, Meeta Mistry
+Contributors: Upendra Bhattarai, Meeta Mistry
 
-Approximate time: 
+Approximate time: 40 minutes
 
 ## Learning Objectives
 
@@ -14,9 +14,65 @@ Approximate time:
 * Perform over-representation analysis using clusterProfiler on the significant genes from DiffBind.
 * Discuss the Functional analysis approaches and the biological insights from the analysis.
 
-## Overview
+## Functional analysis of differentially enriched regions
+At this point in the workflow we have a list of genomic regions that we know exhibit differences in enrichment between the WT and cKO samples. These coordinates do not give us much for biological context, and so a first step would be to **annotate these regions with nearest gene annotations** as we had done in a [previous lesson](04_peak_annotation_and_visualization.md). Once have target gene information we can use that to perform functional enrichment analysis to help **determine whether particular biological processes or pathways are being dysregulated**. This analysis provides insights into the collective function of a group of genes rather than focusing on individual genes.
 
-Functional enrichment analysis will determine whether some functions are enriched in the differentially bound sites. In this step, we will map the differentially bound sites to a functional annotation database and visualize the enrichment. This analysis provides insights into the collective function of a group of genes rather than focusing on individual genes.
+
+## Annotation of differentially enriched regions
+First, let's open an R script called `functional_analysis.R`. Inside we'll add a header and start with loading the required libraries. If you do not have the `res_deseq` object in your environment you can go ahead and load it in too.
+
+
+```{r}
+## Functional analysis of DE regions
+
+# Load libraries 
+library(GenomicRanges)
+library(ChIPseeker)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(clusterProfiler)
+
+# Load result from DiffBind analysis if not present in your environment
+res_deseq <- readRDS("res_all.rds")
+```
+
+## Annotating Peaks with ChIPseeker
+The GRanges object `res_deseq` contains results from the Diffbind analysis, including genomic coordinates, fold change, p-values, and FDR for each analyzed site. Before functional analysis, we first need to annotate the genomic loci with their nearest gene names. We can do this using the `annotatePeak()` function in the ChIPseeker package.
+
+```{r}
+# Add annotations to our DiffBind results
+annot_res_all <- annotatePeak(res_deseq, tssRegion = c(-3000, 3000), TxDb = TxDb.Mmusculus.UCSC.mm10.knownGene, annoDb = "org.Mm.eg.db")
+```
+
+We can visualize the annotation to better understand the distribution of genomic features among these regions.
+
+### Bar plot
+```{r}
+# Barplot
+plotAnnoBar(annot_res_all)
+```
+<p align="center">
+<img src="../img/Chipseq_featuredist.png"  width="600">
+</p>
+
+### Upset plot
+```{r}
+# UpSet plot
+upsetplot(annot_res_all)
+```
+<p align="center">
+<img src="../img/Chipseq_upsetR.png"  width="600">
+</p>
+
+### Distance to TSS
+```{r}
+plotDistToTSS(annot_res_all)
+```
+<p align="center">
+<img src="../img/Chipseq_tssdist.png"  width="600">
+</p>
+
+**SUMMARY?**
+
 
 Functional enrichment analysis typically involves three key decision steps:
 
@@ -59,67 +115,6 @@ The test produces a p-value for each category tested, and multiple testing corre
 
 Now, let's analyze our significantly differentially bound sites and their nearest gene annotations to determine if any GO terms are over-represented in our gene list of interest. 
 
-First, open an R script in RStudio and load the GRange object saved from the results of the DiffBind analysis along with the packages we will need.
-
-
-```{r}
-#Libraries to load if not already loaded
-library(GenomicRanges)
-library(ChIPseeker)
-library(TxDb.Hsapiens.UCSC.hg19.knownGene)
-library(clusterProfiler)
-
-# Load result from DiffBind analysis
-res_all <- readRDS("res_all.rds")
-```
-
-## Annotating Peaks with ChIPseeker
-
-Many annotation tools use nearest gene methods for assigning a peak to a gene in which the algorithm looks for the nearest TSS to the given genomic coordinates and annotates the peak with that gene. This can be misleading as binding sites might be located between two start sites of different genes.
-
-The `annotatePeak()` function, as part of the `ChIPseeker`///÷ package, uses the nearest gene method described above but also provides parameters to specify a max distance from the TSS. For annotating genomic regions, annotatePeak will not only give the gene information but also reports detail information when genomic region is Exon or Intron.
-
-This GRange object `res_all` contains results from the Diffbind analysis, including genomic coordinates, fold change, p-values, and FDR for each analyzed site. Before functional analysis, we need to annotate the genomic loci with their nearest gene names.
-
-```{r}
-annot_res_all <- annotatePeak(res_all, tssRegion = c(-3000, 3000), TxDb = TxDb.Mmusculus.UCSC.mm10.knownGene, annoDb = "org.Mm.eg.db")
-```
-
-## Visualization of Peak Annotation
-We can visualize the annotation to better understand the distribution of genomic features.
-
-### Pie chart
-```{r}
-plotAnnoPie(annot_res_all)
-```
-
-<p align="center">
-<img src="../img/Chipseq_piechart.png"  width="600">
-</p>
-
-### Bar plot
-```{r}
-plotAnnoBar(annot_res_all)
-```
-<p align="center">
-<img src="../img/Chipseq_featuredist.png"  width="600">
-</p>
-
-### Upset plot
-```{r}
-upsetplot(annot_res_all)
-```
-<p align="center">
-<img src="../img/Chipseq_upsetR.png"  width="600">
-</p>
-
-### Distance to TSS
-```{r}
-plotDistToTSS(annot_res_all)
-```
-<p align="center">
-<img src="../img/Chipseq_tssdist.png"  width="600">
-</p>
 
 ## Preparing Data for ORA
 
