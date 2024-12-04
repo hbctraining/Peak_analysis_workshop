@@ -107,34 +107,49 @@ samples <- read.csv("data/DiffBind/metadata.csv")
 names(samples)
 ```
 
+Output:
+
 ```{r, output}
 [1] "SampleID"   "Tissue"     "Factor"     "Condition"  "Replicate"  "bamReads"   "ControlID"  "bamControl" "Peaks"      "PeakCaller"
 ```
 
 
+
 An experiment will have multiple samples. Each sample needs a unique SampleID. A comparative analysis requires at least two samples in a class. Classes are indicated in the metadata as **Factor**, **Tissue**, **Condition**, **Treatment**
 
+
 - **Tissue** - This is a designation for the cell type, tissue type, or some other indication of the biological source of the material.
-  
+
+
 - **Factor** - This is usually what protein the antibody was targeting, such as a transcription factor or a histone mark.
 
+
 - **Condition** - Indicates an experimental condition, such as WT or Mutant.
-  
+
+ 
 - **Treatment** - Specifies any treatments applied to the cells.
+
 
 > Note: Not all classes are required, but at leaset one is necessary for comparision. For example, in our datasheet, we have Tissue, Factor, and Condition.
 
+
 Metadata should also comprise aligned sequencing reads (generally in bam format). Each sample needs an aligned sequencing library, but may include the following:
 
+
 - bamReads: This points to the primary aligned file for the sample from Chip experiment (or other assays like ATAC)
-  
+
+
 - bamControl: This is an optional set of control reads associated with the sample or sample class. For ChIP experiments, this is most often an Input control (ChIP run without an antibody), or a ChIP run with a non-specific antibody. ATAC experiment usually do not have a control.
-  
+
+
 - SpikeIn: This is also an option set of spike-in reads for normalization.
+
 
 Id for the input control is given in `ControlID` column.
 
+
 Diffbind requires a called peaks for each sample. The aligned reads are used to call the peaks with the peak calling software such as MACS. The called peaks here are denoted in the `Peaks` column.
+
 
 ## Affinity binding matrix
 
