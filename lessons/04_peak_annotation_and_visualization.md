@@ -151,6 +151,7 @@ upsetplot(annot_WT1)
 The distance between the peak and the TSS of the nearest gene is also reported in the annotation output and can be visualzed with a barplot.
 
 ```{r}
+## TSS distance plot
 plotDistToTSS(annot_WT1)
 ```
 
