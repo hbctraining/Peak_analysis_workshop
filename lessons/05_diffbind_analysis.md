@@ -307,7 +307,7 @@ Lets plot another PCA for our data, but this time only use the regions those wer
 
 ```{r}
 # Plot PCA using only DE regions
-dba.plotPCA(dbObj, contrast=1, method=DBA_DESEQ2, attributes=DBA_FACTOR, label=DBA_ID)
+dba.plotPCA(dbObj, contrast=1, method=DBA_DESEQ2, attributes=DBA_CONDITION, label=DBA_ID)
 ```
 
 <p align="center">
