@@ -87,7 +87,7 @@ bedtools genomecov \
   -bg \
   -scale $SCALE_FACTOR | \
   sort -k1,1 -k2,2n \
-  > $OUTPUT_FILE
+  &gt; $OUTPUT_FILE
 </pre><br>
 
 We will need to create a bash variable to hold a scale factor to a million, which we will call in the <code>bedtools</code> command. The command to do this is:<br>
@@ -145,7 +145,7 @@ However, this output will have a few more columns than you need. You only need t
   -v OFS='\t' \
   '{print $1, $2}' \
   $FASTA_INDEX_FILE \
-  > $CHROMOSOME_SIZES_FILE
+  &gt; $CHROMOSOME_SIZES_FILE
 </pre>
 
 This command is composed of a few parts:
