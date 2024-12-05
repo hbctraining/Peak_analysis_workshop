@@ -8,7 +8,7 @@ Contributors: Heather Wick, Upendra Bhattarai, Meeta Mistry
 
 Approximate time: 45 minutes
 
-## Learning Objectives
+## Learning objectives
 
 * Annotate peaks with genomic features using ChIPseeker
 * Visualize annotations and compare peak coverage between experimental groups
@@ -17,7 +17,6 @@ Approximate time: 45 minutes
 ## Peak annotation 
 
 Understanding the biological questions addressed by ChIP-seq experiments begins with annotating the genomic regions we have identifed as peaks with genomic context. 
-
 
 **INSERT WORKFLOW SUBSET IMAGE HERE**
 
@@ -33,7 +32,6 @@ Because many cis-regulatory elements are close to transcription start sites of t
 
 _Image source: Welch R.P. et al, Nucleic Acids Research, 2014 [doi: 10.1093/nar/gku463ChIP](https://www.researchgate.net/publication/262812725_ChIP-Enrich_Gene_set_enrichment_testing_for_ChIP-seq_data)_
 
-
 ## Annotating peaks 
 
 In this workshop we will use an R Bioconductor package called **[ChIPseeker](https://bioconductor.org/packages/release/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html) to annotate peaks, visualize features, and compare profiles**. Some features of ChIPseeker include:
@@ -46,7 +44,7 @@ In this workshop we will use an R Bioconductor package called **[ChIPseeker](htt
 Let's open up a new script file and call it `peak_annotation.R`. Add a title to the script and as usual we will begin with loading required libraries:
 
 ```
-## Peak Annotation using ChIPseeker
+# Peak Annotation using ChIPseeker
 
 # Load libraries
 library(ChIPseeker)
@@ -67,7 +65,7 @@ txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
 Now let's annotate our peaks!  Annotation of the peaks to the nearest gene and for various genomic characteristics is performed by the `annotatePeak()` function. By default, the TSS region is defined as -3kb to +3kb; however, users can define this region as desired. The result of the annotation comes in csAnno (a special format for ChIP-seq annotation). This can be converted to GRanges with the `as.GRanges()` function and to data frame with the `as.data.frame()` function. We will begin with annotating peaks from a single sample:
 
 ```{r}
-# Annotate Peaks 
+# Annotate peaks 
 annot_WT1 <- annotatePeak(WT_H3K27ac_ChIPseq_REP1, tssRegion=c(-3000, 3000), TxDb=txdb, annoDb="org.Mm.eg.db")
 
 # View the result
@@ -151,7 +149,7 @@ upsetplot(annot_WT1)
 The distance between the peak and the TSS of the nearest gene is also reported in the annotation output and can be visualzed with a barplot.
 
 ```{r}
-## TSS distance plot
+# TSS distance plot
 plotDistToTSS(annot_WT1)
 ```
 
