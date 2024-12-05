@@ -97,7 +97,7 @@ We will need to create a bash variable to hold a scale factor to a million, whic
   <li><code>-ibam</code> - Input sorted BAM file</li>
   <li><code>-bg</code> - Output depth in bedGraph format</li>
   <li><code>-scale</code> - Scale factor used for scaling the data</li>
-  <li><code>sort -k1,1 -k2,2n</code> - The output file is unsorted and needs to be sorted by chromosome and chromosome start location
+  <li><code>sort -k1,1 -k2,2n</code> - The output file is unsorted and needs to be sorted by chromosome and chromosome start location</li>
   <li><code>&gt; $OUTPUT_FILE</code> - Write to an output file</li>
 </ul><br>
 
