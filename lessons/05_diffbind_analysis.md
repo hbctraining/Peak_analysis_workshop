@@ -413,15 +413,12 @@ Additionally, we can also create BED files for each set of significant regions i
 cKO_enrich <- out %>% 
   filter(FDR < 0.05 & Fold > 0) %>% 
   select(seqnames, start, end)
-  
-# Write to file
-write.table(cKO_enrich, file="results/cKO_enriched.bed", sep="\t", quote=F, row.names=F, col.names=F)
-
 WT_enrich <- out %>% 
   filter(FDR < 0.05 & Fold < 0) %>% 
   select(seqnames, start, end)
-
+  
 # Write to file
+write.table(cKO_enrich, file="results/cKO_enriched.bed", sep="\t", quote=F, row.names=F, col.names=F)
 write.table(WT_enrich, file="results/WT_enriched.bed", sep="\t", quote=F, row.names=F, col.names=F)
 ```
 
