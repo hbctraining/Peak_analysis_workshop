@@ -337,7 +337,11 @@ However, you may want finer control over your color selection and you can use so
 
 #### Rename Tracks
 
+Oftentimes, the sample names that we use during the processing of our samples are not the most obivious track names to a third-party in IGV. Fortunately, we can change the track name in the IGV browser easily. We can right-click on a track and select "Rename Track...". Enter your new track's name and left-click the "OK" button. Let's rename the "cKO_H3K27ac_ChIPseq_REP3.bigWig" to be "cKO ChIP Rep_3". This process is visualized in the GIF below:
 
+<p align="center">
+<img src="../img/IGV_rename_track.gif"  width="800">
+</p>
 
 #### Load track from URL
 Remove
