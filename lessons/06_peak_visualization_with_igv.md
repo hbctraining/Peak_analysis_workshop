@@ -253,7 +253,7 @@ At this point, we have identified a region that we'd like to investigate, but we
 One of the most important steps when comparing between tracks with quantitative ranges like BigWig files, is that you'll need to set the data range to be the same across all tracks. We can look at our IGV browser and look in the top-left of each track (to the right of the track's name) and we will see the track's minimum and maximum data range displayed as [Minimum - Maximum]. 
 
 <p align="center">
-<img src="../img/IGV_setting_data_range_with_caption.png"  width="400">
+<img src="../img/IGV_default_data_ranges_with_caption.png"  width="400">
 </p>
 
 There are two ways to modify a track's data range:
