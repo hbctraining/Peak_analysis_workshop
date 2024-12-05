@@ -43,19 +43,19 @@ Below we will learn about the file formats used to visualize peaks in IGV and us
 Open IGV on your computer. The first thing we will need to use the appropriate reference genome (mm10). There should be a dropdown menu in the top-left of IGV, which let's you select your preferred reference genome. If your selected reference genome is already **mm10**, then you can skip the next few steps. Otherwise, left-click on the dropdown menu:
 
 <p align="center">
-<img src="../img/IGV_default_with_caption.png"  width="600">
+<img src="../img/IGV_default_with_caption.png"  width="800">
 </p>
 
 You can see a few options for refernce genomes to select from. If you see **mm10**, then you can select it. Otherwise, left-click on "Click for more ..."
 
 <p align="center">
-<img src="../img/IGV_reference_dropdown_with_caption.png"  width="600">
+<img src="../img/IGV_reference_dropdown_with_caption.png"  width="800">
 </p>
 
 Find "Mouse mm10" from the menu and left-click "OK"
 
 <p align="center">
-<img src="../img/IGV_reference_menu_with_caption.png"  width="600">
+<img src="../img/IGV_reference_menu_with_caption.png"  width="800">
 </p>
 
 ### Download files for visualization
@@ -170,47 +170,118 @@ Now that we have the data that we would like to visualize, let's go ahead and lo
 In order to load a track, left-click on "File" in the top-left and select "Load from File...":
 
 <p align="center">
-<img src="../img/IGV_File_load_track_with_caption.png"  width="600">
+<img src="../img/IGV_File_load_track_with_caption.png"  width="800">
 </p>
 
 Next, navigate in your file browser to the file you'd like to load, then left-click to select it and left-click "Open". In this case we are trying to open the file called "cKO_H3K27ac_ChIPseq_REP3.bigWig", which should be inside your "bigWig" directory within your "data" directory:
 
 <p align="center">
-<img src="../img/IGV_select_track_with_caption.png"  width="600">
+<img src="../img/IGV_select_track_with_caption.png"  width="800">
 </p>
 
 After loading the cKO IP replicate 3 BigWig track, your IGV session should look like:
 
 <p align="center">
-<img src="../img/IGV_loaded_track_with_caption.png"  width="600">
+<img src="../img/IGV_loaded_track_with_caption.png"  width="800">
 </p>
 
 ### Exercise 
 
-1. Load more Bigwig tracks - WT IP and Input
+Load the three additional BigWig files you were provided within the "BigWig" directory along with the two BED files within the "DiffBind" directory. Were the BED files loaded in the same area in IGV as the BigWig tracks? If not, where did they load?
 
-2. Add DiffBind BED
+<details><summary><b>Click here to see what your IGV window should look like after loading these files</b></summary>
+  Note: The order of the track is dependent on the order that you loaded the tracks in, so your track order <i>may</i> be different than in the image below.
+  <p align="center">
+  <img src="../img/IGV_all_loaded_tracks_with_caption.png"  width="800">
+  </p>
+</details>
 
 ### Moving tracks
 
+Oftentimes, just because you loaded some tracks, that doesn't mean that they are arranged in the order that you would like them to be in. IN order to change the order of the tracks we will left-click on the track where the track's name is located and move it to where you'd like to se it. This process is visualized in the GIF below:
+
+<p align="center">
+<img src="../img/IGV_move_track.gif"  width="800">
+</p>
 
 ### Exercise
 
-move to the order we show
+Re-order the tracks so that the WT tracks are above the cKO tracks and the IP samples are above the input samples for their respective experimental condition. Your IGV browser should look like:
 
-### Zooming in and out
+<p align="center">
+<img src="../img/IGV_reordered_tracks_with_caption.png"  width="800">
+</p>
 
-### Jumping to regions
+### Navigating in IGV
+
+When using IGV it is critical that you are able to navigate to the place in the genome that you are interested in viewing. Below we will discuss a couple of ways to navigate around the genome in the IGV browser.
+
+#### Zooming in and out on regions
+
+The first way that we can zoom in on a region in IGV is to left-click and hold while dragging over the region we are interested in. This can be iteratively done as one narrows down the region that they are interested in viewing. This process is visualized in the GIF below:
+
+<p align="center">
+<img src="../img/IGV_zooming.gif"  width="800">
+</p>
+
+We can zoom in and out using the <kbd>+</kbd> and <kbd>-</kbd>, respectively, on the right of the top bar. This process is visualized in the GIF below:
+
+<p align="center">
+<img src="../img/IGV_zooming_2.gif"  width="800">
+</p>
+
+#### Jumping to regions
+
+Rather than zooming in on a region, you may already have an idea of where you you would like to analyze and you would like to just jump right to that region. Let's go to a region where we might want to inspect a peak that DiffBind has informed us shows is very significant differentially binding. It is located on Chromosome 13 from 64,400,764 to 64,401,164, but let's broaden our region by a kilobase on each side in order to give us some context of the genomic landscape around this differentially expressed peak. In the genomic coordinates box in the top-center of the IGV browser, let's enter `chr13:64,399,764-64,402,164` and left-click "Go".
+
+<p align="center">
+<img src="../img/IGV_genomic_cooridnates_with_caption.png"  width="400">
+</p>
+
+The IGV window should look like:
+
+<p align="center">
+<img src="../img/IGV_genomic_coordinates_full_window_with_caption.png"  width="800">
+</p>
 
 ### Modifying Tracks
+
+At this point, we have identified a region that we'd like to investigate, but we need to clean up the aesthetics of this region in order for us to more clearly evaluate this peak, which DiffBind has indicated shows significant differentially binding.
+
+#### Adjust data range
+
+One of the most important steps when comparing between tracks with quantitative ranges like BigWig files, is that you'll need to set the data range to be the same across all tracks. We can look at our IGV browser and look in the top-left of each track (to the right of the track's name) and we will see the track's minimum and maximum data range displayed as [Minimum - Maximum]. 
+
+<p align="center">
+<img src="../img/IGV_setting_data_range_with_caption.png"  width="400">
+</p>
+
+There are two ways to modify a track's data range:
+
+- Setting each track's data range manually
+- Utilizing IGV's `Group Autoscale` feature
+
+Let's first look at setting a track's data range manually. We can to right-click on our top track, WT_H3K27ac_ChIPseq_REP3.bigWig, and select "Set Data Range..." from the dropdown menu:
+
+<p align="center">
+<img src="../img/IGV_selecting_data_range_with_caption.png"  width="800">
+</p>
+
+Next, let's alter the maximum to be 2 and left-click "OK" from the pop-up menu:
+
+<p align="center">
+<img src="../img/IGV_setting_data_range_with_caption.png"  width="800">
+</p>
+
+If we wanted, we could also alter the minimum value or make our data range be log-scaled from this pop-up menu. We can know see that our track's data range has changed from [0-1.06] to [0 - 2.00].
+
+<p align="center">
+<img src="../img/IGV_modified_data_range_with_caption.png"  width="800">
+</p>
 
 #### Adjust track height
 
 height
-
-
-
-#### Adjust data range
 
 #### Adjust color
 
