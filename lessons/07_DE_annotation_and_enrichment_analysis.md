@@ -58,7 +58,6 @@ plotAnnoBar(annot_res_all)
 <img src="../img/Chipseq_featuredist.png"  width="500">
 </p>
 
-
 ### Distance to TSS
 ```{r}
 # TSS distance plot
@@ -73,8 +72,7 @@ plotDistToTSS(annot_res_all)
 **Exercise:**
 
 1. Subset the `annot_res_all` to keep only the results with FDR < 0.05 and save it to a variable called `annot_sig_all`. Now create the same annotation plots. Do you observe any difference?
-2. 
-3. Further subset the significant results by filtering on on fold change (`Fold`). Save the results into variables called `annot_sig_up` and `annot_sig_down`. Now create the same annotation plots. Do you observe any difference?
+2. Further subset the significant results by filtering on on fold change (`Fold`). Save the results into variables called `annot_sig_up` and `annot_sig_down`. Now create the same annotation plots. Do you observe any difference?
 
 ***
 
