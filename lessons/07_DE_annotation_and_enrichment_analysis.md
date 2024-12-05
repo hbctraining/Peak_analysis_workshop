@@ -39,7 +39,10 @@ The GRanges object `res_deseq` contains results from the Diffbind analysis, incl
 
 ```{r}
 # Add annotations to our DiffBind results
-annot_res_all <- annotatePeak(res_deseq, tssRegion = c(-3000, 3000), TxDb = TxDb.Mmusculus.UCSC.mm10.knownGene, annoDb = "org.Mm.eg.db")
+annot_res_all <- annotatePeak(res_deseq,
+                              tssRegion = c(-3000, 3000),
+                              TxDb = TxDb.Mmusculus.UCSC.mm10.knownGene,
+                              annoDb = "org.Mm.eg.db")
 ```
 
 We can visualize the annotation to better understand the distribution of genomic features among these regions using some of the plots we have introduced previously in the Peak Annotation lesson. Since we are using all results here, the binding regions are a very close representation to the annotation observed for each individual sample, and so this result is not surprising.
