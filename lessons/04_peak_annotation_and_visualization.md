@@ -302,14 +302,15 @@ plotAvgProf(tagMatrixList, xlim=c(-2000, 2000), conf=0.95,resample=500, facet="r
 <img src="../img/Profile_pplots_allsamples.png"  width="500">
 </p>
 
-We can also plot multiple heatmaps drawn side by side:
+We can also plot multiple heatmaps drawn side by side. The code is shown below, but we will **not be running it in class** due to the huge memory requirement.
 
 ```r
+### DO NOT RUN
+
 # Plot multiple heatmaps
 tagHeatmap(tagMatrixList)
 ```
 
-**ADD FIGURE HERE**
 
 ## Summary
 Overall, the annotation and visualizations are in line with our expectations for an H3K27ac binding profile. H3K27ac is associated with the higher activation of transcription and is therefore defined as an active enhancer mark. H3K27ac is found at both proximal and distal regions of transcription start site (TSS), and we saw high percentages of peaks annotated at both regions. The ChIPseeker package has additional functionality that we did not explore due to limits in computational resources. We encourage you to peruse [the vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html) for more information and explore other tools for visualization.
