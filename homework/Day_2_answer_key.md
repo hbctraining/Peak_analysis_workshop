@@ -6,8 +6,8 @@
 
 ```{r}
 annot_sig_all <- subset(annot_res_all, FDR < 0.05)
-plotAnnoBar(annot_sig_all)
-plotDistToTSS(annot_sig_all)
+plotAnnoBar(annot_sig_all, title = "Feature distribution in significant peaks")
+plotDistToTSS(annot_sig_all, title = "Distribution of transcription factor-binding loci relative to TSS in significant peaks")
 ```
 
 Significantly DE peaks are more likely to be in "other intronic" and "distal intergenic" regions (purple and yellow sections of feature distribution) and less likely to be in "promoter" regions (light blue) compared to the full results. Significantly DE peaks are also further from the TSS.
@@ -17,10 +17,10 @@ Significantly DE peaks are more likely to be in "other intronic" and "distal int
 ```{r}
 annot_sig_up   <- subset(annot_sig_all, Fold > 0)
 annot_sig_down <- subset(annot_sig_all, Fold < 0)
-plotAnnoBar(annot_sig_up)
-plotAnnoBar(annot_sig_down)
-plotDistToTSS(annot_sig_up)
-plotDistToTSS(annot_sig_down)
+plotAnnoBar(annot_sig_up, title = "Feature distribution in upregulated peaks")
+plotAnnoBar(annot_sig_down, title = "Feature distribution in downregulated peaks")
+plotDistToTSS(annot_sig_up, title = "Distribution of transcription factor-binding loci relative to TSS in upregulated peaks")
+plotDistToTSS(annot_sig_down, title = "Distribution of transcription factor-binding loci relative to TSS in downregulated peaks")
 ```
 
 Significantly upregulated peaks have a similar feature distribution to all significantly DE peaks; however, downregulated peaks are more likely to be in "other intronic" and "distal intergenic" regions and are never in the 5' UTR (which makes the colors change between the plots, look carefully at the legend!). Upregulated peaks are slightly closer to the TSS, while downregulated peaks are slightly further from the TSS.
