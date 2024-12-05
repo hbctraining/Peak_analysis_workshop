@@ -153,7 +153,7 @@ Let's convert the ORA result to a data frame and save it to file.
 ```{r}
 # Save data frame to file
 go_ORA_Up_df <- data.frame(go_ORA_Up)
-write.csv(go_ORA_Up_df, "results/GO_ORA_clusterProfiler_cKO_vs_WT_Upregulated.csv
+write.csv(go_ORA_Up_df, "results/GO_ORA_clusterProfiler_cKO_vs_WT_Upregulated.csv")
 ```
 
 ### Exploring results from ORA analysis
