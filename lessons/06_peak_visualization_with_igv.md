@@ -93,7 +93,7 @@ bedtools genomecov \
 We will need to create a bash variable to hold a scale factor to a million, which we will call in the <code>bedtools</code> command. The command to do this is:<br>
 <code>$SCALE_FACTOR=`awk 'BEGIN { print 1000000 / $MAPPED_READ_COUNT }'`</code><br>
 
-<ul><li><code>bedtools genomecov</code> - Calls the <code>bedtools</code>'s <code>genomecov</code> tool
+<ul><li><code>bedtools genomecov</code> - Calls the <code>bedtools</code>'s <code>genomecov</code> tool</li>
   <li><code>-ibam</code> - Input sorted BAM file</li>
   <li><code>-bg</code> - Output depth in bedGraph format</li>
   <li><code>-scale</code> - Scale factor used for scaling the data</li>
@@ -161,6 +161,7 @@ This command is composed of a few parts:
 We discuss an alternative way of generating BigWig files in our <a href="https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/08_creating_bigwig_files.html">Chromatin Biology materials</a>.
 <hr />
 </details>
+
 
 ### Load a track
 
