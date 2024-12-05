@@ -120,8 +120,8 @@ First, let's convert the annotated GRanges object to a dataframe, and then we ca
 # Create a dataframe from anno results
 annot_res_all_df <- as.data.frame(annot_res_all)
 
-# Get background gene set
-background_set <- as.character(annot_res_all_df$SYMBOL)
+# Get background gene set of Entrez IDs
+background_set <- as.character(annot_res_all_df$geneId)
 ```
 
 Now we can extract gene lists for the significantly upregulated genes in cKO vs WT to prepare a query set.
@@ -129,16 +129,16 @@ Now we can extract gene lists for the significantly upregulated genes in cKO vs 
 ```{r}
 # Prepare gene set query for up-regulated genes
 sigUp <- dplyr::filter(annot_res_all_df, FDR < 0.05, Fold > 0)
-sigUp_genes <- as.character(sigUp$SYMBOL)
+sigUp_genes <- as.character(sigUp$geneId)
 ```
 
-Finally, we can perform ORA with Gene Ontology (GO) dataset using the `enrichGO` function. Note that the gene IDs we input are gene symbols and so we specify that in the `keyType` argument.
+Finally, we can perform ORA with Gene Ontology (GO) dataset using the `enrichGO` function. Note that the gene IDs we input are Entrez gene IDs and so we specify that in the `keyType` argument.
 
 ```{r}
 # Run over-representation analysis
 go_ORA_Up <- enrichGO(gene = sigUp_genes,
                       universe = background_set,
-                      keyType = "SYMBOL",
+                      keyType = "ENTREZID",
                       OrgDb = org.Mm.eg.db,
                       ont = "ALL",
                       pAdjustMethod = "BH",
@@ -181,7 +181,7 @@ Other columns of interest are the p.adjust column (by which results are ordered 
 
 **Exercise:**
 
-1. Perform the ORA for the downregulated sites in cKO vs WT results. Do you find any significantly over-represented terms?
+1. Perform the ORA for the downregulated sites in cKO vs WT results. Do you find any significantly over-represented terms? If not, think about possible reasons, and try increasing the adjusted p-value cutoff to 0.1 to get an idea of what pathways may be downregulated in cKO samples even if they do not reach traditional statistical significance.
 
 ***
 
