@@ -91,8 +91,6 @@ samples <- read.csv("data/DiffBind/metadata.csv")
 names(samples)
 ```
 
-Output:
-
 ```{r}
 [1] "SampleID"   "Tissue"     "Factor"     "Condition"  "Replicate"  "bamReads"   "ControlID"  "bamControl" "Peaks"      "PeakCaller"
 ```
