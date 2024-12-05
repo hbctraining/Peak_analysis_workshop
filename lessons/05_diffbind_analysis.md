@@ -271,7 +271,7 @@ de_summary <- dba.show(dbObj, bContrasts = T, th=0.05)
 de_summary
 ```
 
-```{r, output}
+```{r}
      Factor Group Samples Group2 Samples2 DB.edgeR DB.DESeq2
 1 Condition   cKO       3     WT        3     3244       925
 ```
