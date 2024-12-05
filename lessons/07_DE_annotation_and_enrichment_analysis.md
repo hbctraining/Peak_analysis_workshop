@@ -221,151 +221,34 @@ emapplot(go_ORA_Up)
 <img src="../img/ORA_enrichment_plot.png"  width="600">
 </p>
 
-## Gene Set Enrichment Analysis (GSEA)
+***
 
-Gene Set Enrichment Analysis (GSEA) developed by [Subramanium A. et al, 2005](https://www.pnas.org/doi/10.1073/pnas.0506580102) employs a different statistical approach for functional enrichment of gene sets compared to Over-Representation Analysis (ORA). Unlike ORA, which subsets genes of interst using an arbitrary threshold, **GSEA considers all genes as input**. Gene-level statistics (e.g. log2 fold changes) are aggregated to generate pathway-level statistics, and the statistical significance of each pathway is reported. This approach is particularly useful when differential analysis yields a small list of significant genes. 
+**Exercise:**
 
-<p align="center">
-<img src="../img/gsea_overview.png"  width="500">
-</p>
+1. Create a dotplot and enrichplot from the ORA result generated earlier using the down regulated sites in cKO vs WT results. What overarching themes are observed from the enrichplot (if any)?
+   
+***
 
-Image source: [Subramanium A. et al, 2005](https://www.pnas.org/doi/10.1073/pnas.0506580102)
+## Functional enrichment: Web based tools
 
-Gene set enrichment identifies whether gene sets associated with specific biological pathways (e.g. KEGG, Gene Ontology, MSigDB, etc) are enriched among genes with the highest or lowest fold changes. This image illustrates the theory of GSEA, where 'gene set S' highlights the metric used (e.g. ranked log2 fold changes) to assess the enrichment of genes in the gene set. The analysis involves four main steps:
-
-1. **Rank genes**
-    * Genes are ranked based on a statistic, such as log2 fold changes.
-2. **Calculate enrichment scores** for each gene set
-    * This score measures how often genes in a set appear at the extremes (top or bottom) of the ranked list.
-    * The score is computed by walking through the ranked list and:
-        - Increasing the running-sum statistic for each gene in the set.
-        - Decreasing the score for genes not in the set.
-        - The magnitude of the score change depends on the fold change.
-3. Estimate **statistical significance**
-    * A permutation test is used to calculate a null distribution of enrichment score, providing a p-value for each pathway.
-4. Adjust for **multiple hypothesis testing**
-    * Enrichment scores are normalized for gene set size, and a false discovery rate (FDR) is calculated to control for false positives.
-
-    
-### Running GSEA with GO database
-
-The `clusterProfiler` package offers several functions to perform GSEA using various genes sets, including GO, KEGG, and MSigDb. Below is an example using GO database. We can use `msigdbr_species()` function to look at the information about species included in the dataset.
-
-First, let's extract fold changes and gene identifiers. GSEA will use the fold changes obtained from the differential expression analysis for every gene to perform the analysis. We need to create a sorted and named vector for input to `clusterProfiler`.
-
-```{r}
-gene_list <- annot_res_all_df$Fold
-names(gene_list) <- annot_res_all_df$geneId
-
-# remove duplicate genes
-gene_list_dedup <- gene_list[!duplicated(names(gene_list))]
-
-# sort gene list in decreasing order of the fold change
-gene_list_sorted <- sort(gene_list_dedup, decreasing = TRUE)
-```
-
-### Run GSEA
-```{r}
-# Run GSEA
-go_GSEA <- gseGO(geneList = gene_list_sorted,
-               ont = "BP",
-               keyType = "ENTREZID",
-               verbose = FALSE,
-               OrgDb = "org.Mm.eg.db",
-               pAdjustMethod = "none")
-```
-
-Let's check the number of enriched terms:
-
-```{r}
-dim(goGSEA)[1]
-```
-
-```{r, output}
-[1] 341
-```
-> Note: we have set pAdjustMethod as none for this run. To use Benjamin Hochberg multiple correction, set it as "BH" and check the output.
-
-
-Saving the results
-```{r}
-go_GSEA_results <- go_GSEA@result
-
-# write results to a file
-write.csv(go_GSEA_results, "results/go_GSEA_cko_vs_wt.csv", quote = FALSE)
-```
-
-> NOTE: The permutations are performed using random reordering, so every time we run the function we will get slightly different results. If we would like to use the same permutations every time we run a function, then we use the set.seed() function prior to running. The input to set.seed() can be any number.
->  ```{r}
->   set.seed(123) # replace 123 with any number
->  ```
-    
-### Inspect Results
-
-Take a look at the results table and reorder by NES (normalized enrichment score). What terms do you see positively enriched? Does this overlap with what we observed from ORA analysis?
-
-```{r}
-go_GSEA_results %>% arrange(-NES) %>% View()
-```
-
-- The first few columns of the results table identify the gene set information.
-- The following columns include the associated statistics.
-- The last column will report which genes are part of the 'core enrichment'. These are the genes associated with the pathway which contributed to the observed enrichment score (i.e., in the extremes of the ranking).
-
-### Dotplot
-
- ```{r}
-dotplot(go_GSEA, showCategory=10, split = ".sign") +facet_grid(.~.sign)
-```
-<p align="center">
-<img src="../img/GSEA_go.png"  width="600">
-</p>
-
-### GSEA visualization
-Let's explore the GSEA plot of enrichment of one of the pathways in the ranked list using a built-in function from clusterProfiler.
-
-```{r}
-gseaplot(go_GSEA, geneSetID = 'GO:0033363')
-```
-
+There are also many web-based tool for enrichment analysis on genomic regions, and a popular one for ChIP-seq data is [GREAT](http://great.stanford.edu/public/html/) (Genomic Regions Enrichment of Annotations Tool). GREAT is used to **analyze the functional significance of cis-regulatory regions identified by localized measurements of DNA binding events** across an entire genome. The figure below gives an overview of the tool's functionality, but we recommend [referncing the paper](http://bejerano.stanford.edu/papers/GREAT.pdf) for more information. 
 
 <p align="center">
-<img src="../img/GSEA_secretory_granule_organization.png"  width="600">
+<img src="../img/great_screenshot.png"  width="600">
 </p>
 
-In the plot:
-1. The lines in plot represent the genes in the gene set 'GO:0033363', and where they occur among the log2 fold changes.
-2. The largest positive log2 fold changes are on the left-hand side of the plot, while the largest negative log2 fold changes are on the right.
-3. The top plot shows the magnitude of the log2 fold changes for each gene.
-4. The bottom plot shows the running sum, with the enrichment score peaking at the red dotted line (which is among the positive log2 fold changes). This suggests the up-regulation of this function.
+It incorporates annotations from 20 different ontologies and is an easy to use tool which generates annotation and downstream functional enrichement results for genomic coordinate files. The utility of GREAT is not limited to ChIP-seq, as it could also be applied to open chromatin, localized epigenomic markers and similar functional data sets, as well as comparative genomics sets.
 
 
-
-# Functional enrichment: Web based tools
-
-There are also web-based tool for enrichment analysis on genomic regions, and a popular one is [GREAT](http://great.stanford.edu/public/html/) (Genomic Regions Enrichment of Annotations Tool). GREAT is used to analyze the functional significance of cis-regulatory regions identified by localized measurements of DNA binding events across an entire genome [Reference paper](http://bejerano.stanford.edu/papers/GREAT.pdf). It incorporates annotations from 20 different ontologies and is an easy to use tool which generates annotation and downstream functional enrichement results for genomic coordinate files. The utility of GREAT is not limited to ChIP-seq, as it could also be applied to open chromatin, localized epigenomic markers and similar functional data sets, as well as comparative genomics sets.
-
-In the interest of time we will not go into the details of using GREAT, however we have materials linked [here](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/web_based_functional_analysis.html) if you are interested in testing it out with this dataset. There also [demo datasets](http://great.stanford.edu/public/html/demo.php) on the GREAT website that you can use to test out the functionality of the tool.
+In the interest of time we will not go into the details of using GREAT, however if you are interested in testing it out there are [demo datasets](http://great.stanford.edu/public/html/demo.php) on the GREAT website that you can use to test out the functionality of the tool. Additionally, you can take the BED files from this workshop and use them as input to compare and contrast results with what we have described in this lesson with clusterProfiler.
 
 ## Resources for functional analysis
-In this lesson, we reviewed a few approaches for functional analysis and demonstrated the use of clusterProfiler package. Note that there are numerous other options out there, including the use of web-based tools. Below we list a few tools that we are familiar with:
+In this lesson, we have reviewed functional analysis of the target genes obtained from a ChIP-seq analysis and demonstrated the use of clusterProfiler package. Note that there are numerous other options out there, including the use of web-based tools. Below we list a few tools that we are familiar with:
 
-g:Profiler - http://biit.cs.ut.ee/gprofiler/index.cgi
-
-DAVID - https://david.ncifcrf.gov
-
-clusterProfiler - http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html
-
-ReviGO (visualizing GO analysis, input is GO terms) - http://revigo.irb.hr/
-
-WGCNA - https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/ (no longer maintained)
-
-GSEA - http://software.broadinstitute.org/gsea/index.jsp
-
-SPIA - https://www.bioconductor.org/packages/release/bioc/html/SPIA.html
-
-GAGE/Pathview - http://www.bioconductor.org/packages/release/bioc/html/gage.html
-
+* gProfiler - http://biit.cs.ut.ee/gprofiler/index.cgi
+* DAVID - https://david.ncifcrf.gov
+* clusterProfiler - http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html
+* ReviGO (visualizing GO analysis, input is GO terms) - http://revigo.irb.hr/
 
 ***
 
