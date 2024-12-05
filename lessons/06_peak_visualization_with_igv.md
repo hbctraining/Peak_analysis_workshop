@@ -11,7 +11,6 @@ Approximate time:
 ## Learning objectives
 
 * Visualize peaks in IGV (Integrative Genomics Viewer)
-
 * Qualitatively assess whether DiffBind correctly identifies differential binding
 
 ## Overview
@@ -163,11 +162,13 @@ We discuss an alternative way of generating BigWig files in our <a href="https:/
 </details>
 
 
-### Load a track
+### Loading Tracks
+
+#### Loading Tracks from Files
 
 Now that we have the data that we would like to visualize, let's go ahead and load it into IGV. Many file formats you load into IGV will load as a single "track", or horizontal row of genomic data. However, some, like BAM/SAM, will load as multiple tracks. Let's go ahead and load the BigWig track for our cKO IP replicate 3 sample.
 
-In order to load a track, left-click on "File" in the top-left and select "Load from File...":
+In order to load a track from a file, left-click on "File" in the top-left and select "Load from File...":
 
 <p align="center">
 <img src="../img/IGV_File_load_track_with_caption.png"  width="800">
@@ -184,6 +185,24 @@ After loading the cKO IP replicate 3 BigWig track, your IGV session should look 
 <p align="center">
 <img src="../img/IGV_loaded_track_with_caption.png"  width="800">
 </p>
+
+#### Loading tracks from URL
+
+Alternatively to loading a track from a local file, we can also load tracks from a URL. In this case, we will load [VISTA enchancers](https://enhancer.lbl.gov/vista/) that are availible for the Mouse genome on the [UCSC Genome Browser](https://genome.ucsc.edu/). The file uses bigBed format, which is used with hosted genome browsers liike the UCSC browser which allows the browser only load the relevant sections of genomes at a time and is less computaitonally intensive on a public genome browser. More information on bigBed can be found on the [UCSC page about bigBed](https://genome.ucsc.edu/goldenpath/help/bigBed.html). In order to load  a file from a URL, left-click on <kbd>File</kbd> in the top-left and select <kbd>Load from File...</kbd>. Next, enter this URL into the URL blank:
+
+```
+https://hgdownload.soe.ucsc.edu/gbdb/mm39/vistaEnhancers/vistaEnhancers.bb
+```
+
+Then left-click <kbd>OK</kbd>. This process is visualized in the GIF below:
+
+<p align="center">
+<img src="../img/IGV_load_URL_track.gif"  width="800">
+</p>
+
+### Remove Track
+
+
 
 ### Exercise 
 
