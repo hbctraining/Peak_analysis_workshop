@@ -210,7 +210,9 @@ To plot the binding around the TSS region, we need to first prepare the TSS regi
 # Get promoters
 promoter <- getPromoters(TxDb = txdb, upstream = 2000, downstream = 2000)
 promoter
+```
 
+```{r, output}
 GRanges object with 24514 ranges and 0 metadata columns:
           seqnames              ranges strand
              <Rle>           <IRanges>  <Rle>
