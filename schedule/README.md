@@ -106,7 +106,7 @@ I. Please **study the contents** and **work through all the code** within the fo
 
 * [Day 1 exercises](../homework/Day_1_answer_key.md)
 
-* Day 2 exercises 
+* [Day 2 exercises](../homework/Day_2_answer_key.md)
 
 * Day 3 In-class
 
