@@ -54,3 +54,57 @@ Significantly upregulated peaks have a similar feature distribution to all signi
 </p>
 
 Upregulated peaks are slightly closer to the TSS, while downregulated peaks are slightly further from the TSS.
+
+**3. Perform the ORA for the downregulated sites in cKO vs WT results. Do you find any significantly over-represented terms? If not, think about possible reasons, and try increasing the adjusted p-value cutoff to 0.1 to get an idea of what pathways may be downregulated in cKO samples even if they do not reach traditional statistical significance.**
+
+```{r}
+# Prepare gene set query for down-regulated genes
+sigDown <- dplyr::filter(annot_res_all_df, FDR < 0.05, Fold < 0)
+sigDown_genes <- as.character(sigDown$SYMBOL)
+# Run over-representation analysis
+go_ORA_Down <- enrichGO(gene = sigDown_genes,
+                        universe = background_set,
+                        keyType = "SYMBOL",
+                        OrgDb = org.Mm.eg.db,
+                        ont = "ALL",
+                        pAdjustMethod = "BH",
+                        qvalueCutoff = 0.05,
+                        readable = TRUE)
+# Look at results
+go_ORA_Down_df <- data.frame(go_ORA_Down)
+View(go_ORA_Down_df)
+```
+
+There are no downregulated GO terms with a p-value cutoff of 0.05 (and a q-value cutoff of 0.05). There are fewer downregulated genes than upregulated genes, so maybe fewer pathways are affected, and to a lesser extent.
+
+```{r}
+# Run over-representation analysis again with a higher p-value cutoff
+# Note that we have changed qvalueCutoff to pvalueCutoff!
+go_ORA_Down <- enrichGO(gene = sigDown_genes,
+                        universe = background_set,
+                        keyType = "ENTREZID",
+                        OrgDb = org.Mm.eg.db,
+                        ont = "ALL",
+                        pAdjustMethod = "BH",
+                        pvalueCutoff = 0.1,
+                        readable = TRUE)
+# Look at results
+go_ORA_Down_df <- data.frame(go_ORA_Down)
+View(go_ORA_Down_df)
+```
+
+With the more lax p-value cutoff, we see a number of pathways related to chemotaxis are downregulated.
+
+**4. Create a dotplot and enrichplot from the ORA result generated earlier using the downregulated sites in cKO vs WT results. What overarching themes are observed from the enrichplot (if any)?**
+
+```{r}
+# Dotplot
+dotplot(go_ORA_Down)
+# Enrich plot
+go_ORA_Down <- enrichplot::pairwise_termsim(go_ORA_Down)
+emapplot(go_ORA_Down)
+```
+
+<p align="center">
+<img src="../img/ORA_dotplot_go_down.png"  width="500">
+</p>
