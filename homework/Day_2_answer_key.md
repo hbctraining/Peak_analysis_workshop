@@ -10,8 +10,12 @@ plotAnnoBar(annot_sig_all, title = "Feature distribution in significant peaks")
 plotDistToTSS(annot_sig_all, title = "Distribution of transcription factor-binding loci relative to TSS in significant peaks")
 ```
 
+The original images for the full dataset will also be shown below for comparison purposes.
+
 <p align="center">
+<img src="../img/Chipseq_featuredist.png"  width="500">
 <img src="../img/Chipseq_featuredist_sig.png"  width="500">
+  <img src="../img/Chipseq_tssdist.png"  width="500">
 <img src="../img/Chipseq_tssdist_sig.png"  width="500">
 </p>
 
