@@ -2,6 +2,10 @@
 
 ## Peak visualization using IGV
 
+There are no coding questions for this lesson.
+
+## Annotation and functional analysis of DE regions
+
 **1. Subset the annot_res_all to keep only the results with FDR < 0.05 and save it to a variable called annot_sig_all. Now create the same annotation plots. Do you observe any difference?**
 
 ```{r}
@@ -40,5 +44,3 @@ plotDistToTSS(annot_sig_down, title = "Distribution of transcription factor-bind
 </p>
 
 Significantly upregulated peaks have a similar feature distribution to all significantly DE peaks; however, downregulated peaks are more likely to be in "other intronic" and "distal intergenic" regions and are never in the 5' UTR or downstream (which makes the colors change between the plots, look carefully at the legend!). Upregulated peaks are slightly closer to the TSS, while downregulated peaks are slightly further from the TSS.
-
-## Annotation and functional analysis of DE regions
