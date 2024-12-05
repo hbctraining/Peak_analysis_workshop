@@ -139,6 +139,7 @@ plotAnnoBar(annot_WT1)
 Annotation overlaps can be visualized by upsetR plot. Here, we use a function from ChIPseeker that grabs the required data and formats it to be compatible with UpSetR and draws the plot. With this plot we can see that there are many peaks that contain more than one annotation. We can observe the counts for various combinations of annotations.
 
 ```{r}
+# UpSet plot
 upsetplot(annot_WT1)
 ```
 
