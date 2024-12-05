@@ -24,20 +24,20 @@ In our dataset we have samples from two different conditions; wildtype and the c
 
 
 ## Tools for evaluating differential enrichment
-A wide variety of computational tools are available for differential analysis of ChIP-seq experiments. Each of these tools differ in the underlying algorithms and the assumptions of the data, as such this results in challenge of knowing which tool is right for your condition. Below we list some things to consider when evaluating the different apporaches:
+A wide variety of computational tools are available for differential analysis of ChIP-seq experiments. Each of these tools differ in the underlying algorithms and the assumptions of the data, as such this results in challenge of knowing which tool is right for your condition. Below are some key factors to consider when evaluating the different approaches:
 
 * **Peak calls or alignment files**
-  * Some tools require peaks to be called prior to differntial enrichment analysis, while others implement their own detection method or work using sliding windows.
+  * Some tools require peaks to be called prior to differential enrichment analysis, while others implement their own detection method or work using sliding windows.
 * **Statistical distribution**
   * Use of a Poisson distribution or on a more flexible negative binomial distribution.
 * **Assumptions of the data**
-  * Methods adapted from RNA-seq assume the majority of occupied genomic regions do not differ between experimental state. This may not hold for studies where large perurbations can have large scale globla impact on chromatin.
+  * Methods adapted from RNA-seq assume the majority of occupied genomic regions do not differ between experimental state. This may not hold for studies where large perurbations can have large scale global impact on chromatin.
 * **Biological replicates**
-  * Some tools work in the absence of replicates for each condition, and others require replicates to provide differential analysis.
+  * Some tools can work in the absence of replicates for each condition, and others require replicates to provide differential analysis.
 * **Binding profile**
   * A narrow peak will identify smaller regions, whereas broad peaks can range between a few hundred to thousands of base pairs.   
 
- All of these aspects  make it challenging to know what the optimal computational tool is for differential enrichement analysis of your data. A recent [study performed a comprehensive assessment of differential ChIP-seq tools](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02686-y). In this work the authors **evaluated the performance of 33 computational tools** using reference datasets obtained by in silico simulation of ChIP-seq. Tool performances were evaluated with precision-recall curves, and the accuracy of tested tools was assessed depending on peak shape and biological regulation scenario. The **decision tree** displayed below was generated based on the results of this study and is helpful in **providing recommendations**.
+All of these aspects  make it challenging to know what the optimal computational tool is for differential enrichement analysis of your data. A recent [study performed a comprehensive assessment of differential ChIP-seq tools](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02686-y). In this work the authors **evaluated the performance of 33 computational tools** using reference datasets obtained by in silico simulation of ChIP-seq. Tool performances were evaluated with precision-recall curves, and the accuracy of tested tools was assessed depending on peak shape and biological regulation scenario. The **decision tree** displayed below was generated based on the results of this study and is helpful in **providing recommendations**.
 
 <p align="center">
 <img src="../img/DiffEnrich_image.png"  width="850">
@@ -116,9 +116,9 @@ Metadata should also contain columns pointing to the path where alignment files 
 
 
 ### Affinity binding matrix
-DiffBind will read in the data and **determine a set of consensus peaks**. Using default settings peaks that are called in at least two samples, regardless of which sample group the belong to are considered in the consensus set. You can create your own consensus peak set as outlined in Section 8.2 in the DiffBind vignette. For example, you may want to only include peaks that overlap in a subset of WT samples _and_ a subset of cKO samples. This is the consensus-of-consensus approach, where you first make a consensus peakset for each sample group, then combine them in an overall consensus you use for counting. This consensus peakset represents the overall set of candidate binding sites further analysis.
+DiffBind will read in the data and **determine a set of consensus peaks**. Using default settings peaks that are called in at least two samples, regardless of which sample group the belong to are considered in the consensus set. You can create your own consensus peak set as outlined in Section 8.2 in the DiffBind vignette. For example, you may want to only include peaks that overlap in a subset of WT samples _and_ a subset of cKO samples. This is the consensus-of-consensus approach, where you first make a consensus peakset for each sample group, then combine them in an overall consensus you use for counting. This consensus peakset represents the overall set of candidate binding sites for further analysis.
 
-The `dba()` function is used to read in data files an create the DiffBind object. The `scoreCol` refers to the peak signal score in the peak files. If using MACS software scores are generally in 5th column. **The code below will not work since we do not have BAM files locally available.**
+The `dba()` function is used to read in data files an create the DiffBind object. The `scoreCol` refers to the peak signal score in the peak files. If using MACS software, scores are generally in 5th column. **The code below will not work since we do not have BAM files locally available.**
 
 ```
 ### DO NOT RUN THIS CODE ###
@@ -136,7 +136,7 @@ This step is very **computationally intensive**, as such we will not run this co
 dbObj <- dba.count(dbObj, bParallel=FALSE) # This is the most computationally intensive part
 ```
 
-We have run this code for you on the O2 cluster and have saved the DiffBind object. The file is located in your working directory under `data/DiffBind` and we will have you load it in using the code below:
+We have run this code for you on the O2 cluster and have saved the resulting DiffBind object. The file is located in your working directory under `data/DiffBind` and we will have you load it in using the code below:
 
 ```
 # Load in the existing DiffBind object
@@ -404,7 +404,7 @@ Each of the **columns in the results are described below**:
 - **FDR**: False discovery rate after multiple correction
 
 
-First, we'll save the GRanges object to file for use during functional analysis. Then, we can convert the GRanges object to a data frame where the genomic coordinates get written as columns and can be saved as a tab-delimited file.
+First, we'll save the GRanges object to a file for downstream functional analysis. Then, we can convert the GRanges object to a data frame where the genomic coordinates get written as columns and can be saved as a tab-delimited file.
 
 ```{r}
 
