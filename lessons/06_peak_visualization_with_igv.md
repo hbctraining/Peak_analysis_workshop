@@ -366,11 +366,15 @@ If we now open IGV back up, we will notice that it provides a fresh session. If 
 
 1) Now that we've explored some of the functionality from IGV let's format our IGV browser and qualitatively assess some regions in the genome.
 
-a. Rename "cKO_H3K27ac_input_REP3.bigWig" to "cKO Input Rep_3"
-b. Rename "WT_H3K27ac_ChIPseq_REP3.bigWig" to "WT ChIP Rep_3"
-c. Rename "WT_H3K27ac_input_REP3.bigWig" to "WT Input Rep_3"
-d. Rename "WT_enriched.bed" to "WT Enriched Peaks"
-e. Rename "cKO_enriched.bed" to "cKO Enriched Peaks"
+&emsp;a. Rename "cKO_H3K27ac_input_REP3.bigWig" to "cKO Input Rep_3"
+
+&emsp;b. Rename "WT_H3K27ac_ChIPseq_REP3.bigWig" to "WT ChIP Rep_3"
+
+&emsp;c. Rename "WT_H3K27ac_input_REP3.bigWig" to "WT Input Rep_3"
+
+&emsp;d. Rename "WT_enriched.bed" to "WT Enriched Peaks"
+
+&emsp;e. Rename "cKO_enriched.bed" to "cKO Enriched Peaks"
 
 2) Change the color of the "cKO Input Rep_3" and "cKO Enriched Peaks" tracks to orange
 
@@ -382,12 +386,12 @@ e. Rename "cKO_enriched.bed" to "cKO Enriched Peaks"
 
 3) Let's explore a few regions and see if we qualitatively agree with DiffBind's analysis. Do you agree with DiffBind's call or non-call differentially bound peak for the following genomic coordinates:
 
-a. chr13:64,400,764-64,401,164
+&emsp;a. chr13:64,400,764-64,401,164
 
-b. chr1:131,492,210-131,492,610
+&emsp;b. chr1:131,492,210-131,492,610
 
-c. chr7:130,677,389-130,677,789 
-  Note: The FDR for this peak is 0.051
+&emsp;c. chr7:130,677,389-130,677,789 
+&emsp;&emsp;Note: The FDR for this peak is 0.051
 
 ### Save Image
 
