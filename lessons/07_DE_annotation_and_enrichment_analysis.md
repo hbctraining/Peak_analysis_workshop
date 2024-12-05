@@ -164,12 +164,6 @@ View(go_ORA_Up_df)
 ```
 
 <p align="center">
-<img src="../img/ora_table_screenshot.png"  width="600">
-</p>
-
-**Entrez result?**
-
-<p align="center">
 <img src="../img/Go_ORA_up.png"  width="800">
 </p>
 
