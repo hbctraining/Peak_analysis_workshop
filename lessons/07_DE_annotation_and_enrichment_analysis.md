@@ -20,7 +20,7 @@ At this point in the workflow we have a list of genomic regions that we know exh
 
 ## Annotation of differentially enriched regions
 
-First, let's open an R script called `functional_analysis.R`. Inside we'll add a header and start with loading the required libraries. If you do not have the `res_deseq` object in your environment you can go ahead and load it in too.
+First, let's open an R script called `functional_analysis.R`. Inside we'll add a header and start with loading the required libraries. If you do not have the `res_deseq` or `txdb` objects in your environment you can go ahead and load them in too.
 
 ```{r}
 # Functional analysis of DE regions
@@ -33,6 +33,9 @@ library(clusterProfiler)
 
 # Load result from DiffBind analysis if not present in your environment
 res_deseq <- readRDS("all_res_deseq2.rds")
+
+# Set the annotation database if not present in your environment
+txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
 ```
 
 The GRanges object `res_deseq` contains results from the Diffbind analysis, including genomic coordinates, fold change, p-values, and FDR for each analyzed site. Before functional analysis, we first need to annotate the genomic loci with their nearest gene names. We can do this using the `annotatePeak()` function in the ChIPseeker package.
