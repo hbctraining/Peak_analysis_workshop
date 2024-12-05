@@ -112,7 +112,7 @@ Genomic Annotation Summary:
 There are several functions for visualization provided by ChIPseeker package to effectively visualize annotation of various genomic features. We will go through some of these options below.
 
 ### Piechart
-This function provides a visualization of the suammry we generated earlier, in the form of a pie chart.
+This function provides a visualization of the summary we generated earlier, in the form of a pie chart.
 
 ```{r}
 # Piechart
