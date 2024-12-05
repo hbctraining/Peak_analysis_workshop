@@ -70,9 +70,11 @@ We will discuss the importance of each step in the process, but for more detaile
 1. Open the R project `chipseq-project` in your RStudio environment.
 2. Open a new R script `'File' -> 'New File' -> 'Rscript'`, and save it as `diffbind.R`
 
-Let's begin with loading the DiffBind and Tidyverse libraries.
+Let's begin with giving our script a header and loading the DiffBind and Tidyverse libraries.
 
 ```{r}
+# Differential binding analysis using DiffBind
+
 # Load libraries
 library(DiffBind)
 library(tidyverse)
