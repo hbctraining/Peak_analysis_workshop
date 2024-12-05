@@ -110,12 +110,12 @@ Metadata should also contain columns pointing to the path where alignment files 
 - **bamControl**: This is an optional set of control reads associated with the sample or sample class. For ChIP experiments, this is most often an Input control (ChIP run without an antibody), or a ChIP run with a non-specific antibody (IgG). ATAC-seq experiment usually do not have a control.
 - **ControlID**: ID for the input control sample
 - **Peaks**: The path to peakset files (in our case narrowPeak files)
-- **PeakCaller**: The type of peak file (e.g., narrow, bed, macs). Different peak callers will produce files in different formats, so identifying the type of file tells DiffBind what columns to expect.
+- **PeakCaller**: The type of peak file (e.g., narrow, bed, macs). Different peak callers will produce files in different formats, so identifying the type of file tells DiffBind what columns to expect. The default is "narrow" for narrowPeaks.
 
  > There is also a 'SpikeIn' option to provide the BAM files from alignment to the spike-in genome. More information on spike-ins is discussed below.
 
 ### Affinity binding matrix
-DiffBind will read in the data and **determine a set of consensus peaks**. Using default settings peaks that are called in at least two samples, regardless of which sample group the belong to are considered in the consensus set. You can create your own consensus peak set as outlined in Section 8.2 in the DiffBind vignette. For example, you may want to only include peaks that overlap in a subset of WT samples _and_ a subset of cKO samples. This is the consensus-of-consensus approach, where you first make a consensus peakset for each sample group, then combine them in an overall consensus you use for counting. This consensus peakset represents the overall set of candidate binding sites for further analysis.
+DiffBind will read in the data and **determine a set of consensus peaks**. Using default settings, peaks that are called in at least two samples, regardless of which sample group they belong to, are considered in the consensus set. You can create your own consensus peak set as outlined in Section 8.2 in the DiffBind vignette. For example, you may want to include only peaks that overlap in a subset of WT samples _and_ a subset of cKO samples. This is the consensus-of-consensus approach, where you first make a consensus peakset for each sample group, then combine them in an overall consensus you use for counting. This consensus peakset represents the overall set of candidate binding sites for further analysis.
 
 The `dba()` function is used to read in data files an create the DiffBind object. The `scoreCol` refers to the peak signal score in the peak files. If using MACS software, scores are generally in 5th column. **The code below will not work since we do not have BAM files locally available.**
 
@@ -126,9 +126,9 @@ The `dba()` function is used to read in data files an create the DiffBind object
 dbObj <- dba(sampleSheet=sample, scoreCol=5) 
 ```
 
-Next, we use the `dba.count()` which takes the alignment files and **compute for each sample, the count information for each of the peaks/regions in the consensus set**. In this step, for each of the consensus regions DiffBind takes the number of aligned reads in the ChIP sample and the input sample, to compute a normalized read count for each sample at every potential binding site. The peaks in the consensus peakset may be re-centered and trimmed based on calculating their summits (point of greatest read overlap) in order to provide more standardized peak intervals.
+Next, we use the `dba.count()` function, which takes the alignment files and **computes, for each sample, the count information for each of the peaks/regions in the consensus set**. In this step, for each of the consensus regions, DiffBind takes the number of aligned reads in the ChIP sample and the input sample to compute a normalized read count for each sample at every potential binding site. The peaks in the consensus peakset may be re-centered and trimmed based on calculating their summits (point of greatest read overlap) in order to provide more standardized peak intervals.
 
-This step is very **computationally intensive**, as such we will not run this code in class.
+This step is very **computationally intensive**; as such we will not run this code in class.
 
 ```{r}
 # Count reads to create affinity binding matrix
@@ -143,16 +143,16 @@ dbObj <- readRDS("data/DiffBind/dbObj.rds")
 ```
 
 > #### What are my options for normalization?
-> For each region the ChIP peak count is computed by subtracting out the background using `max(chip_counts - control_counts,1)`. Those values are  normalized based on sequencing depth. Normalization is discussed in great detail in Section 7 of the DiffBind vignette. Note that when running the differential analysis, the normalization applied will depend on the method (DESeq2 or edgeR), which is discussed later in the lesson.
+> For each region the ChIP peak count is computed by subtracting out the background using `max(chip_counts - control_counts,1)`. Those values are normalized based on sequencing depth. Normalization is discussed in great detail in Section 7 of the DiffBind vignette. Note that when running the differential analysis, the normalization applied will depend on the method (DESeq2 or edgeR), which is discussed later in the lesson.
 >
-> There is also an option for spike-in normalization. The spike-in strategy is based on the use of a fixed amount of exogenous chromatin from another species that is added to sample in an effort to control for technical variation. More information on how spike-in data is ideally, [this lesson](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/01b_experimental_design_considerations.html#spike-in-dna) is a good resource.
+> There is also an option for spike-in normalization. The spike-in strategy is based on the use of a fixed amount of exogenous chromatin from another species that is added to sample in an effort to control for technical variation. More information on spike-in data can be found in [this lesson](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/01b_experimental_design_considerations.html#spike-in-dna).
 
 ### Data exploration
 Before performing differential binding analysis, it is essential to explore the count matrix, examine various sample statistics, and assess the overall similarity between samples. 
 
 This initial step can help us understand:
 
-- Which samples are similar to each other and which are different?
+- Which samples are similar to each other, and which are different?
 - What are the major sources of variation, and do they align with the expectations from the research design?
 
 Let's examine our DiffBind object:
@@ -160,8 +160,6 @@ Let's examine our DiffBind object:
 ```{r}
 dbObj
 ```
-
-Output:
 
 ```
 6 Samples, 85868 sites in matrix:
@@ -174,7 +172,7 @@ Output:
 6 cKO_REP3 PRDM16 H3K27ac       cKO         3 16677061 0.20
 ```
 
-From this output, we observe **85,868 total sites in the consensus peaksets across six samples**. The first five columns display the sample metadata provided in the sample sheet used to create the DiffBind object. The Reads column indicates the number of reads in each sample, while the FRiP score (Fraction of Reads in Peaks) shows the fraction of mapped reads falling into the consensus peaksets. Multiplying the number of reads by FRiP score gives the number of reads that overlap the consensus peaksets. We can calculate this using `dba.show` function.
+From this output, we observe **85,868 total sites in the consensus peaksets across six samples**. The first five columns display the sample metadata provided in the sample sheet used to create the DiffBind object. The Reads column indicates the number of reads in each sample, while the FRiP score (Fraction of Reads in Peaks) shows the fraction of mapped reads falling into the consensus peaksets. Multiplying the number of reads by FRiP score gives the number of reads that overlap the consensus peaksets. We can calculate this using the `dba.show()` function.
 
 ```{r}
 # Create a dataframe with total number of reads in our affinity matrix
@@ -184,8 +182,6 @@ rownames(libsizes) <- info$ID
 
 libsizes
 ```
-
-Output:
 
 ```{r}
          LibReads FRiP peakReads
@@ -209,7 +205,6 @@ dba.plotPCA(dbObj, attributes=DBA_CONDITION, label=DBA_ID, score = DBA_SCORE_NOR
 <img src="../img/diffbind_pca.png"  width="500">
 </p>
 
-
 In this data, PC1 is explaining 32% of the variation, and on this axis we observe a separation of the WT and cKO samples. This is a good indication that the primary source of variation in the dataset is the difference between conditions. PC2 is accounting for 22% of the variation. Here, we see that there is slightly more variability in WT replicate 3 and cKO replicate 2 compared to their counterparts.
 
 ### Correlation Heatmap
@@ -227,11 +222,10 @@ dba.plotHeatmap(dbObj, ColAttributes = DBA_TISSUE,
 
 From the heatmap, we observe that the replicates cluster together, as expected. Although there is variability between the replicates, the largest differences are between the two conditions (WT and cKO).
 
-
 ### Differential binding affinity analysis
-The core functionality of DiffBind is its ability to identify differentially bound sites; binding sites that exhibit statistically significant differences in binding affinity between sample groups. There are two tools that are used to find statisticaly different sites, DESeq2 and edgeR. By default DESeq2 is set with input substraction and library-size normalization automatically in its pipeline. Each tool assigns a p-value and FDR to candidate binding sites, indicating confidence in their differential binding status.
+The core functionality of DiffBind is its ability to identify differentially bound sites: binding sites that exhibit statistically significant differences in binding affinity between sample groups. There are two tools that are used to find statisticaly different sites, DESeq2 and edgeR. By default DESeq2 is set with input substraction and library-size normalization automatically in its pipeline. Each tool assigns a p-value and FDR to candidate binding sites, indicating confidence in their differential binding status.
 
-Before running the differential binding analysis, we need to **define the contrast**; i.e. the groups of samples to be compared. In this example, the factor of interest is **Condition** (WT vs cKO). Contrasts are set using the `dba.contrast()` function, as follows:
+Before running the differential binding analysis, we need to **define the contrast**; i.e., the groups of samples to be compared. In this example, the factor of interest is **Condition** (WT vs cKO). Contrasts are set using the `dba.contrast()` function, as follows:
 
 ```{r}
 # Set contrasts
@@ -264,8 +258,8 @@ dbObj <- dba.analyze(dbObj, method = DBA_ALL_METHODS, bGreylist = FALSE, bBlackl
 ```
 
 > #### Blacklists and Greylists
-> * **Blacklists:** are pre-defined lists of regions specific to a reference genome that are known to be problematic. The [best known lists](http://mitra.stanford.edu/kundaje/akundaje/release/blacklists/) have been identified as part of the ENCODE project. The blacklisted regions typically **appear uniquely mappable so simple mappability filters do not remove them**. These regions are often found at specific types of repeats such as centromeres, telomeres and satellite repeats. 
-> * **Greylists:** are specific to a ChIP-seq experiment, and are derived from the controls generated as part of the experiment. The idea is to identify anomalous regions where a disproportionate degree of signal is present in the input controls. These regions can then be excluded from subsequent analysis.
+> * **Blacklists** are pre-defined lists of regions specific to a reference genome that are known to be problematic. The [best known lists](http://mitra.stanford.edu/kundaje/akundaje/release/blacklists/) have been identified as part of the ENCODE project. The blacklisted regions typically **appear uniquely mappable so simple mappability filters do not remove them**. These regions are often found at specific types of repeats such as centromeres, telomeres, and satellite repeats. 
+> * **Greylists** are specific to a ChIP-seq experiment, and are derived from the controls generated as part of the experiment. The idea is to identify anomalous regions where a disproportionate degree of signal is present in the input controls. These regions can then be excluded from subsequent analysis.
 >
 > Within DiffBind blacklist regions for many reference genomes identified as part of the ENCODE project can be accessed through the `dba.blacklist()` function. As for greylist filtering, if the control samples are available, one can prepare regions to be excluded specific to the experiment using the [`GreyListChIP` package](https://www.bioconductor.org/packages/release/bioc/html/GreyListChIP.html).
 
@@ -281,13 +275,14 @@ de_summary
      Factor Group Samples Group2 Samples2 DB.edgeR DB.DESeq2
 1 Condition   cKO       3     WT        3     3244       925
 ```
+
 Here, **DESeq2 identifies fewer peaks than edgeR**, reflecting it is a more stringent approach. This is not unusual, as we also see a lack of complete agreement with these tools with RNA-seq analyses.
 
 ***
 
 **Exercise**
 
-1. Try summarizing results with a more stringent threshold of 0.01 and a more lenient threshold of 0.1 Compare the differences between the differntially bound sites between the conditions. Is it a dramatic difference in numbers?
+1. Try summarizing results with a more stringent threshold of 0.01 and a more lenient threshold of 0.1. Compare the differences between the differentially bound sites between the conditions. Is it a dramatic difference in numbers?
 
 ***
 
@@ -319,9 +314,8 @@ dba.plotPCA(dbObj, contrast=1, method=DBA_DESEQ2, attributes=DBA_FACTOR, label=D
 <img src="../img/diffbind_pca_deseq2.png"  width="500">
 </p>
 
-
 ### MA plot
-An MA plots show the relationship between the overall binding level at each site and the magnitude of the change in binding enrichment between conditions, as well as the effect of normalization on data. In the plot below, each point represents a binding site, with **882 points in magenta representing sites identified as differentially bound**. There is a blue horizontal line through the origin (0 logFoldChange), as well as a horizontal red curve representing a non-liner loess fit showing the underlying relationship between coverage levels and fold changes.
+MA plots show the relationship between the overall binding level at each site and the magnitude of the change in binding enrichment between conditions, as well as the effect of normalization on data. In the plot below, each point represents a binding site, with **882 points in magenta representing sites identified as differentially bound**. There is a blue horizontal line through the origin (0 logFoldChange), as well as a horizontal red curve representing a non-linear loess fit showing the underlying relationship between coverage levels and fold changes.
 
 ```{r}
 # MA plot
@@ -332,21 +326,19 @@ dba.plotMA(dbObj, method=DBA_DESEQ2)
 <img src="../img/diffbind_maplot_deseq2.png"  width="600">
 </p>
 
-
 ### Volcano plots
-
 We can use volcano plots to visualize significantly differentially bound sites and their fold change.
 
 ```{r}
 # Volcano plot
 dba.plotVolcano(dbObj, contrast = 1)
 ```
+
 <p align="center">
 <img src="../img/diffbind_volcanoplot_deseq2.png"  width="600">
 </p>
 
 ### Binding affinity Heatmaps
-
 The heatmap below shows the patterns of binding affinity in the differentially bound sites. The affinities and clustering of the differentially bound sites are in rows and the samples are represented in columns. The normalized counts have been row-scaled and plotted with red/green heatmap color palette.
 
 ```{r}
@@ -355,19 +347,20 @@ hmap <- colorRampPalette(c("red", "black", "green"))(n = 13)
 readscores <- dba.plotHeatmap(dbObj, correlations = FALSE,
                               scale="row", colScheme = hmap)
 ```
+
 <p align="center">
 <img src="../img/diffbind_heatmap_deseq2.png"  width="600">
 </p>
 
-
 ## Extracting results
 
-To extract the full DiffBind results we use `dba.report()` function:
+To extract the full DiffBind results we use the `dba.report()` function:
 
 ```{r}
 # Extract results
 res_deseq <- dba.report(dbObj, method=DBA_DESEQ2, contrast = 1, th=1)
 ```
+
 This **produces a GRanges object** with genomic coordinates and binding statistics, including fold-change, p-value and FDR.
 
 ```{r}
@@ -402,11 +395,9 @@ Each of the **columns in the results are described below**:
 - **p-value**: pvalue from the significance test
 - **FDR**: False discovery rate after multiple correction
 
-
 First, we'll save the GRanges object to a file for downstream functional analysis. Then, we can convert the GRanges object to a data frame where the genomic coordinates get written as columns and can be saved as a tab-delimited file.
 
 ```{r}
-
 # Write GRanges to rds
 saveRDS(res_deseq, file = "all_res_deseq2.rds")
 
@@ -435,7 +426,6 @@ write.table(WT_enrich, file="results/WT_enriched.bed", sep="\t", quote=F, row.na
 ```
 
 > **NOTE:** BED files cannot contain headers and so we have added the col.names=F argument to address that. Additionally, we took only the first three columns from the results (genomic coordinates) to adhere to a minimal BED file format.
-
 
 
 ***
