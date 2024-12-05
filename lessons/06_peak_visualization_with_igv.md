@@ -12,8 +12,6 @@ Approximate time:
 
 * Visualize peaks in IGV (Integrative Genomics Viewer)
 * Qualitatively assess whether DiffBind correctly assess differential binding
-* Use R package (graphViz/rtracklayer) to plot and study differential peak enrichment between experimental groups
-
 
 ## Overview
 
@@ -34,7 +32,7 @@ When working with next-generation sequecing data, it can be helpful to visualize
 - GTF
 - More and with a complete list of suppported file formats can be found [here](https://igvteam.github.io/igv-webapp/fileFormats.html)
 
-Below we will learn about the file formats used to visualize peaks in IGV and use it to explore peaks in our experiment samples. We will also use graphViz/rtracklayer to plot the peak signals in R. 
+Below we will learn about the file formats used to visualize peaks in IGV and use it to explore peaks in our experiment samples. 
 
 ## IGV
 
@@ -346,11 +344,68 @@ Oftentimes, the sample names that we use during the processing of our samples ar
 #### Load track from URL
 Remove
 
-### Save a Session
+### Saving and Loading IGV Sessions
 
-### Load a Session
+Oftentimes, you’ll want to save your IGV session or load up an IGV session that you’ve been previously working on. Below we will describe how to save and load IGV sessions.
 
+#### Saving an IGV Session
 
+Now that you have edited your tracks to get them just the way you want you them, you might want to save the IGV session so that you can easily reload it for when you want to revisit it. To save your IGV session, go to the top bar and left-click <kbd>File</kbd> &#8594; <kbd>Save Session...</kbd>. Then name your session and left-click "OK". You can notice that the name and path to the session is now at the top of the IGV browser.
+
+<p align="center">
+<img src="../img/IGV_save_session.gif"  width="800">
+</p>
+
+After saving our IGV session, let's close IGV.
+
+#### Loading an IGV Session
+
+If we now open IGV back up, we will notice that it provides a fresh session. If we want to pick-up our analysis where we left off our previous IGV session, we will need to load the previous session. To load an IGV session, go to the top bar and left-click <kbd>File</kbd> &#8594; <kbd>Open Session...</kbd>. Navigate to the desired IGV session and left-click "Open". Now the previous IGV session should be loaded where you left off. 
+
+<p align="center">
+<img src="../img/IGV_load_session.gif"  width="800">
+</p>
+
+**It is VERY IMPORTANT that if you move files that were loaded into IGV into a different location on your computer, IGV will not be able to find them and therefore not load your saved session!**
+
+### Exercise
+
+1. Now that we've explored some of the functionality from IGV let's format our IGV browser and qualitatively assess some regions in the genome.
+
+a. Rename "cKO_H3K27ac_input_REP3.bigWig" to "cKO Input Rep_3"
+b. Rename "WT_H3K27ac_ChIPseq_REP3.bigWig" to "WT ChIP Rep_3"
+c. Rename "WT_H3K27ac_input_REP3.bigWig" to "WT Input Rep_3"
+d. Rename "WT_enriched.bed" to "WT Enriched Peaks"
+e. Rename "cKO_enriched.bed" to "cKO Enriched Peaks"
+
+2. Change the color of the "cKO Input Rep_3" and "cKO Enriched Peaks" tracks to orange
+
+<details><summary><b>Click here to see what the IGV session should look like</b></summary>
+  <p align="center">
+  <img src="../img/IGV_name_color_exercise_status_with_caption.gif"  width="800">
+  </p>
+</details>
+
+3. Let's explore a few regions and see if we qualitatively agree with DiffBind's analysis. Do you agree with DiffBind's call or non-call differentially bound peak for the following genomic coordinates:
+
+a. chr13:64,400,764-64,401,164
+b. chr1:131,492,210-131,492,610
+c. chr7:130,677,389-130,677,789 
+  Note: The FDR for this peak is 0.051
+
+### Save Image
+
+Lastly, now that we've completed an analysis we might be interested in saving an image of our analysis. You can either take a screenshot or use the built-in capabilities of IGV to save an image. In order to save an image, left-click <kbd>File</kbd> &#8594; <kbd>Save PNG Image...</kbd>/<kbd>Save SVG Image...</kbd>. Name the image and left-click "Save". This process is visualized in the GIF below:
+
+<p align="center">
+<img src="../img/IGV_save_image.gif"  width="800">
+</p>
+
+This image will look like:
+
+<p align="center">
+<img src="../img/Iimportant_peak_with_caption.png"  width="800">
+</p>
 
 ***
 
