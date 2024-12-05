@@ -16,15 +16,15 @@ Approximate time: 70 minutes
 
 ## Differential enrichment analysis
 
-Differential enrichment analysis is a powerful computational approach used to identify variations in protein-DNA binding events across different biological conditions, such as treatments, disease states, or cell types. It is applicable for datasets in which more than one sample class is being evaluated and best results are acheived in cases where each sample class has biological replicates. By **comparing enriched regions of the genome**—where proteins like transcription factors or histone modifications are bound—researchers can **pinpoint specific genomic sites that exhibit statistically significant changes** in binding between the conditions being studied. 
+Differential enrichment analysis is a powerful computational approach used to identify variations in protein-DNA binding events across different biological conditions, such as treatments, disease states, or cell types. It is applicable for datasets in which more than one sample class is being evaluated and best results are achieved in cases where each sample class has biological replicates. By **comparing enriched regions of the genome**—where proteins like transcription factors or histone modifications are bound—researchers can **pinpoint specific genomic sites that exhibit statistically significant changes** in binding between the conditions being studied. 
 
-In our dataset we have samples from two different conditions; wildtype and the conditional knockout of PRDM16 (cKO).This analysis will be helpful in understanding the transcriptional programs impacted during cortical development when PRDM16 is non-functional. 
+In our dataset we have samples from two different conditions: wildtype and the conditional knockout of PRDM16 (cKO). This analysis will be helpful in understanding the transcriptional programs impacted during cortical development when PRDM16 is non-functional. 
 
 **INSERT WORKFLOW IMAGE HERE**
 
-
 ## Tools for evaluating differential enrichment
-A wide variety of computational tools are available for differential analysis of ChIP-seq experiments. Each of these tools differ in the underlying algorithms and the assumptions of the data, as such this results in challenge of knowing which tool is right for your condition. Below are some key factors to consider when evaluating the different approaches:
+
+A wide variety of computational tools are available for differential analysis of ChIP-seq experiments. Each of these tools differ in the underlying algorithms and the assumptions of the data; as such, this results in the challenge of knowing which tool is right for your condition. Below are some key factors to consider when evaluating the different approaches:
 
 * **Peak calls or alignment files**
   * Some tools require peaks to be called prior to differential enrichment analysis, while others implement their own detection method or work using sliding windows.
@@ -33,22 +33,22 @@ A wide variety of computational tools are available for differential analysis of
 * **Assumptions of the data**
   * Methods adapted from RNA-seq assume the majority of occupied genomic regions do not differ between experimental state. This may not hold for studies where large perurbations can have large scale global impact on chromatin.
 * **Biological replicates**
-  * Some tools can work in the absence of replicates for each condition, and others require replicates to provide differential analysis.
+  * Some tools can work in the absence of replicates for each condition, while others require replicates to provide differential analysis.
 * **Binding profile**
   * A narrow peak will identify smaller regions, whereas broad peaks can range between a few hundred to thousands of base pairs.   
 
-All of these aspects  make it challenging to know what the optimal computational tool is for differential enrichement analysis of your data. A recent [study performed a comprehensive assessment of differential ChIP-seq tools](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02686-y). In this work the authors **evaluated the performance of 33 computational tools** using reference datasets obtained by in silico simulation of ChIP-seq. Tool performances were evaluated with precision-recall curves, and the accuracy of tested tools was assessed depending on peak shape and biological regulation scenario. The **decision tree** displayed below was generated based on the results of this study and is helpful in **providing recommendations**.
+All of these aspects  make it challenging to know what the optimal computational tool is for differential enrichment analysis of your data. A recent [study performed a comprehensive assessment of differential ChIP-seq tools](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02686-y). In this work the authors **evaluated the performance of 33 computational tools** using reference datasets obtained by _in silico_ simulation of ChIP-seq. Tool performances were evaluated with precision-recall curves, and the accuracy of tested tools was assessed depending on peak shape and biological regulation scenario. The **decision tree** displayed below was generated based on the results of this study and is helpful in **providing recommendations**.
 
 <p align="center">
 <img src="../img/DiffEnrich_image.png"  width="850">
 </p>
 
 _Image source: [Eder T. and Grebian F., Genome Biology 2022](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02686-y)_ 
- 
 
 In this workshop, we have chosen to use **[DiffBind](https://bioconductor.org/packages/devel/bioc/vignettes/DiffBind/inst/doc/DiffBind.pdf)** for the differential enrichment analysis. From the figure above we see that it appears to be a top 5 tool for every scenario. We will walk through the DiffBind pipeline to perform data exploration, conduct differential binding analysis, evaluate the results, and save the output. 
 
 ## DiffBind
+
 DiffBind is an R Biocondutor package designed to identify genomic sites that are differentially enriched between sample groups. It works primarily with sets of peak calls ('peaksets'), which represent candidate protein binding sites as genomic intervals for each sample. **Biological replicates are required in order to run DiffBind analysis.** DiffBind provides a range of functionalities that support the processing of peaksets, including:
 
 - Overlapping and merging peaksets across an entire dataset
@@ -108,12 +108,11 @@ Metadata should also contain columns pointing to the path where alignment files 
 
 - **bamReads**: This points to the primary aligned file for the sample from Chip experiment (or other assays like ATAC)
 - **bamControl**: This is an optional set of control reads associated with the sample or sample class. For ChIP experiments, this is most often an Input control (ChIP run without an antibody), or a ChIP run with a non-specific antibody (IgG). ATAC-seq experiment usually do not have a control.
-- **ControlID**: Id for the input control sample
+- **ControlID**: ID for the input control sample
 - **Peaks**: The path to peakset files (in our case narrowPeak files)
-- **PeakCaller**:
+- **PeakCaller**: The type of peak file (e.g., narrow, bed, macs). Different peak callers will produce files in different formats, so identifying the type of file tells DiffBind what columns to expect.
 
- > There is also a 'SpikeIn' option to provide the BAM files from alignment to the spike in genome. More information on spike-ins is discussed below.
-
+ > There is also a 'SpikeIn' option to provide the BAM files from alignment to the spike-in genome. More information on spike-ins is discussed below.
 
 ### Affinity binding matrix
 DiffBind will read in the data and **determine a set of consensus peaks**. Using default settings peaks that are called in at least two samples, regardless of which sample group the belong to are considered in the consensus set. You can create your own consensus peak set as outlined in Section 8.2 in the DiffBind vignette. For example, you may want to only include peaks that overlap in a subset of WT samples _and_ a subset of cKO samples. This is the consensus-of-consensus approach, where you first make a consensus peakset for each sample group, then combine them in an overall consensus you use for counting. This consensus peakset represents the overall set of candidate binding sites for further analysis.
