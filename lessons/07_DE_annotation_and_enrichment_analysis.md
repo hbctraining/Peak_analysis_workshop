@@ -181,7 +181,7 @@ Other columns of interest are the p.adjust column (by which results are ordered 
 
 **Exercise:**
 
-1. Perform the ORA for the down regulated sites in cKO vs WT results. Do you find any significantly over-represented terms?
+1. Perform the ORA for the downregulated sites in cKO vs WT results. Do you find any significantly over-represented terms?
 
 ***
 
@@ -224,7 +224,7 @@ emapplot(go_ORA_Up)
 
 **Exercise:**
 
-1. Create a dotplot and enrichplot from the ORA result generated earlier using the down regulated sites in cKO vs WT results. What overarching themes are observed from the enrichplot (if any)?
+1. Create a dotplot and enrichplot from the ORA result generated earlier using the downregulated sites in cKO vs WT results. What overarching themes are observed from the enrichplot (if any)?
    
 ***
 
