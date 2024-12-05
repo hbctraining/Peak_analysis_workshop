@@ -39,6 +39,6 @@ plotDistToTSS(annot_sig_down, title = "Distribution of transcription factor-bind
 <img src="../img/Chipseq_tssdist_sig_down.png"  width="500">
 </p>
 
-Significantly upregulated peaks have a similar feature distribution to all significantly DE peaks; however, downregulated peaks are more likely to be in "other intronic" and "distal intergenic" regions and are never in the 5' UTR (which makes the colors change between the plots, look carefully at the legend!). Upregulated peaks are slightly closer to the TSS, while downregulated peaks are slightly further from the TSS.
+Significantly upregulated peaks have a similar feature distribution to all significantly DE peaks; however, downregulated peaks are more likely to be in "other intronic" and "distal intergenic" regions and are never in the 5' UTR or downstream (which makes the colors change between the plots, look carefully at the legend!). Upregulated peaks are slightly closer to the TSS, while downregulated peaks are slightly further from the TSS.
 
 ## Annotation and functional analysis of DE regions
