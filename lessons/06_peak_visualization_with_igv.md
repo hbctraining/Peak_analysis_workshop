@@ -8,12 +8,11 @@ Contributors: Heather Wick, Upendra Bhattarai, Meeta Mistry, Will Gammerdinger
 
 Approximate time: 
 
-## Learning Objectives
+## Learning objectives
 
 * Visualize peaks in IGV (Integrative Genomics Viewer)
-* Qualitatively assess whether DiffBind correctly assess differential binding
+* Qualitatively assess whether DiffBind correctly assesses differential binding
 * Use R package (graphViz/rtracklayer) to plot and study differential peak enrichment between experimental groups
-
 
 ## Overview
 
@@ -21,7 +20,7 @@ Approximate time:
 <img src="../img/IGV_logo.jpeg"  width="150">
 </p>
 
-When working with next-generation sequecing data, it can be helpful to visualize your analysis. [Integrate Genomics Viewer (IGV)](https://igv.org/) is an open-source desktop genome visualization tool, which supports visualization for a wide variety of file formats including:
+When working with next-generation sequecing data, it can be helpful to visualize your analysis. [Integrative Genomics Viewer (IGV)](https://igv.org/) is an open-source desktop genome visualization tool that supports visualization for a wide variety of file formats including:
 
 - BED
 - bigWig
@@ -38,9 +37,9 @@ Below we will learn about the file formats used to visualize peaks in IGV and us
 
 ## IGV
 
-### Selecting the mm10 reference genome
+### Select the mm10 reference genome
 
-Open IGV on your computer. The first thing we will need to use the appropriate reference genome (mm10). There should be a dropdown menu in the top-left of IGV, which let's you select your preferred reference genome. If your selected reference genome is already **mm10**, then you can skip the next few steps. Otherwise, left-click on the dropdown menu:
+Open IGV on your computer. The first thing we will need to do is select the appropriate reference genome (mm10). There should be a dropdown menu in the top left of IGV, which lets you select your preferred reference genome. If your selected reference genome is already **mm10**, then you can skip the next few steps. Otherwise, left-click on the dropdown menu:
 
 <p align="center">
 <img src="../img/IGV_default_with_caption.png"  width="800">
@@ -52,7 +51,7 @@ You can see a few options for refernce genomes to select from. If you see **mm10
 <img src="../img/IGV_reference_dropdown_with_caption.png"  width="800">
 </p>
 
-Find "Mouse mm10" from the menu and left-click "OK"
+Find "Mouse mm10" from the menu and left-click "OK".
 
 <p align="center">
 <img src="../img/IGV_reference_menu_with_caption.png"  width="800">
@@ -91,7 +90,7 @@ bedtools genomecov \
   > $OUTPUT_FILE
 </pre><br>
 
-We will need to create a bash variabel to hold a scale factor to a miilion which we will call in the <code>bedtools</code> command. The command to do this is:<br>
+We will need to create a bash variable to hold a scale factor to a million, which we will call in the <code>bedtools</code> command. The command to do this is:<br>
 <code>$SCALE_FACTOR=`awk 'BEGIN { print 1000000 / $MAPPED_READ_COUNT }'`</code><br>
 
 <ul><li><code>bedtools genomecov</code> - Calls the <code>bedtools</code>'s <code>genomecov</code> tool
@@ -99,7 +98,7 @@ We will need to create a bash variabel to hold a scale factor to a miilion which
   <li><code>-bg</code> - Output depth in bedGraph format</li>
   <li><code>-scale</code> - Scale factor used for scaling the data</li>
   <li><code>sort -k1,1 -k2,2n</code> - The output file is unsorted and needs to be sorted by chromosome and chromosome start location
-  <li><code>&gt; $OUTPUT_FILE</code> - Write to an ouptut file</li>
+  <li><code>&gt; $OUTPUT_FILE</code> - Write to an output file</li>
 </ul><br>
 
 The full documentation for <code>bedtools genomecov</code> can be found <a href="https://bedtools.readthedocs.io/en/latest/content/tools/genomecov.html">here</a>.
@@ -124,7 +123,7 @@ We can break this command down as:<br>
 The download for <code>bedGraphToBigWig</code> can be found <a href="https://github.com/ENCODE-DCC/kentUtils">here</a>.<br>
 
 <details><summary><b>Click here to see how to create a chromosome sizes file</b></summary>
-There are several ways to make a tab-delimited file with the chromosomes in the first column and their asscoiated sizes in the second column. One way is to use the <code>samtools</code> package <code>faidx</code> to create a FASTA index file. The documentation to run this cool can be found <a href="https://www.htslib.org/doc/samtools-faidx.html">here</a>. The command to run the <code>samtools faidx</code> tool is:
+There are several ways to make a tab-delimited file with the chromosomes in the first column and their associated sizes in the second column. One way is to use the <code>samtools</code> package <code>faidx</code> to create a FASTA index file. The documentation to run this cool can be found <a href="https://www.htslib.org/doc/samtools-faidx.html">here</a>. The command to run the <code>samtools faidx</code> tool is:
 
 <pre>
   samtools faidx \
@@ -139,7 +138,7 @@ We can break this command into two parts:<br>
 
 The full documentation for using <code>samtools faidx</code> can be found <a href="https://www.htslib.org/doc/samtools-faidx.html">here</a>.<br>
 
-However, this output will have a few more column than you need. You only need the first two columns, so we can use <code>awk</code> to parse out the first two columns:
+However, this output will have a few more columns than you need. You only need the first two columns, so we can use <code>awk</code> to parse out the first two columns:
 
 <pre>
   awk \
@@ -155,7 +154,7 @@ This command is composed of a few parts:
   <li><code>-v OFS='\t'</code> - Output as tab-delimited</li>
   <li><code>'{print $1, $2}'</code> - Print the first and second columns</li>
   <li><code>$FASTA_INDEX_FILE</code> - Input FASTA index file that was made with the above <code>samtools faidx</code> command</li>
-  <li><code>&gt; $CHROMOSOME_SIZES_FILE</code> - Output Chromosome sizes file that we can use in out <code>bedGraphToBigWig</code> command</li>
+  <li><code>&gt; $CHROMOSOME_SIZES_FILE</code> - Output chromosome sizes file that we can use in our <code>bedGraphToBigWig</code> command</li>
 </ul>
 <hr />
 </details>
@@ -165,7 +164,7 @@ We discuss an alternative way of generating BigWig files in our <a href="https:/
 
 ### Load a track
 
-Now that we have the data that we would like to visualize, let's go ahead and load it into IGV. Many file formats you load into IGV will load as a single "track", or horizonatla row of genomic data. However some, like BAM/SAM, will load as multiple tracks. Let's go ahead and load the BigWig track for our cKO IP replicate 3 sample.
+Now that we have the data that we would like to visualize, let's go ahead and load it into IGV. Many file formats you load into IGV will load as a single "track", or horizontal row of genomic data. However, some, like BAM/SAM, will load as multiple tracks. Let's go ahead and load the BigWig track for our cKO IP replicate 3 sample.
 
 In order to load a track, left-click on "File" in the top-left and select "Load from File...":
 
@@ -196,9 +195,9 @@ Load the three additional BigWig files you were provided within the "BigWig" dir
   </p>
 </details>
 
-### Moving tracks
+### Move tracks
 
-Oftentimes, just because you loaded some tracks, that doesn't mean that they are arranged in the order that you would like them to be in. IN order to change the order of the tracks we will left-click on the track where the track's name is located and move it to where you'd like to se it. This process is visualized in the GIF below:
+Oftentimes, just because you loaded some tracks, that doesn't mean that they are arranged in the order that you would like them to be in. In order to change the order of the tracks we will left-click on the track where the track's name is located and drag to move it to where you'd like to see it. This process is visualized in the GIF below:
 
 <p align="center">
 <img src="../img/IGV_move_track.gif"  width="800">
@@ -212,12 +211,11 @@ Re-order the tracks so that the WT tracks are above the cKO tracks and the IP sa
 <img src="../img/IGV_reordered_tracks_with_caption.png"  width="800">
 </p>
 
-### Navigating in IGV
+### Navigate in IGV
 
 When using IGV it is critical that you are able to navigate to the place in the genome that you are interested in viewing. Below we will discuss a couple of ways to navigate around the genome in the IGV browser.
 
-#### Zooming in and out on regions
-
+#### Zoom in and out on regions
 The first way that we can zoom in on a region in IGV is to left-click and hold while dragging over the region we are interested in. This can be iteratively done as one narrows down the region that they are interested in viewing. This process is visualized in the GIF below:
 
 <p align="center">
@@ -230,9 +228,8 @@ We can zoom in and out using the <kbd>+</kbd> and <kbd>-</kbd>, respectively, on
 <img src="../img/IGV_zooming_2.gif"  width="800">
 </p>
 
-#### Jumping to regions
-
-Rather than zooming in on a region, you may already have an idea of where you you would like to analyze and you would like to just jump right to that region. Let's go to a region where we might want to inspect a peak that DiffBind has informed us shows is very significant differentially binding. It is located on Chromosome 13 from 64,400,764 to 64,401,164, but let's broaden our region by a kilobase on each side in order to give us some context of the genomic landscape around this differentially expressed peak. In the genomic coordinates box in the top-center of the IGV browser, let's enter `chr13:64,399,764-64,402,164` and left-click "Go".
+#### Jump to regions
+Rather than zooming in on a region, you may already have an idea of where you you would like to analyze and you would like to just jump right to that region. Let's go to a region where we might want to inspect a peak that DiffBind has informed us shows is very significant differentially binding. It is located on Chromosome 13 from 64,400,764 to 64,401,164, but let's broaden our region by a kilobase on each side in order to give us some context of the genomic landscape around this differentially expressed peak. In the genomic coordinates box in the top center of the IGV browser, let's enter `chr13:64,399,764-64,402,164` and left-click "Go".
 
 <p align="center">
 <img src="../img/IGV_genomic_cooridnates_with_caption.png"  width="400">
@@ -250,13 +247,12 @@ Alternatively, if there is a gene we are particularly interested in going to, we
 <img src="../img/Gene_jump_IGV.png"  width="800">
 </p>
 
-### Modifying Tracks
+### Modify tracks
 
 At this point, we have identified a region that we'd like to investigate, but we need to clean up the aesthetics of this region in order for us to more clearly evaluate this peak, which DiffBind has indicated shows significant differentially binding.
 
 #### Adjust data range
-
-One of the most important steps when comparing between tracks with quantitative ranges like BigWig files, is that you'll need to set the data range to be the same across all tracks. We can look at our IGV browser and look in the top-left of each track (to the right of the track's name) and we will see the track's minimum and maximum data range displayed as [Minimum - Maximum]. 
+One of the most important steps when comparing between tracks with quantitative ranges like BigWig files is that you'll need to set the data range to be the same across all tracks. We can look at our IGV browser and look in the top-left of each track (to the right of the track's name) and we will see the track's minimum and maximum data range displayed as [Minimum - Maximum]. 
 
 <p align="center">
 <img src="../img/IGV_default_data_ranges_with_caption.png"  width="400">
@@ -268,7 +264,6 @@ There are two ways to modify a track's data range:
 - Utilizing IGV's `Group Autoscale` feature
 
 ##### Setting Data Range Manually
-
 Let's first look at setting a track's data range manually. We can to right-click on our top track, WT_H3K27ac_ChIPseq_REP3.bigWig, and select "Set Data Range..." from the dropdown menu:
 
 <p align="center">
@@ -288,7 +283,6 @@ If we wanted, we could also alter the minimum value or make our data range be lo
 </p>
 
 ##### Using IGV's Group Autoscale
-
 While it is nice to be able to adjust a data range, it can be tedious to do it across all of your samples in order to make your sample comparable. Furthermore, if you move to a different location in the genome to look at a different peak, you will likely need to re-adjust your data ranges. Fortunately, IGV has a nifty function called "Group Autoscale" that can help with this. It will:
 
 - Automatically adjust the data range for all of the sample in the group to be the same
@@ -306,7 +300,6 @@ Next, right-click in the track names area and select the "Group Autoscale" funct
 </p>
 
 #### Adjust track height
-
 We can see in our IGV browser that there is a lot of whitespace that we might like to have our tracks occupy. There are a two ways to adjust the height of the tracks so that they occupy some of the white space. First, we can right-click on a track and select "Change Track Height...". Then select a new height and left-click "OK". This process is visualized in the GIF below:
 
 <p align="center">
@@ -319,25 +312,23 @@ Alternatively, we can use the "Resize tracks to fit in window" button on the top
 <img src="../img/IGV_resize_all_tracks.gif"  width="800">
 </p>
 
-> Note: If you have too few tracks there still might be some whitespace left and if you have twoo many it may only squish them to a certain point before offering you the option to scroll down through the tracks.
+> Note: If you have too few tracks there still might be some whitespace left and if you have too many it may only squish them to a certain point before offering you the option to scroll down through the tracks.
 
 #### Adjust color
-
 It can be nice to adjust the color in IGV in order to demonstrate contrasts between samples or conditions. Let's go ahead and change the color of the cKO ChIP sample to orange. Right-click on a track and select "Change Track Color...". Select the desired color of your track and left-click "OK". This process is visualized in the GIF below:
 
 <p align="center">
 <img src="../img/IGV_change_track_color.gif"  width="800">
 </p>
 
-However, you may want finer control over your color selection and you can use some of the other tabs to do this. The "RGB" tab allows you to define the level of red, green and blue you want in the color. Of particular note, it also allows you to place the hexidemical code for the color you want in the "Color Code" text box. For instance, this could be of interest if you are trying to keep consistent colors from other figures where you defined a hexidecimal code for a given dataset. Once you have selected a color that you like, you can left-click the <kbd>OK</kbd> button:
+However, you may want finer control over your color selection and you can use some of the other tabs to do this. The "RGB" tab allows you to define the level of red, green and blue you want in the color. Of particular note, it also allows you to place the hexadecimal code for the color you want in the "Color Code" text box. For instance, this could be of interest if you are trying to keep consistent colors from other figures where you defined a hexadecimal code for a given dataset. Once you have selected a color that you like, you can left-click the <kbd>OK</kbd> button:
 
 <p align="center">
 <img src="../img/IGV_RBG_color_with_caption.png"  width="800">
 </p>
 
 #### Rename Tracks
-
-Oftentimes, the sample names that we use during the processing of our samples are not the most obivious track names to a third-party in IGV. Fortunately, we can change the track name in the IGV browser easily. We can right-click on a track and select "Rename Track...". Enter your new track's name and left-click the "OK" button. Let's rename the "cKO_H3K27ac_ChIPseq_REP3.bigWig" to be "cKO ChIP Rep_3". This process is visualized in the GIF below:
+Oftentimes, the sample names that we use during the processing of our samples are not the most obivious track names to a third party in IGV. Fortunately, we can change the track name in the IGV browser easily. We can right-click on a track and select "Rename Track...". Enter your new track's name and left-click the "OK" button. Let's rename the "cKO_H3K27ac_ChIPseq_REP3.bigWig" to be "cKO ChIP Rep_3". This process is visualized in the GIF below:
 
 <p align="center">
 <img src="../img/IGV_rename_track.gif"  width="800">
