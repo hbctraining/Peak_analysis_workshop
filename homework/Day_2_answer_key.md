@@ -10,6 +10,7 @@ There are no coding questions for this lesson.
 
 ```{r}
 annot_sig_all <- subset(annot_res_all, FDR < 0.05)
+
 plotAnnoBar(annot_sig_all, title = "Feature distribution in significant peaks")
 plotDistToTSS(annot_sig_all, title = "Distribution of transcription factor-binding loci relative to TSS in significant peaks")
 ```
@@ -35,6 +36,7 @@ Significantly DE peaks are also further from the TSS.
 ```{r}
 annot_sig_up   <- subset(annot_sig_all, Fold > 0)
 annot_sig_down <- subset(annot_sig_all, Fold < 0)
+
 plotAnnoBar(annot_sig_up, title = "Feature distribution in upregulated peaks")
 plotAnnoBar(annot_sig_down, title = "Feature distribution in downregulated peaks")
 plotDistToTSS(annot_sig_up, title = "Distribution of transcription factor-binding loci relative to TSS in upregulated peaks")
@@ -60,16 +62,18 @@ Upregulated peaks are slightly closer to the TSS, while downregulated peaks are 
 ```{r}
 # Prepare gene set query for down-regulated genes
 sigDown <- dplyr::filter(annot_res_all_df, FDR < 0.05, Fold < 0)
-sigDown_genes <- as.character(sigDown$SYMBOL)
+sigDown_genes <- as.character(sigDown$geneId)
+
 # Run over-representation analysis
 go_ORA_Down <- enrichGO(gene = sigDown_genes,
                         universe = background_set,
-                        keyType = "SYMBOL",
+                        keyType = "ENTREZID",
                         OrgDb = org.Mm.eg.db,
                         ont = "ALL",
                         pAdjustMethod = "BH",
                         qvalueCutoff = 0.05,
                         readable = TRUE)
+
 # Look at results
 go_ORA_Down_df <- data.frame(go_ORA_Down)
 View(go_ORA_Down_df)
@@ -88,12 +92,13 @@ go_ORA_Down <- enrichGO(gene = sigDown_genes,
                         pAdjustMethod = "BH",
                         pvalueCutoff = 0.1,
                         readable = TRUE)
+
 # Look at results
 go_ORA_Down_df <- data.frame(go_ORA_Down)
 View(go_ORA_Down_df)
 ```
 
-With the more lax p-value cutoff, we see a number of pathways related to chemotaxis are downregulated.
+With the more lax p-value cutoff, we see a number of pathways related to proliferation and chemotaxis are downregulated.
 
 **4. Create a dotplot and enrichplot from the ORA result generated earlier using the downregulated sites in cKO vs WT results. What overarching themes are observed from the enrichplot (if any)?**
 
