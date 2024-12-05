@@ -397,7 +397,7 @@ Lastly, now that we've completed an analysis we might be interested in saving an
 This image will look like:
 
 <p align="center">
-<img src="../img/Iimportant_peak_with_caption.png"  width="800">
+<img src="../img/important_peak_with_caption.png"  width="800">
 </p>
 
 ***
