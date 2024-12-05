@@ -28,7 +28,7 @@ First, let's open an R script called `functional_analysis.R`. Inside we'll add a
 # Load libraries 
 library(GenomicRanges)
 library(ChIPseeker)
-library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 library(clusterProfiler)
 
 # Load result from DiffBind analysis if not present in your environment
