@@ -244,6 +244,12 @@ The IGV window should look like:
 <img src="../img/IGV_genomic_coordinates_full_window_with_caption.png"  width="800">
 </p>
 
+Alternatively, if there is a gene we are particularly interested in going to, we can also enter the gene’s name in this same box and left-click the <kbd>Go</kbd> button:
+
+<p align="center">
+<img src="../img/Gene_jump_IGV.png"  width="800">
+</p>
+
 ### Modifying Tracks
 
 At this point, we have identified a region that we'd like to investigate, but we need to clean up the aesthetics of this region in order for us to more clearly evaluate this peak, which DiffBind has indicated shows significant differentially binding.
@@ -307,17 +313,31 @@ We can see in our IGV browser that there is a lot of whitespace that we might li
 <img src="../img/IGV_change_track_height.gif"  width="800">
 </p>
 
-Alternatively, we canuse the "Resize tracks to fit in window" button on the top of our IGV browser to resize all of our tracks to take up more of the whitespace. This process is visualized in the GIF below:
+Alternatively, we can use the "Resize tracks to fit in window" button on the top of our IGV browser to resize all of our tracks to take up more of the whitespace. This process is visualized in the GIF below:
 
 <p align="center">
-<img src="../img/.gif"  width="800">
+<img src="../img/IGV_resize_all_tracks.gif"  width="800">
 </p>
 
-If you have too few tracks there still might be some whitespace left and if you have twoo many it may only squish them to a certain point before offering you the option to scroll down through the tracks.
+> Note: If you have too few tracks there still might be some whitespace left and if you have twoo many it may only squish them to a certain point before offering you the option to scroll down through the tracks.
 
 #### Adjust color
 
+It can be nice to adjust the color in IGV in order to demonstrate contrasts between samples or conditions. Let's go ahead and change the color of the cKO ChIP sample to orange. Right-click on a track and select "Change Track Color...". Select the desired color of your track and left-click "OK". This process is visualized in the GIF below:
+
+<p align="center">
+<img src="../img/IGV_change_track_color.gif"  width="800">
+</p>
+
+However, you may want finer control over your color selection and you can use some of the other tabs to do this. The "RGB" tab allows you to define the level of red, green and blue you want in the color. Of particular note, it also allows you to place the hexidemical code for the color you want in the "Color Code" text box. For instance, this could be of interest if you are trying to keep consistent colors from other figures where you defined a hexidecimal code for a given dataset. Once you have selected a color that you like, you can left-click the <kbd>OK</kbd> button:
+
+<p align="center">
+<img src="../img/IGV_RBG_color_with_caption.png"  width="800">
+</p>
+
 #### Rename Tracks
+
+
 
 #### Load track from URL
 Remove
