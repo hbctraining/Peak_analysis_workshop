@@ -261,6 +261,8 @@ There are two ways to modify a track's data range:
 - Setting each track's data range manually
 - Utilizing IGV's `Group Autoscale` feature
 
+##### Setting Data Range Manually
+
 Let's first look at setting a track's data range manually. We can to right-click on our top track, WT_H3K27ac_ChIPseq_REP3.bigWig, and select "Set Data Range..." from the dropdown menu:
 
 <p align="center">
@@ -279,15 +281,45 @@ If we wanted, we could also alter the minimum value or make our data range be lo
 <img src="../img/IGV_modified_data_range_with_caption.png"  width="800">
 </p>
 
+##### Using IGV's Group Autoscale
+
+While it is nice to be able to adjust a data range, it can be tedious to do it across all of your samples in order to make your sample comparable. Furthermore, if you move to a different location in the genome to look at a different peak, you will likely need to re-adjust your data ranges. Fortunately, IGV has a nifty function called "Group Autoscale" that can help with this. It will:
+
+- Automatically adjust the data range for all of the sample in the group to be the same
+- Automatically re-adjust the data range as genomic coordinates change
+
+In order to use the "Group Autoscale" function in IGV you will need to select all of the tracks you would like to group by either:
+
+- Selecting a range of track while holding <kbd>Shift</kbd>
+- Selecting tracks individually while holding <kbd>Command</kbd> on MacOS or <kbd>Ctrl</kbd> on Windows 
+
+Next, right-click in the track names area and select the "Group Autoscale" function. Now, the tracks will be have the same datsa range and will automatically adjust as the data range changes. This process is visualized in the GIF below:
+
+<p align="center">
+<img src="../img/IGV_group_autoscale.gif"  width="800">
+</p>
+
 #### Adjust track height
 
-height
+We can see in our IGV browser that there is a lot of whitespace that we might like to have our tracks occupy. There are a two ways to adjust the height of the tracks so that they occupy some of the white space. First, we can right-click on a track and select "Change Track Height...". Then select a new height and left-click "OK". This process is visualized in the GIF below:
+
+<p align="center">
+<img src="../img/IGV_change_track_height.gif"  width="800">
+</p>
+
+Alternatively, we canuse the "Resize tracks to fit in window" button on the top of our IGV browser to resize all of our tracks to take up more of the whitespace. This process is visualized in the GIF below:
+
+<p align="center">
+<img src="../img/.gif"  width="800">
+</p>
+
+If you have too few tracks there still might be some whitespace left and if you have twoo many it may only squish them to a certain point before offering you the option to scroll down through the tracks.
 
 #### Adjust color
 
 #### Rename Tracks
 
-#### Load from URL
+#### Load track from URL
 Remove
 
 ### Save a Session
