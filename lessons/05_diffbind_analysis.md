@@ -123,7 +123,7 @@ The `dba()` function is used to read in data files an create the DiffBind object
 ### DO NOT RUN THIS CODE ###
 
 ## Read in data files to create DiffBind object 
-dbObj <- dba(sampleSheet=sample, scoreCol=5) 
+dbObj <- dba(sampleSheet=samples, scoreCol=5)
 ```
 
 Next, we use the `dba.count()` function, which takes the alignment files and **computes, for each sample, the count information for each of the peaks/regions in the consensus set**. In this step, for each of the consensus regions, DiffBind takes the number of aligned reads in the ChIP sample and the input sample to compute a normalized read count for each sample at every potential binding site. The peaks in the consensus peakset may be re-centered and trimmed based on calculating their summits (point of greatest read overlap) in order to provide more standardized peak intervals.
