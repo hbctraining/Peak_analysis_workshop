@@ -70,9 +70,11 @@ We will discuss the importance of each step in the process, but for more detaile
 1. Open the R project `chipseq-project` in your RStudio environment.
 2. Open a new R script `'File' -> 'New File' -> 'Rscript'`, and save it as `diffbind.R`
 
-Let's begin with loading the DiffBind and Tidyverse libraries.
+Let's begin with giving our script a header and loading the DiffBind and Tidyverse libraries.
 
 ```{r}
+# Differential binding analysis using DiffBind
+
 # Load libraries
 library(DiffBind)
 library(tidyverse)
@@ -88,8 +90,6 @@ This metadata file includes one line for each ChIP peakset, with columns of info
 samples <- read.csv("data/DiffBind/metadata.csv")
 names(samples)
 ```
-
-Output:
 
 ```{r}
 [1] "SampleID"   "Tissue"     "Factor"     "Condition"  "Replicate"  "bamReads"   "ControlID"  "bamControl" "Peaks"      "PeakCaller"
@@ -123,7 +123,7 @@ The `dba()` function is used to read in data files an create the DiffBind object
 ### DO NOT RUN THIS CODE ###
 
 ## Read in data files to create DiffBind object 
-dbObj <- dba(sampleSheet=sample, scoreCol=5) 
+dbObj <- dba(sampleSheet=samples, scoreCol=5)
 ```
 
 Next, we use the `dba.count()` function, which takes the alignment files and **computes, for each sample, the count information for each of the peaks/regions in the consensus set**. In this step, for each of the consensus regions, DiffBind takes the number of aligned reads in the ChIP sample and the input sample to compute a normalized read count for each sample at every potential binding site. The peaks in the consensus peakset may be re-centered and trimmed based on calculating their summits (point of greatest read overlap) in order to provide more standardized peak intervals.
@@ -307,7 +307,7 @@ Lets plot another PCA for our data, but this time only use the regions those wer
 
 ```{r}
 # Plot PCA using only DE regions
-dba.plotPCA(dbObj, contrast=1, method=DBA_DESEQ2, attributes=DBA_FACTOR, label=DBA_ID)
+dba.plotPCA(dbObj, contrast=1, method=DBA_DESEQ2, attributes=DBA_CONDITION, label=DBA_ID)
 ```
 
 <p align="center">
@@ -413,15 +413,12 @@ Additionally, we can also create BED files for each set of significant regions i
 cKO_enrich <- out %>% 
   filter(FDR < 0.05 & Fold > 0) %>% 
   select(seqnames, start, end)
-  
-# Write to file
-write.table(cKO_enrich, file="results/cKO_enriched.bed", sep="\t", quote=F, row.names=F, col.names=F)
-
 WT_enrich <- out %>% 
   filter(FDR < 0.05 & Fold < 0) %>% 
   select(seqnames, start, end)
-
+  
 # Write to file
+write.table(cKO_enrich, file="results/cKO_enriched.bed", sep="\t", quote=F, row.names=F, col.names=F)
 write.table(WT_enrich, file="results/WT_enriched.bed", sep="\t", quote=F, row.names=F, col.names=F)
 ```
 
