@@ -403,6 +403,12 @@ If we now open IGV back up, we will notice that it provides a fresh session. If 
 
 &emsp;&emsp;e. Rename "cKO_enriched.bed" to "cKO Enriched Peaks"
 
+<details><summary><b>Click here to see what the IGV session should look like</b></summary>
+  <p align="center">
+  <img src="../img/IGV_track_names_exercise_with_caption.png"  width="800">
+  </p>
+</details>
+
 _There is nothing to submit to the Google Form for this question._
 
 2) Change the color of the "cKO Input Rep_3" and "cKO Enriched Peaks" tracks to orange
