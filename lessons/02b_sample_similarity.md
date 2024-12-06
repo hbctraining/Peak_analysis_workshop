@@ -201,7 +201,7 @@ Let's first begin by loading in the data. We will use a for loop to go through a
 sample_files <- list.files(path = "./data/macs2/narrowPeak/", full.names = T)
 
 # Create a vector of short names
-vars <- str_remove( sample_files, "./data/macs2/narrowPeak//") %>% 
+vars <- str_remove( sample_files, "./data/macs2/narrowPeak/") %>% 
   str_remove("_peaks.narrowPeak")
 
 # Loop through to create a dataframe for each sample with columns required
