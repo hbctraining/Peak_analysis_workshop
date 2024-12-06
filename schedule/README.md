@@ -68,18 +68,18 @@ I. Please **study the contents** and **work through all the code** within the fo
    1. [Peak visualization using IGV](../lessons/06_peak_visualization_with_igv.md)
       <details>
        <summary><i>Click here for a preview of this lesson</i></summary>
-         <br>A two sentence summary of the lesson.... <br><br>In this lesson, we will:<br>
-             - Point 1<br>
-             - Point 2<br><br>
+         <br>Now that we have identified regions that are differentially enriched, it would be good to perform a qualitative assessment. To do this we will take a look at the data in IGV, a genome browser and see what read density looks like in significant regions.<br><br>In this lesson, we will:<br>
+             - Learn how to navigate IGV and introduce various features<br>
+             - Evaluate significant regions from DiffBind<br><br>
         </details>
    
 
    2. [Annotation and functional analysis of DE regions](../lessons/07_DE_annotation_and_enrichment_analysis.md)
       <details>
        <summary><i>Click here for a preview of this lesson</i></summary>
-         <br>A two sentence summary of the lesson.... <br><br>In this lesson, we will:<br>
-             - Point 1<br>
-             - Point 2<br><br>
+         <br>To gain biological insight from the genomic coordinates identified as differentially bound, we need to map them back to genomic features and see if there is some over-representation of target genes in specific pathways.  <br><br>In this lesson, we will:<br>
+             - Use ChIPseeker to annotate the DE regions<br>
+             - Perform functional analysis on the DE target genes<br><br>
         </details>
         
 3. **Complete the exercises**:
