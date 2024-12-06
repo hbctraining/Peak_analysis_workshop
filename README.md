@@ -54,6 +54,7 @@ install.packages("pheatmap")
 install.packages("UpSetR")
 install.packages("RColorBrewer")
 install.packages("ggrepel")
+install.packages("ggupset")
 ```
 
 **Note that these package names are case sensitive!**
@@ -79,6 +80,7 @@ BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 BiocManager::install("IRanges")
 BiocManager::install("GenomicRanges")
 BiocManager::install("DESeq2")
+BiocManager::install("org.Mm.eg.db")
 ```
 
 > **NOTE:** The library used for the annotations associated with genes (here we are using `TxDb.Mmusculus.UCSC.mm10.knownGene`) will change based on organism. The list of different organism packages are given [here](https://github.com/hbctraining/Training-modules/raw/master/DGE-functional-analysis/img/available_annotations.png).
@@ -99,6 +101,8 @@ library(GenomicRanges)
 library(DESeq2)
 library(RColorBrewer)
 library(ggrepel)
+library(ggupset)
+library(org.Mm.eg.db)
 ```
 
 (4) Once all packages have been loaded, run sessionInfo().  
