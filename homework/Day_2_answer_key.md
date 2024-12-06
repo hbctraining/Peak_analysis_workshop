@@ -33,21 +33,39 @@ No, they were loaded in the bottom part of the IGV window.
 <img src="../img/IGV_track_names_exercise_with_caption.png"  width="800">
 </p>
 
-2) Change the color of the "cKO Input Rep_3" and "cKO Enriched Peaks" tracks to orange
+**4. Change the color of the "cKO Input Rep_3" and "cKO Enriched Peaks" tracks to orange**
 
 <p align="center">
 <img src="../img/IGV_name_color_exercise_status_with_caption.png"  width="800">
 </p>
 
 
-3) Let's explore a few regions and see if we qualitatively agree with DiffBind's analysis. Do you agree with DiffBind's call or non-call differentially bound peak for the following genomic coordinates:
+**3) Let's explore a few regions and see if we qualitatively agree with DiffBind's analysis. Do you agree with DiffBind's call or non-call differentially bound peak for the following genomic coordinates:**
 
 &emsp;&emsp;a. chr13:64,400,764-64,401,164
 
+<p align="center">
+<img src="../img/IGV_peak_evaluation_chr13_with_caption.png"  width="800">
+</p>
+
+Yes, this looks like a correctly called differentially bound peak.
+
 &emsp;&emsp;b. chr1:131,492,210-131,492,610
+
+<p align="center">
+<img src="../img/IGV_peak_evaluation_chr1_with_caption.png"  width="800">
+</p>
+
+Yes, this does not look like a correctly called non-differentially bound peak.
 
 &emsp;&emsp;c. chr7:130,677,389-130,677,789 
 <blockquote>&emsp;&emsp;Note: The FDR for this peak is 0.051</blockquote>
+
+<p align="center">
+<img src="../img/IGV_peak_evaluation_chr7_with_caption.png"  width="800">
+</p>
+
+Maybe, there is clearly some qualitative differences in whether this is differentially bound, but it just misses the significance threshold. The goal of this sub-question is to help participants see what the FDR 0.05 threshold looks like in real data. 
 
 
 ## Annotation and functional analysis of DE regions
