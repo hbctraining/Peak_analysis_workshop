@@ -202,6 +202,11 @@ Then left-click <kbd>OK</kbd>. This process is visualized in the GIF below:
 
 ### Remove Track
 
+Sometimes you decide that you aren't interested in a track anymore and you'd like to remove it from you IGV browser. We will remove the "vistaEnhancers.bb" track that we just added. In order to remove a track, right-click on the track and select "Remove Track". This process is visualized in the GIF below:
+
+<p align="center">
+<img src="../img/IGV_remove_track.gif"  width="800">
+</p>
 
 
 ### Exercise 
