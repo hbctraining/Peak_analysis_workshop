@@ -18,6 +18,10 @@ Approximate time: 40 minutes
 
 At this point in the workflow we have a list of genomic regions that we know exhibit differences in enrichment between the WT and cKO samples. These coordinates do not give us much for biological context, and so a first step would be to **annotate these regions with nearest gene annotations** as we had done in a [previous lesson](04_peak_annotation_and_visualization.md). Once have target gene information, we can use that to perform functional enrichment analysis to help **determine whether particular biological processes or pathways are being dysregulated**. This analysis uses gene annotation databases to  provides insights into the collective function of a group of genes rather than focusing on individual genes.
 
+<p align="center">
+<img src="../img/Functional_analysis_subset_workflow.png"  width="800">
+</p>
+
 ## Annotation of differentially enriched regions
 
 First, let's open an R script called `functional_analysis.R`. Inside we'll add a header and start with loading the required libraries. If you do not have the `res_deseq` or `txdb` objects in your environment you can go ahead and load them in too.
