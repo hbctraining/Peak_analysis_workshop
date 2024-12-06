@@ -20,7 +20,9 @@ Differential enrichment analysis is a powerful computational approach used to id
 
 In our dataset we have samples from two different conditions: wildtype and the conditional knockout of PRDM16 (cKO). This analysis will be helpful in understanding the transcriptional programs impacted during cortical development when PRDM16 is non-functional. 
 
-**INSERT WORKFLOW IMAGE HERE**
+<p align="center">
+<img src="../img/Differential_enrichment_subset_workflow.png"  width="800">
+</p>
 
 ## Tools for evaluating differential enrichment
 
