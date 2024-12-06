@@ -85,7 +85,6 @@ I. Please **study the contents** and **work through all the code** within the fo
 3. **Complete the exercises**:
    * The Functional Analysis lesson above contains exercises; please go through each of them.
    * Copy over your solutions into the [Google Forms](https://forms.gle/vivYK1LraGt2BUxu7) the **day before the next class**.
-   * The **IGV lesson has nothing to submit**, but have some fun playing around with IGV!
 
 ### Questions?
 * ***If you get stuck due to an error*** while runnning code in the lesson, [email us](mailto:hbctraining@hsph.harvard.edu) 
