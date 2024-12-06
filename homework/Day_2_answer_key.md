@@ -105,11 +105,20 @@ With the more lax p-value cutoff, we see a number of pathways related to prolife
 ```{r}
 # Dotplot
 dotplot(go_ORA_Down)
+```
+
+<p align="center">
+<img src="../img/ORA_dotplot_go_down.png"  width="500">
+</p>
+
+```{r}
 # Enrich plot
 go_ORA_Down <- enrichplot::pairwise_termsim(go_ORA_Down)
 emapplot(go_ORA_Down)
 ```
 
 <p align="center">
-<img src="../img/ORA_dotplot_go_down.png"  width="500">
+<img src="../img/go_ORA_Down_Down.png"  width="500">
 </p>
+
+
