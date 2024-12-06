@@ -240,6 +240,8 @@ Re-order the tracks so that the WT tracks are above the cKO tracks and the IP sa
 <img src="../img/IGV_reordered_tracks_with_caption.png"  width="800">
 </p>
 
+_There is nothing to submit to the Google Form for this question._
+
 ### Navigate in IGV
 
 When using IGV it is critical that you are able to navigate to the place in the genome that you are interested in viewing. Below we will discuss a couple of ways to navigate around the genome in the IGV browser.
@@ -363,9 +365,6 @@ Oftentimes, the sample names that we use during the processing of our samples ar
 <img src="../img/IGV_rename_track.gif"  width="800">
 </p>
 
-#### Load track from URL
-Remove
-
 ### Saving and Loading IGV Sessions
 
 Oftentimes, you’ll want to save your IGV session or load up an IGV session that you’ve been previously working on. Below we will describe how to save and load IGV sessions.
@@ -404,7 +403,11 @@ If we now open IGV back up, we will notice that it provides a fresh session. If 
 
 &emsp;&emsp;e. Rename "cKO_enriched.bed" to "cKO Enriched Peaks"
 
+_There is nothing to submit to the Google Form for this question._
+
 2) Change the color of the "cKO Input Rep_3" and "cKO Enriched Peaks" tracks to orange
+
+_There is nothing to submit to the Google Form for this question._
 
 <details><summary><b>Click here to see what the IGV session should look like</b></summary>
   <p align="center">
