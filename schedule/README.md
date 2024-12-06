@@ -56,10 +56,10 @@ I. Please **study the contents** and **work through all the code** within the fo
 
 | Time |  Topic  | Instructor |
 |:-----------:|:----------:|:--------:|
-| 09:30 - 10:00 | Self-learning review |  |
-| 10:00 - 10:45 | [Peak annotation and visualization using ChIPseeker](../lessons/04_peak_annotation_and_visualization.md)|  |
+| 09:30 - 10:00 | Self-learning review | All |
+| 10:00 - 10:45 | [Peak annotation and visualization using ChIPseeker](../lessons/04_peak_annotation_and_visualization.md)| Will |
 | 10:45- 10:55 | Break|  |
-| 10:55 - 12:00 | [Differential enrichment analysis using DiffBind](../lessons/05_diffbind_analysis.md) |  |
+| 10:55 - 12:00 | [Differential enrichment analysis using DiffBind](../lessons/05_diffbind_analysis.md) | Meeta |
 
 
 ### Before the next class:
