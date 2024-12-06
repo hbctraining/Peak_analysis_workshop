@@ -34,6 +34,10 @@ When working with next-generation sequecing data, it can be helpful to visualize
 
 Below we will learn about the file formats used to visualize peaks in IGV and use it to explore peaks in our experiment samples. 
 
+<p align="center">
+<img src="../img/Peak_visualization_subset_workflow.png"  width="800">
+</p>
+
 ## IGV
 
 ### Select the mm10 reference genome
