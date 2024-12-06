@@ -413,13 +413,13 @@ _There is nothing to submit to the Google Form for this question._
 
 2) Change the color of the "cKO Input Rep_3" and "cKO Enriched Peaks" tracks to orange
 
-_There is nothing to submit to the Google Form for this question._
-
 <details><summary><b>Click here to see what the IGV session should look like</b></summary>
   <p align="center">
   <img src="../img/IGV_name_color_exercise_status_with_caption.png"  width="800">
   </p>
 </details>
+
+_There is nothing to submit to the Google Form for this question._
 
 3) Let's explore a few regions and see if we qualitatively agree with DiffBind's analysis. Do you agree with DiffBind's call or non-call differentially bound peak for the following genomic coordinates:
 
