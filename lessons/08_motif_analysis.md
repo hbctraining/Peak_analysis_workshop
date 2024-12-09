@@ -10,7 +10,7 @@ Approximate time: 40 minutes
 
 ## Learning Objectives
 
-* Describe motifs and identify the general steps for a typical motf analysis 
+* Describe motifs and identify the general steps for a typical motif analysis 
 * Recognize tools for motif analysis
 * Evaluate motif enrichment in H3K27Ac binding regions 
 
@@ -20,7 +20,7 @@ After identifying regions of interest in the genome, there are various avenues t
 
 
 <p align="center">
-<img src="Motif_discovery_subset_workflow.png" width="700">
+<img src="../img/Motif_discovery_subset_workflow.png" width="1000">
 </p>
 
 
@@ -28,12 +28,12 @@ After identifying regions of interest in the genome, there are various avenues t
 
 
 <p align="center">
-<img src="Motif-Example-PWM.png" width="400">
+<img src="../img/Motif-Example-PWM.png" width="350">
 </p>
 
 
 ### Tools for motif analysis
-There are a vast number of tools avaiable for motif finding. A 2014 study from [Tran NTL and Huang C](https://biologydirect.biomedcentral.com/articles/10.1186/1745-6150-9-4) reviews nine motif finding Web tools for detecting binding site motifs in ChIP-Seq data. Web-based tools are helpful as they provide a graphical user interface making it easy for the user to upload data and perform analysis. Many command-line tools also exist, as outlined in this benchmarking study in 2021 by [Castellana S. et al](https://academic.oup.com/bib/article/22/6/bbab303/6341664) however, installation and the requirement of minimal technical skills can identify as a limitation to some.
+There are a vast number of tools avaiable for motif finding. A 2014 study from [Tran N.TL. and Huang C.](https://biologydirect.biomedcentral.com/articles/10.1186/1745-6150-9-4) reviews nine motif finding Web tools for detecting binding site motifs in ChIP-Seq data. Web-based tools are helpful as they provide a graphical user interface making it easy for the user to upload data and perform analysis. Many command-line tools also exist, as outlined in this benchmarking study in 2021 by [Castellana S. et al](https://academic.oup.com/bib/article/22/6/bbab303/6341664) however, installation and the requirement of minimal technical skills can identify as a limitation to some.
 
 Reagrdless of which tool you decide to use, the general steps involved will typically go as described below:
 
@@ -42,7 +42,7 @@ Reagrdless of which tool you decide to use, the general steps involved will typi
 3. Each potential pattern is evaluated based on how common it is and it's significance value.
 4. Often the initial pattern search will result in many motifs, in which case some filtering is applied (too common, too rare, too similar to each other, etc)
 
-Once motifs have been discovered from the data, a common next step is to look for **enrichment of known motifs** by accessing **public databases** like [JASPAR](https://jaspar.elixir.no/) which is the largest open bioinformatics resource of TFBSs in the form of PWMs for eukaryotic genomes. Other commonly accessed resources include: [HOCOMOCO](https://hocomoco11.autosome.org/ which contains binding models for mouse and human transcription factors and [TRANSFAC](https://genexplain.com/transfac-2-0/), a database of TFs, associated DNA motifs in eukaryotic genomes, and analysis tools.
+Once motifs have been discovered from the data, a common next step is to look for **enrichment of known motifs** by accessing **public databases** like [JASPAR](https://jaspar.elixir.no/) which is the largest open bioinformatics resource of TFBSs in the form of PWMs for eukaryotic genomes. Other commonly accessed resources include: [HOCOMOCO](https://hocomoco11.autosome.org/) which contains binding models for mouse and human transcription factors and [TRANSFAC](https://genexplain.com/transfac-2-0/), a database of TFs, associated DNA motifs in eukaryotic genomes, and analysis tools.
 
 
 ## The MEME Suite
