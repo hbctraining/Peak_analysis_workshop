@@ -133,10 +133,23 @@ To run STREME, navigate to the MEME Suite web browser by [clicking on this link]
 <img src="../img/streme_screenshot1.png" width="600">
 </p>
 
+#### Advanced options
+If you click on Advanced Options you will see a host of selections we could make. They are described below, but note that **we wil be using default parameters.**
+
+<p align="center">
+<img src="../img/streme_screenshot2.png" width="450">
+</p>
 
 
+* The user can specify the minimum and maximum width for motifs.
+* It also allows entering the number of sites for each motif if there is a prior knowledge about the number of occurrences that the motif has in the dataset.
+* The p-value threshold can be modified to be more or less stringent
+* The background model normalizes for biased distribution of letters and groups of letters in your sequences. A 0-order model adjusts for single letter biases, a 1-order model adjusts for dimer biases (e.g., GC content in DNA sequences), etc. By default STREME uses m=2 for DNA and RNA sequences.
+* Should the user choose to NOT trim the control sequences, this will cause STREME to use the (less accurate) Binomial test (instead of Fisher's exact).
+* Option to align sequences to the right or left. For visualizing motif distributions, center alignment is ideal for ChIP-seq and similar data.
 
-. MEME allows specifying the length of the motif and the number of motifs to return. It also allows entering the number of sites for each motif if there is a prior knowledge about the number of occurrences that the motif has in the dataset. MEME requires specifying how the user believes the occurrences of the motifs are distributed among the sequences, for example, zero or one per sequence. MEME includes the option in the results on the browser for verifying discovered motifs with the reference database. Its initial version allowed verifying discovered motifs with JASPAR [30] or BLOCKS [35] reference database. In its later versions, MEME allows using TOMTOM [36] for verifying discovered motifs. MEME requires email address for notifying the results. It does not allow either creating an account or storing the results on the server. MEME includes other options such as performing discriminative motif discovery, uploading file containing a background Markov model, searching a given strand or both given strand and reverse strand, and looking for palindromes [4].
+
+MEME requires specifying how the user believes the occurrences of the motifs are distributed among the sequences, for example, zero or one per sequence. MEME includes the option in the results on the browser for verifying discovered motifs with the reference database. Its initial version allowed verifying discovered motifs with JASPAR [30] or BLOCKS [35] reference database. In its later versions, MEME allows using TOMTOM [36] for verifying discovered motifs. MEME requires email address for notifying the results. It does not allow either creating an account or storing the results on the server. MEME includes other options such as performing discriminative motif discovery, uploading file containing a background Markov model, searching a given strand or both given strand and reverse strand, and looking for palindromes [4].
 
 
 
