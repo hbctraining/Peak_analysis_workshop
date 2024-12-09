@@ -15,7 +15,7 @@
 1. [R](https://www.r-project.org/)
 2. [RStudio](https://posit.co/download/rstudio-desktop/)
 3. [Integrative Genomics Viewer (IGV)](https://software.broadinstitute.org/software/igv/)
-4. [The listed R packages](../../Peak_analysis_workshop#installation-requirements)
+4. [The listed R packages](../README.md#installation-requirements)
 
 ### On your HPCC (if not using Harvard's O2 cluster)
 
