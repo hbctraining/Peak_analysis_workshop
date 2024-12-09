@@ -48,10 +48,14 @@ Once motifs have been discovered from the data, a common next step is to look fo
 ## The MEME Suite
 In this workshop we will be using [MEME (Multiple EM for Motif Elicitation)](https://meme-suite.org/meme/index.html) for motif disocovery and motif enrichment. It is a web-based tool which has been shown to perform well in comparative studies using [simulated data](https://academic.oup.com/bib/article/22/6/bbab303/6341664) and in benchmarking studies with [real ChIP-seq data](https://biologydirect.biomedcentral.com/articles/10.1186/1745-6150-9-4). MEME is a tool which discovers novel, ungapped motifs (recurring, fixed-length patterns) in your sequences (sample output from sequences). MEME splits variable-length patterns into two or more separate motifs. STREME, is a very similar tool recommended for larger datasets (more than 50 sequences). **Since we have many sequences, STREME is the better option for us**.
 
+<p align="center">
+<img src="../img/meme_suite.png" width="600">
+</p>
+
 The web interface of MEME is easy to use, but there is a also a stand-alone version if you prefer using it via the command-line tool. There is also a Bioconductor implementation called the [memes package](https://www.bioconductor.org/packages/release/bioc/html/memes.html) providing a seamless R interface to a selection of popular MEME Suite tools. In addition to the analysis we perform in this workshop, there are various additional utility functions that we will not be covering but we encourage you to explore.
 
 ### Prepare the data 
-STREME will accept as accept BED files or sequence files as input, which must be in fasta format. The input sequence’s length should be ≤ 1,000 bp and as short as possible. The data we will use as input will be a consensus set from the WT replicates. To generate the consensus set, we will access the `olaps_wt` variable created in a previous lesson. You should have this object in your environment.
+STREME will accept as accept **BED files or sequence files as input**, which must be in fasta format. The data we will use as input will be a consensus set from the WT replicates. To generate the consensus set, we will access the `olaps_wt` variable created in a previous lesson. You should have this object in your environment.
 
 <details>
 <summary><b>Click here if you are unable to locate `olaps_wt` in your environment</b></summary>
@@ -74,7 +78,47 @@ olaps_wt <- findOverlapsOfPeaks(WT_H3K27ac_ChIPseq_REP1,
 <hr />
 </details>
 
+Let's begin by extracting the peaks which overlap across the replicates. Stored in the object are `mergedPeaks`, this corresponds to 	
+an object of GRanges consisting of all merged overlapping peaks. Another option is `peaksInMergedPeaks`	which is an object of GRanges consisting of all peaks in each samples involved in the overlapping peaks. Since MEME/STREME suggests **removing duplicate sequences**, we will go with `mergedPeaks`. The only issue here is that merging might create some fairly large sized regions. MEME/STREME recommends **the input sequence’s length should be ≤ 1,000 bp and as short as possible**, as such we will filter the regions.
 
+```
+# Get merged peaks for WT
+wt_consensus <- olaps_wt$mergedPeaks
+
+# Filter to keep only regions 1000bp or smaller
+wt_consensus <- wt_consensus[width(wt_consensus) <= 1000]
+
+# Remove non standard sequences as it will cause errors when retrieving the FASTA sequences from the reference (i.e. chr1_GL456211_random)
+wt_consensus <- keepStandardChromosomes(wt_consensus, pruning.mode="coarse")
+
+```
+
+Since we are specifically **interested in enhancer regions**, we will annotate the consensus set and further filter to only retain peaks that occur outside of promoter regions. We will **create a minimal BED file** with coordinates to use as input to STREME.
+
+```
+# Annotate consensus reiogns 
+annot_wt_consensus <- annotatePeak(wt_consensus, tssRegion = c(-3000, 3000),
+                                   TxDb = TxDb.Mmusculus.UCSC.mm10.knownGene,
+                                   annoDb = "org.Mm.eg.db")
+
+# GRanges to dataframe
+df <- annot_wt_consensus@anno %>% data.frame()
+
+# Find regions annotated as "Promoter" and remove them
+promoter_regions <- grep("Promoter", df$annotation)
+non_promoter_df <- df[-(promoter_regions), ]
+
+# Write minimal BED file
+write_tsv(non_promoter_df[, 1:3], file = "results/non_promoter_wt.bed", 
+          col_names = F, quote = "none")
+
+
+```
+
+
+
+
+. MEME allows specifying the length of the motif and the number of motifs to return. It also allows entering the number of sites for each motif if there is a prior knowledge about the number of occurrences that the motif has in the dataset. MEME requires specifying how the user believes the occurrences of the motifs are distributed among the sequences, for example, zero or one per sequence. MEME includes the option in the results on the browser for verifying discovered motifs with the reference database. Its initial version allowed verifying discovered motifs with JASPAR [30] or BLOCKS [35] reference database. In its later versions, MEME allows using TOMTOM [36] for verifying discovered motifs. MEME requires email address for notifying the results. It does not allow either creating an account or storing the results on the server. MEME includes other options such as performing discriminative motif discovery, uploading file containing a background Markov model, searching a given strand or both given strand and reverse strand, and looking for palindromes [4].
 
 
 
