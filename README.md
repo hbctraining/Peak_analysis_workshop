@@ -17,7 +17,7 @@
 
 ### Lessons
 * [Workshop schedule (trainer-led learning)](schedule/README.md)
-* [Self-learning]()
+* [Self-learning](schedule/self-learning.md)
 
 ### Description
 This repository has teaching materials for a hands-on **Introduction to Peak Analysis** workshop. This workshop will use the R statistical programming environment to evaluate files generated from peak calling of ChIP-seq (and related approaches i.e. CUT&RUN and ATAC-seq) data. We will provide participants with a suite of tools and a basic workflow beginning with quality metrics through to annotation and visualization. This workshop will introduce participants to:
