@@ -115,6 +115,24 @@ write_tsv(non_promoter_df[, 1:3], file = "results/non_promoter_wt.bed",
 
 ```
 
+### Running STREME 
+To run STREME, navigate to the MEME Suite web browser by [clicking on this link](https://meme-suite.org/meme/). On the left hand side, locate the tools listed under "Motif Discovery". Here, you will **click on STREME**, which will take you to the submission form depicted in the screenshot below. You will need to make the following selections:
+
+1. **"Shuffled input sequences"**
+     * STREME looks for motifs that are enriched in your sequences relative to a control set of sequences. This selection will create the control set by shuffling each of your input sequences, conserving k-mer frequencies, where k=3.
+     * The alternative is to provide a file of control sequences (be sure they have the same length distribution as the input)
+2. **DNA, RNA or Protein** sequence alphabet
+3. From the dropdown select **Upload the BED file**
+     * Select UCSC Mammal Genomes
+     * Select Mouse
+     * Select mm10
+     * Navigate and locate the `non_promoter_wt.bed` file we just created
+4. Enter your email if you would like email updates
+
+<p align="center">
+<img src="../img/streme_screenshot1.png" width="600">
+</p>
+
 
 
 
