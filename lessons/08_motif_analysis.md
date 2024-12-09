@@ -46,9 +46,34 @@ Once motifs have been discovered from the data, a common next step is to look fo
 
 
 ## The MEME Suite
-In this workshop we will be using [MEME (Multiple EM for Motif Elicitation)](https://meme-suite.org/meme/index.html) for motif disocovery and motif enrichment. It is a web-based tool which has been shown to perform well in comparative studies using [simulated data](https://academic.oup.com/bib/article/22/6/bbab303/6341664) and in benchmarking studies with [real ChIP-seq data](https://biologydirect.biomedcentral.com/articles/10.1186/1745-6150-9-4). 
+In this workshop we will be using [MEME (Multiple EM for Motif Elicitation)](https://meme-suite.org/meme/index.html) for motif disocovery and motif enrichment. It is a web-based tool which has been shown to perform well in comparative studies using [simulated data](https://academic.oup.com/bib/article/22/6/bbab303/6341664) and in benchmarking studies with [real ChIP-seq data](https://biologydirect.biomedcentral.com/articles/10.1186/1745-6150-9-4). MEME is a tool which discovers novel, ungapped motifs (recurring, fixed-length patterns) in your sequences (sample output from sequences). MEME splits variable-length patterns into two or more separate motifs. STREME, is a very similar tool recommended for larger datasets (more than 50 sequences). **Since we have many sequences, STREME is the better option for us**.
 
 The web interface of MEME is easy to use, but there is a also a stand-alone version if you prefer using it via the command-line tool. There is also a Bioconductor implementation called the [memes package](https://www.bioconductor.org/packages/release/bioc/html/memes.html) providing a seamless R interface to a selection of popular MEME Suite tools. In addition to the analysis we perform in this workshop, there are various additional utility functions that we will not be covering but we encourage you to explore.
+
+### Prepare the data 
+STREME will accept as accept BED files or sequence files as input, which must be in fasta format. The input sequence’s length should be ≤ 1,000 bp and as short as possible. The data we will use as input will be a consensus set from the WT replicates. To generate the consensus set, we will access the `olaps_wt` variable created in a previous lesson. You should have this object in your environment.
+
+<details>
+<summary><b>Click here if you are unable to locate `olaps_wt` in your environment</b></summary>
+<br>Run the code provided below to create the object `olaps_wt`:<br><br>
+
+<pre>
+sample_files <- list.files(path = "./data/macs2/narrowPeak/", full.names = T)
+
+# Reassign vars so that they are now GRanges instead of dataframes
+for(r in 1:length(sample_files)){
+  obj <- ChIPpeakAnno::toGRanges(sample_files[r], format="narrowPeak", header=FALSE)  
+  assign(vars[r], obj)
+}
+
+# Find overlapping peaks of WT samples
+olaps_wt <- findOverlapsOfPeaks(WT_H3K27ac_ChIPseq_REP1,
+                                WT_H3K27ac_ChIPseq_REP2,
+                                WT_H3K27ac_ChIPseq_REP3, connectedPeaks = "merge")
+</pre><br>
+<hr />
+</details>
+
 
 
 
