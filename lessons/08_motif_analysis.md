@@ -1,11 +1,20 @@
 ---
-title: "Motif Analysis Prep using Bedtools"
-author: " Meeta Mistry"
+title: "Motif Analysis"
+author: "Meeta Mistry"
 date: "Thursday, December 5th, 2024"
 ---
 
-Approximate time: 30 minutes
+Contributors: Meeta Mistry, Will Gammerdinger
 
+Approximate time: 40 minutes
+
+## Learning Objectives
+
+* Describe motifs and identify different analysis approaches
+* Recognize algorithms for motif analysis
+* Evaluate motif enrichment in H3K27Ac binding regions 
+
+## Motif discovery
 
 
 
