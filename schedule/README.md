@@ -108,13 +108,16 @@ I. Please **study the contents** and **work through all the code** within the fo
 
 * [Day 2 exercises](../homework/Day_2_answer_key.md)
 
-* Day 3 In-class
-
-***
-
 ## Resources
 
+- [Comprehensive assessment of differential ChIP-seq tools guides optimal algorithm selection](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02686-y)
+- [GRanges Tutorial](https://research.stowers.org/cws/CompGenomics/Tutorial/GRanges/guide.html)
+- [ChIPpeakAnno Vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPpeakAnno/inst/doc/ChIPpeakAnno.html)
+- [Introduction to Chromatin Biology Workshop](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/)
 
+****
+
+*These materials have been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
 
 ***
 
