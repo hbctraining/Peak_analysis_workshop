@@ -58,6 +58,21 @@ The web interface of MEME is easy to use, but there is also a stand-alone versio
 ### Prepare the data 
 STREME will accept **BED files or sequence files as input**, which must be in FASTA format. The data we will use as input will be a consensus set from the WT replicates. To generate the consensus set, we will access the `olaps_wt` variable created in a previous lesson. You should have this object in your environment.
 
+Open up an R script file and call it `motif_analysis_prep.R` and add in a header line and the necessary libraries to load.
+
+```
+## Preparing data for motif analysis
+
+# Load libraries
+library(tidyverse)
+library(GRanges)
+library(ChIPseeker)
+library(TxDb.Mmusculus. UCSC.mm10.knownGene)
+```
+
+Let's begin by extracting the peaks which overlap across the replicates. Stored in the object are `mergedPeaks`, this corresponds to 	
+an object of GRanges consisting of all merged overlapping peaks. Another option is `peaksInMergedPeaks`	which is a GRanges object consisting of all peaks in each of the samples involved in the overlapping peaks. Since MEME/STREME suggests **removing duplicate sequences**, we will go with `mergedPeaks`. The only issue here is that merging might create some fairly large sized regions. MEME/STREME recommends **the input sequence’s length should be ≤ 1,000 bp and as short as possible**. As a result, we will filter the regions.
+
 <details>
 <summary><b>Click here if you are unable to locate <code>olaps_wt</code>code in your environment</b></summary>
 <br>Run the code provided below to create the object <code>olaps_wt</code>:<br><br>
@@ -79,21 +94,6 @@ olaps_wt <- findOverlapsOfPeaks(WT_H3K27ac_ChIPseq_REP1,
 </pre><br>
 <hr />
 </details>
-
-Open up an R script file and call it `motif_analysis_prep.R` and add in a header line and the necessary libraries to load.
-
-```
-## Preparing data for motif analysis
-
-# Load libraries
-library(tidyverse)
-library(GRanges)
-library(ChIPseeker)
-library(TxDb.Mmusculus. UCSC.mm10.knownGene)
-```
-
-Let's begin by extracting the peaks which overlap across the replicates. Stored in the object are `mergedPeaks`, this corresponds to 	
-an object of GRanges consisting of all merged overlapping peaks. Another option is `peaksInMergedPeaks`	which is a GRanges object consisting of all peaks in each of the samples involved in the overlapping peaks. Since MEME/STREME suggests **removing duplicate sequences**, we will go with `mergedPeaks`. The only issue here is that merging might create some fairly large sized regions. MEME/STREME recommends **the input sequence’s length should be ≤ 1,000 bp and as short as possible**. As a result, we will filter the regions.
 
 ```
 # Get merged peaks for WT
