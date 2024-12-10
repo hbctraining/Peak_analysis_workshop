@@ -113,7 +113,8 @@ I. Please **study the contents** and **work through all the code** within the fo
 - [Comprehensive assessment of differential ChIP-seq tools guides optimal algorithm selection](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02686-y)
 - [GRanges Tutorial](https://research.stowers.org/cws/CompGenomics/Tutorial/GRanges/guide.html)
 - [ChIPpeakAnno Vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPpeakAnno/inst/doc/ChIPpeakAnno.html)
-- [Introduction to Chromatin Biology Workshop](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/)
+- [HBC Introduction to Chromatin Biology Workshop](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/) - Workflow upstream of peaks
+- A short lesson on [Integrating ChIP-seq target genes with and RNA-seq](https://hbctraining.github.io/Intro-to-ChIPseq-flipped/lessons/integrating_rna-seq_and_chip-seq.html)
 
 ****
 
