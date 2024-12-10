@@ -134,7 +134,7 @@ To run STREME, navigate to the MEME Suite web browser by [clicking on this link]
 </p>
 
 #### Advanced options
-If you click on Advanced Options you will see a host of selections we could make. They are described below, but note that **we wil be using default parameters.**
+If you click on Advanced Options you will see a host of selections we could make. They are described below, but note that **we will be using default parameters.**
 
 <p align="center">
 <img src="../img/streme_screenshot2.png" width="450">
@@ -142,15 +142,31 @@ If you click on Advanced Options you will see a host of selections we could make
 
 
 * The user can specify the minimum and maximum width for motifs.
-* It also allows entering the number of sites for each motif if there is a prior knowledge about the number of occurrences that the motif has in the dataset.
-* The p-value threshold can be modified to be more or less stringent
+* The number of sites for each motif can be provided, if there is prior knowledge about the number of occurrences that the motif has in the dataset.
+* The p-value threshold can be modified to be more or less stringent.
 * The background model normalizes for biased distribution of letters and groups of letters in your sequences. A 0-order model adjusts for single letter biases, a 1-order model adjusts for dimer biases (e.g., GC content in DNA sequences), etc. By default STREME uses m=2 for DNA and RNA sequences.
 * Should the user choose to NOT trim the control sequences, this will cause STREME to use the (less accurate) Binomial test (instead of Fisher's exact).
 * Option to align sequences to the right or left. For visualizing motif distributions, center alignment is ideal for ChIP-seq and similar data.
 
 
-MEME requires specifying how the user believes the occurrences of the motifs are distributed among the sequences, for example, zero or one per sequence. MEME includes the option in the results on the browser for verifying discovered motifs with the reference database. Its initial version allowed verifying discovered motifs with JASPAR [30] or BLOCKS [35] reference database. In its later versions, MEME allows using TOMTOM [36] for verifying discovered motifs. MEME requires email address for notifying the results. It does not allow either creating an account or storing the results on the server. MEME includes other options such as performing discriminative motif discovery, uploading file containing a background Markov model, searching a given strand or both given strand and reverse strand, and looking for palindromes [4].
+### STREME results
+Once the tool is done running you will see a bullet point list of results generated, with each hyperlinked. The MEME suite tools provide three different output formats: HTML, XML, and text. **We will focus on the HTML report**. 
 
+<p align="center">
+<img src="../img/streme_result_list.png" width="300">
+</p>
+
+If you were not able to generate a result, [click here to download the HTML report]]().  For each motif, MEME outputs the p-value, E-value, the number of sites found, the motif’s logo (and reverse complement), and genomic coordinates for sites where the motifs were found. MEME also provides a Submit/Download option in HTML output for forwarding one or all motifs to other MEME programs for further analysis or downloading the the motif or logo.
+
+<p align="center">
+<img src="../img/streme_html_screenshot.png" width="800">
+</p>
+
+
+The motifs bound by TFs are most likely within the valleys of your H3K27ac signal. This hypothesis has been tested (article) and a program called EpiSAFARI was developed to identify peaks within valleys . You can certainly do motif analysis on the peak set you have but it wouldn't make must biological sense. I also want to point out that this is true for H3K27ac but may not be true for other histone modifications.
+
+
+Interestingly, we observed that the H3K27ac-associated motifs seem to form negative feedbacks on acetylation. The possible feedback mechanisms are derived from the motifs’ occurrence in both the promoters and enhancers closest to the histone modification enzymes. For example, HDAC genes’ promoters all contain H3K27ac-related motifs. Motif H3K27ac_4280 CCTCCTCCC, found in 39 cells/tissues (P value 2.72 × 10−3), appears in the promoters of HDAC1/HDAC2 (Fig. 5B) and numerous other deacetylases. HDAC1/2 are responsible for lysine deacetylation of the core histone proteins (H2A, H2B, H3, H4) as annotated in the UniProt database and is specifically documented to deacetylate H3K9ac in the GREAT annotation (Fig. 5B). This may suggest a negative feedback loop of histone acetylation: the H3K27ac motifs are responsible for establishing/maintaining the H3K27ac signal in the promoters of HDACs, which suggests transcribing HDACs; the transcribed HDACs, in turn, deacetylate H3K9ac and/or H3K27ac marks in the genome.
 
 
 
