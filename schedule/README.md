@@ -96,7 +96,7 @@ I. Please **study the contents** and **work through all the code** within the fo
 | Time |  Topic  | Instructor |
 |:-----------:|:----------:|:--------:|
 | 09:30 - 10:30 | Self-learning review | All |
-| 10:30 - 11:15 | [Motif analysis/discovery]() | Meeta |
+| 10:30 - 11:15 | [Motif analysis/discovery](../lessons/08_motif_analysis.md) | Meeta |
 | 11:15- 11:25 | Break|  |
 | 11:05 - 11:45 | Discussion Q&A | All |
 | 11:45 - 12:00 | [Wrap-up](../lectures/Workshop_wrapup.pdf) | Will |
