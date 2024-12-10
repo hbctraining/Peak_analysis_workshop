@@ -98,7 +98,7 @@ A widely-used gene annotation resource is the Gene Ontology (GO) database, which
 ### Hypergeometric test
 The statistical method used to determine whether a category is over-represented is the hypergeometric test.
 
-The hypergeometric distribution describes the probability of observing some number of genes (k) associated with a specific functional category (e.g., "Functional category 1") in a list of of all of the genes (n), compared to the total number of genes (M) associated with that functional category in the entire genome with (N) genes.
+The hypergeometric distribution describes the probability of observing some number of genes (k) associated with a specific functional category (e.g., "Functional category 1") in a list of of all of the genes (n), compared to the total number of genes (K) associated with that functional category in the entire genome with (N) genes.
 
 The p-value is calculated using the formula:
 
@@ -110,7 +110,7 @@ Where:
 
 - k: Number of genes associated with the functional category in the gene list.
 - n: Total number of genes in the gene list.
-- M: Total number of genes associated with the functional category in the genome.
+- K: Total number of genes associated with the functional category in the genome.
 - N: Total number of genes in the genome.
 
 The test produces a p-value for each category tested, and multiple testing correction is applied to adjust these p-values. This ensures statistical rigor when identifying significantly over-represented categories.
