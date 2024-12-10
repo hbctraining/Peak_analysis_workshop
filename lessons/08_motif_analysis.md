@@ -16,7 +16,7 @@ Approximate time: 40 minutes
 
 ## Motif analysis
 
-After identifying regions of interest in the genome, there are various avenues to explore. In this workshop so far, we have demonstrated visualization of those regions using the read alignment data and we have annoated regions to identify nearest gene annotations and gain some biological context with functional analysis approaches. In this lesson, we discuss **approaches for interrogating the actual sequence data corresponding to our regions/peaks** of interest to evaluate enrichment of motif sequences.
+After identifying regions of interest in the genome, there are various avenues to explore. In this workshop so far, we have demonstrated visualization of those regions using the read alignment data and we have annoated regions to identify nearest gene annotations and gained some biological context with functional analysis approaches. In this lesson, we discuss **approaches for interrogating the actual sequence data corresponding to our regions/peaks** of interest to evaluate enrichment of motif sequences.
 
 
 <p align="center">
@@ -24,7 +24,7 @@ After identifying regions of interest in the genome, there are various avenues t
 </p>
 
 
-**Motifs are typically short, conserved sequences** that have a specific biological significance, such as being binding sites for transcription factors (TFs), or other proteins that regulate gene expression. Motifs are often represented as **Position-specific Weight Matrices (PWM)**, which is a matrix of 4 x _m_ where _m_ is the motif length. Every position in the matrix represents the probability of each nucleotide at each index position of the motif. 
+**Motifs are typically short, conserved sequences** that have a specific biological significance, such as being binding sites for transcription factors (TFs), or other proteins that regulate gene expression. Motifs are often represented as **Position-specific Weight Matrices (PWM)**, which is a matrix of 4 x _m_ where _m_ is the motif length. Every position in the matrix represents the probability of that nucleotide at each index position of the motif. 
 
 <p align="center">
 <img src="../img/Motif-Example-PWM.png" width="250">
@@ -34,33 +34,33 @@ _An example of the Klf4 motif from the JASPAR CORE database is displayed above._
 
 
 ### Tools for motif analysis
-There are a vast number of tools avaiable for motif finding. A 2014 study from [Tran N.TL. and Huang C.](https://biologydirect.biomedcentral.com/articles/10.1186/1745-6150-9-4) reviews nine motif finding Web tools for detecting binding site motifs in ChIP-Seq data. Web-based tools are helpful as they provide a graphical user interface making it easy for the user to upload data and perform analysis. Many command-line tools also exist, as outlined in this benchmarking study in 2021 by [Castellana S. et al](https://academic.oup.com/bib/article/22/6/bbab303/6341664) however, installation and the requirement of minimal technical skills can identify as a limitation to some.
+There are a vast number of tools avaiable for motif finding. A 2014 study from [Tran N.TL. and Huang C.](https://biologydirect.biomedcentral.com/articles/10.1186/1745-6150-9-4), reviewed nine web-based tools for detecting binding site motifs in ChIP-Seq data. Web-based tools are helpful as they provide a graphical user interface which makes it easy for the user to upload data and perform analysis. Many command-line tools also exist, as outlined in this benchmarking study in 2021 by [Castellana S. et al](https://academic.oup.com/bib/article/22/6/bbab303/6341664). However, installation and the requirement of minimal technical skills can be identified as a limitation to some users.
 
-Reagrdless of which tool you decide to use, the general steps involved will typically go as described below:
+Regardless of which tool you decide to use, the general steps involved will typically go as described below:
 
-1. Begin with gathering the sequences where there is supected presence of repeating motifs. 
-2. Next, the data set is scanned to look for sequences that appear frequently and are recurring in a way that is not just by random chance. 
-3. Each potential pattern is evaluated based on how common it is and it's significance value.
-4. Often the initial pattern search will result in many motifs, in which case some filtering is applied (too common, too rare, too similar to each other, etc)
+1. Gather the sequences where there is supected presence of repeating motifs. 
+2. The data set is scanned to look for sequences that appear frequently and are recurring in a way that is not just by random chance. 
+3. Each potential pattern is evaluated based on how common it is and its significance value.
+4. Often the initial pattern search will result in many motifs, in which case some filtering is applied (too common, too rare, too similar to each other, etc.)
 
 Once motifs have been discovered from the data, a common next step is to look for **enrichment of known motifs** by accessing **public databases** like [JASPAR](https://jaspar.elixir.no/) which is the largest open bioinformatics resource of TFBSs in the form of PWMs for eukaryotic genomes. Other commonly accessed resources include: [HOCOMOCO](https://hocomoco11.autosome.org/) which contains binding models for mouse and human transcription factors and [TRANSFAC](https://genexplain.com/transfac-2-0/), a database of TFs, associated DNA motifs in eukaryotic genomes, and analysis tools.
 
 
 ## The MEME Suite
-In this workshop we will be using [MEME (Multiple EM for Motif Elicitation)](https://meme-suite.org/meme/index.html) for motif discovery and motif enrichment. It is a web-based tool which has been shown to perform well in benchmarking studiess using [simulated data](https://academic.oup.com/bib/article/22/6/bbab303/6341664) and in comparative studies with [real ChIP-seq data](https://biologydirect.biomedcentral.com/articles/10.1186/1745-6150-9-4). MEME is a tool which discovers novel, ungapped motifs (recurring, fixed-length patterns) in your sequences (sample output from sequences). MEME splits variable-length patterns into two or more separate motifs. STREME, is a very similar tool recommended for larger datasets (more than 50 sequences). **Since we have many sequences, STREME is the better option for us**.
+In this workshop we will be using [MEME (Multiple EM for Motif Elicitation)](https://meme-suite.org/meme/index.html) for motif discovery and motif enrichment. It is a web-based tool which has been shown to perform well in benchmarking studies using [simulated data](https://academic.oup.com/bib/article/22/6/bbab303/6341664) and in comparative studies with [real ChIP-seq data](https://biologydirect.biomedcentral.com/articles/10.1186/1745-6150-9-4). MEME is a tool which discovers novel, ungapped motifs (recurring, fixed-length patterns) in your sequences (sample output from sequences). MEME splits variable-length patterns into two or more separate motifs. STREME, is a very similar tool recommended for larger datasets (more than 50 sequences). **Since we have many sequences, STREME is the better option for us**.
 
 <p align="center">
 <img src="../img/meme_suite.png" width="600">
 </p>
 
-The web interface of MEME is easy to use, but there is a also a stand-alone version if you prefer using it via the command-line tool. There is also a Bioconductor implementation called the [memes package](https://www.bioconductor.org/packages/release/bioc/html/memes.html) providing a seamless R interface to a selection of popular MEME Suite tools. In addition to the analysis we perform in this workshop, there are various additional utility functions that we will not be covering but we encourage you to explore.
+The web interface of MEME is easy to use, but there is also a stand-alone version if you prefer using it via the command-line tool. There is also a Bioconductor implementation, called the [memes package](https://www.bioconductor.org/packages/release/bioc/html/memes.html), which provides a seamless R interface to a selection of popular MEME Suite tools. In addition to the analysis we perform in this workshop, there are various additional utility functions that we will not be covering but we encourage you to explore.
 
 ### Prepare the data 
-STREME will accept as accept **BED files or sequence files as input**, which must be in fasta format. The data we will use as input will be a consensus set from the WT replicates. To generate the consensus set, we will access the `olaps_wt` variable created in a previous lesson. You should have this object in your environment.
+STREME will accept **BED files or sequence files as input**, which must be in FASTA format. The data we will use as input will be a consensus set from the WT replicates. To generate the consensus set, we will access the `olaps_wt` variable created in a previous lesson. You should have this object in your environment.
 
 <details>
-<summary><b>Click here if you are unable to locate `olaps_wt` in your environment</b></summary>
-<br>Run the code provided below to create the object `olaps_wt`:<br><br>
+<summary><b>Click here if you are unable to locate <code>olaps_wt</code>code in your environment</b></summary>
+<br>Run the code provided below to create the object <code>olaps_wt</code>:<br><br>
 
 <pre>
 sample_files <- list.files(path = "./data/macs2/narrowPeak/", full.names = T)
@@ -80,7 +80,7 @@ olaps_wt <- findOverlapsOfPeaks(WT_H3K27ac_ChIPseq_REP1,
 </details>
 
 Let's begin by extracting the peaks which overlap across the replicates. Stored in the object are `mergedPeaks`, this corresponds to 	
-an object of GRanges consisting of all merged overlapping peaks. Another option is `peaksInMergedPeaks`	which is an object of GRanges consisting of all peaks in each samples involved in the overlapping peaks. Since MEME/STREME suggests **removing duplicate sequences**, we will go with `mergedPeaks`. The only issue here is that merging might create some fairly large sized regions. MEME/STREME recommends **the input sequence’s length should be ≤ 1,000 bp and as short as possible**, as such we will filter the regions.
+an object of GRanges consisting of all merged overlapping peaks. Another option is `peaksInMergedPeaks`	which is a GRanges object consisting of all peaks in each of the samples involved in the overlapping peaks. Since MEME/STREME suggests **removing duplicate sequences**, we will go with `mergedPeaks`. The only issue here is that merging might create some fairly large sized regions. MEME/STREME recommends **the input sequence’s length should be ≤ 1,000 bp and as short as possible**. As a result, we will filter the regions.
 
 ```
 # Get merged peaks for WT
@@ -94,7 +94,7 @@ wt_consensus <- keepStandardChromosomes(wt_consensus, pruning.mode="coarse")
 
 ```
 
-Since we are specifically **interested in enhancer regions**, we will annotate the consensus set and further filter to only retain peaks that occur outside of promoter regions. We will **create a minimal BED file** with coordinates to use as input to STREME.
+Since we are specifically **interested in enhancer regions**, we will annotate the consensus set and further filter this consensus set to only retain peaks that occur outside of promoter regions. We will **create a minimal BED file** with coordinates to use as input to STREME.
 
 ```
 # Annotate consensus reiogns 
@@ -151,7 +151,7 @@ If you click on Advanced Options you will see a host of selections we could make
 
 
 ### STREME results
-Once the tool is done running you will see a bullet point list of results generated, with each hyperlinked. The MEME suite tools provide three different output formats: HTML, XML, and text. **We will focus on the HTML report**. 
+Once the tool is done running you will see a bullet point list of results generated, with each hyperlinked. The MEME suite tools provide three different output formats: HTML, XML and text. **We will focus on the HTML report**. 
 
 <p align="center">
 <img src="../img/streme_result_list.png" width="300">
@@ -163,11 +163,11 @@ If you were not able to generate a result, [click here to download the HTML repo
 <img src="../img/streme_html_screenshot.png" width="800">
 </p>
 
-Let's take a closer look at some of these results, and see where we could explore further!
+Let's take a closer look at some of these results and see where we could explore further!
 
 Consider the binding profile of H3K27Ac, where we observed a slight dip near the TSS in our profile plots. The motifs bound by transcription factors are most likely within the valleys of the H3K27ac signal. As such we might expect that some of the motifs from this report to align with binding motifs for transcriptional regulators, in particular those known to play a key role in cortical neurogenesis (since we are working wth cortical cells in mouse embryonic brain).
 
-**Scroll down in the report to motif 37-AGACAGATGG**, and click on the Submit/Download button. Here, choose the TomTom program to submit the motif. 
+**Scroll down in the report to motif 37-AGACAGATGG**, and click on the Submit/Download button (can look like a sideways arrow). Here, choose the TomTom program to submit the motif. 
 
 <p align="center">
 <img src="../img/submit_to_tomtom.png" width="300">
@@ -184,12 +184,12 @@ Once you hit submit you will find yourself at the data submission form for **Tom
 <img src="../img/tomtom_parameters.png" width="400">
 </p>
 
-After the result is generated, open up the HTML report in your browser. What you will find is that **top hits** for this motif sequence include **NDF1, a transcriptional activator** that associates with chromatin to enhancer regulatory elements in genes encoding key transcriptional regulators of neurogenesis. We also see **ATOH1, a transcription factor** which plays a role in the differentiation of subsets of neural cells and **OLIG2 which regulates the differentiation of neural precursors** into neurons, oligodendrocytes, and astrocytes.
+After the result is generated, open up the HTML report in your browser. What you will find is that **top hits** for this motif sequence include **NDF1, a transcriptional activator** that associates with chromatin to enhancer regulatory elements in genes encoding key transcriptional regulators of neurogenesis. We also see **ATOH1, a transcription factor** which plays a role in the differentiation of subsets of neural cells and **OLIG2 which regulates the differentiation of neural precursors** into neurons, oligodendrocytes and astrocytes.
 
-This is encouraging, as the result lines up with what we know about the regions used as input, and the samples they originated from. While, we could continue to explore other motif results, another way of **searching directly for known motifs** would be to use a MEME program for **Motif Enrichment** (i.e. AME, or SEA).
+This is encouraging, as the result lines up with what we know about the regions used as input and the samples they originated from. While, we could continue to explore other motif results, another way of **searching directly for known motifs** would be to use a MEME program for **Motif Enrichment** (i.e. AME, or SEA).
 
 ### Summary
-In this lesson we have given you an introduction to motif analysis using an easy to navigate Web-tool called the MEME suite. This example demontrates the use of the tool to for motif discovery, but also the utility of the MEME suite and other linked programs to continue to explore your data in more detail.
+In this lesson we have given you an introduction to motif analysis using an easy to navigate Web-tool called the MEME suite. This example demontrates the use of the tool for motif discovery, but also the utility of the MEME suite and other linked programs to continue to explore your data in more detail.
 
 
 ***
