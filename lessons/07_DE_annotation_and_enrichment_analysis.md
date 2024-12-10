@@ -102,7 +102,9 @@ The hypergeometric distribution describes the probability of observing some numb
 
 The p-value is calculated using the formula:
 
-$$ P(X = k) = \frac{\binom{K}{k} \binom{N - K}{n - k}}{\binom{N}{n}} $$
+<p align="center">
+<img src="https://latex.codecogs.com/svg.image?&space;P(X=k)=\frac{\binom{K}{k}\binom{N-K}{n-k}}{\binom{N}{n}}"  width="200">
+</p>
 
 Where:
 
