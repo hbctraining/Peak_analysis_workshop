@@ -12,7 +12,7 @@ Approximate time: 40 minutes
 
 * Describe motifs and identify the general steps for a typical motif analysis 
 * Recognize tools for motif analysis
-* Evaluate motif enrichment in H3K27Ac binding regions 
+* Evaluate motif enrichment in H3K27Ac binding regions using the MEME suite
 
 ## Motif analysis
 
@@ -24,12 +24,13 @@ After identifying regions of interest in the genome, there are various avenues t
 </p>
 
 
-**Motifs are typically short, conserved sequences** that have a specific biological significance, such as being binding sites for transcription factors (TFs), or other proteins that regulate gene expression. Motifs are often represented as **Position-specific Weight Matrices (PWM)**, which is a matrix of 4 x _m_ where _m_ is the motif length. Every position in the matrix represents the probability of each nucleotide at each index position of the motif. An example of the Klf4 motif from the JASPAR CORE database is displayed below.
-
+**Motifs are typically short, conserved sequences** that have a specific biological significance, such as being binding sites for transcription factors (TFs), or other proteins that regulate gene expression. Motifs are often represented as **Position-specific Weight Matrices (PWM)**, which is a matrix of 4 x _m_ where _m_ is the motif length. Every position in the matrix represents the probability of each nucleotide at each index position of the motif. 
 
 <p align="center">
-<img src="../img/Motif-Example-PWM.png" width="350">
+<img src="../img/Motif-Example-PWM.png" width="250">
 </p>
+
+_An example of the Klf4 motif from the JASPAR CORE database is displayed above._
 
 
 ### Tools for motif analysis
@@ -46,7 +47,7 @@ Once motifs have been discovered from the data, a common next step is to look fo
 
 
 ## The MEME Suite
-In this workshop we will be using [MEME (Multiple EM for Motif Elicitation)](https://meme-suite.org/meme/index.html) for motif disocovery and motif enrichment. It is a web-based tool which has been shown to perform well in comparative studies using [simulated data](https://academic.oup.com/bib/article/22/6/bbab303/6341664) and in benchmarking studies with [real ChIP-seq data](https://biologydirect.biomedcentral.com/articles/10.1186/1745-6150-9-4). MEME is a tool which discovers novel, ungapped motifs (recurring, fixed-length patterns) in your sequences (sample output from sequences). MEME splits variable-length patterns into two or more separate motifs. STREME, is a very similar tool recommended for larger datasets (more than 50 sequences). **Since we have many sequences, STREME is the better option for us**.
+In this workshop we will be using [MEME (Multiple EM for Motif Elicitation)](https://meme-suite.org/meme/index.html) for motif discovery and motif enrichment. It is a web-based tool which has been shown to perform well in benchmarking studiess using [simulated data](https://academic.oup.com/bib/article/22/6/bbab303/6341664) and in comparative studies with [real ChIP-seq data](https://biologydirect.biomedcentral.com/articles/10.1186/1745-6150-9-4). MEME is a tool which discovers novel, ungapped motifs (recurring, fixed-length patterns) in your sequences (sample output from sequences). MEME splits variable-length patterns into two or more separate motifs. STREME, is a very similar tool recommended for larger datasets (more than 50 sequences). **Since we have many sequences, STREME is the better option for us**.
 
 <p align="center">
 <img src="../img/meme_suite.png" width="600">
@@ -156,7 +157,7 @@ Once the tool is done running you will see a bullet point list of results genera
 <img src="../img/streme_result_list.png" width="300">
 </p>
 
-If you were not able to generate a result, [click here to download the HTML report]().  For each motif, MEME outputs the p-value, E-value, the number of sites found, the motif’s logo (and reverse complement), and genomic coordinates for sites where the motifs were found. MEME also provides a Submit/Download option in HTML output for forwarding one or all motifs to other MEME programs for further analysis or downloading the the motif or logo.
+If you were not able to generate a result, [click here to download the HTML report](https://www.dropbox.com/scl/fi/i7kxbn4bmf7qe1zjacbm5/STREME-Results.html?rlkey=apbckh75fmo8nb9xyhxmrl01u&st=c6eb01hc&dl=1).  For each motif, MEME outputs the p-value, E-value, the number of sites found, the motif’s logo (and reverse complement), and genomic coordinates for sites where the motifs were found. MEME also provides a Submit/Download option in HTML output for forwarding one or all motifs to other MEME programs for further analysis or downloading the the motif or logo.
 
 <p align="center">
 <img src="../img/streme_html_screenshot.png" width="800">
@@ -172,7 +173,7 @@ Consider the binding profile of H3K27Ac, where we observed a slight dip near the
 <img src="../img/submit_to_tomtom.png" width="300">
 </p>
 
-Once you hit submit you will find yourself at the data submission form for **TomTom; a tool that compares a given motf against a database of known motifs**. Tomtom will rank the motifs in the database and produce an alignment for each significant match. 
+Once you hit submit you will find yourself at the data submission form for **TomTom; a tool that compares a given motif against a database of known motifs**. Tomtom will rank the motifs in the database and produce an alignment for each significant match. 
 
 - From the "Select target motifs" section you will choose MOUSE (Mus musculus) DNA.
 - From the dropdown that appears below you will choose HOCOMOCO Mouse (v11 CORE).
@@ -188,7 +189,7 @@ After the result is generated, open up the HTML report in your browser. What you
 This is encouraging, as the result lines up with what we know about the regions used as input, and the samples they originated from. While, we could continue to explore other motif results, another way of **searching directly for known motifs** would be to use a MEME program for **Motif Enrichment** (i.e. AME, or SEA).
 
 ### Summary
-In this lesson we have given you an introduction to motif analysis using an easy to navigate Web-tool called the MEME suite. This example demontrates the use of the tool to for motif discovery, but also teh utility of MEME and other linked programs to continue to explore your data in more detail.
+In this lesson we have given you an introduction to motif analysis using an easy to navigate Web-tool called the MEME suite. This example demontrates the use of the tool to for motif discovery, but also the utility of the MEME suite and other linked programs to continue to explore your data in more detail.
 
 
 ***
