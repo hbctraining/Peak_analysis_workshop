@@ -156,19 +156,39 @@ Once the tool is done running you will see a bullet point list of results genera
 <img src="../img/streme_result_list.png" width="300">
 </p>
 
-If you were not able to generate a result, [click here to download the HTML report]]().  For each motif, MEME outputs the p-value, E-value, the number of sites found, the motif’s logo (and reverse complement), and genomic coordinates for sites where the motifs were found. MEME also provides a Submit/Download option in HTML output for forwarding one or all motifs to other MEME programs for further analysis or downloading the the motif or logo.
+If you were not able to generate a result, [click here to download the HTML report]().  For each motif, MEME outputs the p-value, E-value, the number of sites found, the motif’s logo (and reverse complement), and genomic coordinates for sites where the motifs were found. MEME also provides a Submit/Download option in HTML output for forwarding one or all motifs to other MEME programs for further analysis or downloading the the motif or logo.
 
 <p align="center">
 <img src="../img/streme_html_screenshot.png" width="800">
 </p>
 
+Let's take a closer look at some of these results, and see where we could explore further!
 
-The motifs bound by TFs are most likely within the valleys of your H3K27ac signal. This hypothesis has been tested (article) and a program called EpiSAFARI was developed to identify peaks within valleys . You can certainly do motif analysis on the peak set you have but it wouldn't make must biological sense. I also want to point out that this is true for H3K27ac but may not be true for other histone modifications.
+Consider the binding profile of H3K27Ac, where we observed a slight dip near the TSS in our profile plots. The motifs bound by transcription factors are most likely within the valleys of the H3K27ac signal. As such we might expect that some of the motifs from this report to align with binding motifs for transcriptional regulators, in particular those known to play a key role in cortical neurogenesis (since we are working wth cortical cells in mouse embryonic brain).
+
+**Scroll down in the report to motif 37-AGACAGATGG**, and click on the Submit/Download button. Here, choose the TomTom program to submit the motif. 
+
+<p align="center">
+<img src="../img/submit_to_tomtom.png" width="300">
+</p>
+
+Once you hit submit you will find yourself at the data submission form for **TomTom; a tool that compares a given motf against a database of known motifs**. Tomtom will rank the motifs in the database and produce an alignment for each significant match. 
+
+- From the "Select target motifs" section you will choose MOUSE (Mus musculus) DNA.
+- From the dropdown that appears below you will choose HOCOMOCO Mouse (v11 CORE).
+- Then you can  go ahead and "Start Search".
 
 
-Interestingly, we observed that the H3K27ac-associated motifs seem to form negative feedbacks on acetylation. The possible feedback mechanisms are derived from the motifs’ occurrence in both the promoters and enhancers closest to the histone modification enzymes. For example, HDAC genes’ promoters all contain H3K27ac-related motifs. Motif H3K27ac_4280 CCTCCTCCC, found in 39 cells/tissues (P value 2.72 × 10−3), appears in the promoters of HDAC1/HDAC2 (Fig. 5B) and numerous other deacetylases. HDAC1/2 are responsible for lysine deacetylation of the core histone proteins (H2A, H2B, H3, H4) as annotated in the UniProt database and is specifically documented to deacetylate H3K9ac in the GREAT annotation (Fig. 5B). This may suggest a negative feedback loop of histone acetylation: the H3K27ac motifs are responsible for establishing/maintaining the H3K27ac signal in the promoters of HDACs, which suggests transcribing HDACs; the transcribed HDACs, in turn, deacetylate H3K9ac and/or H3K27ac marks in the genome.
+<p align="center">
+<img src="../img/tomtom_parameters.png" width="400">
+</p>
 
+After the result is generated, open up the HTML report in your browser. What you will find is that **top hits** for this motif sequence include **NDF1, a transcriptional activator** that associates with chromatin to enhancer regulatory elements in genes encoding key transcriptional regulators of neurogenesis. We also see **ATOH1, a transcription factor** which plays a role in the differentiation of subsets of neural cells and **OLIG2 which regulates the differentiation of neural precursors** into neurons, oligodendrocytes, and astrocytes.
 
+This is encouraging, as the result lines up with what we know about the regions used as input, and the samples they originated from. While, we could continue to explore other motif results, another way of **searching directly for known motifs** would be to use a MEME program for **Motif Enrichment** (i.e. AME, or SEA).
+
+### Summary
+In this lesson we have given you an introduction to motif analysis using an easy to navigate Web-tool called the MEME suite. This example demontrates the use of the tool to for motif discovery, but also teh utility of MEME and other linked programs to continue to explore your data in more detail.
 
 
 ***
